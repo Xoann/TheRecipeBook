@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form with List</title>
+    <style>
+        .list-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .list-item input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .remove-item {
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="dynamic-form">
+        <div id="list-container">
+            <!-- List items will be added here -->
+        </div>
+        <button type="button" id="add-item">Add Item</button>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("dynamic-form");
+            const listContainer = document.getElementById("list-container");
+            const addItemButton = document.getElementById("add-item");
+
+            let itemCount = 0;
+
+            addItemButton.addEventListener("click", function() {
+                const listItem = document.createElement("div");
+                listItem.classList.add("list-item");
+
+                const input = document.createElement("input");
+                input.type = "text";
+                input.name = `item_${itemCount}`;
+                input.placeholder = "Enter an item";
+
+                const removeButton = document.createElement("span");
+                removeButton.classList.add("remove-item");
+                removeButton.innerText = "Remove";
+                removeButton.addEventListener("click", function() {
+                    listContainer.removeChild(listItem);
+                });
+
+                listItem.appendChild(input);
+                listItem.appendChild(removeButton);
+                listContainer.appendChild(listItem);
+
+                itemCount++;
+            });
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                // Retrieve the values of the list items and do something with them
+                const formData = new FormData(form);
+                for (const [key, value] of formData.entries()) {
+                    console.log(`Item ${key}: ${value}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

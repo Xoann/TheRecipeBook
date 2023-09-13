@@ -1,20 +1,30 @@
-<html>
-    <body>
-        <header>
-            <h1>Login</h1>
-            <br>
-        </header>
-        <main>
-            <form id="username_pw">
-                <h2>Username:</h2>
-                <br>
-                <input name="username" id="username">
-                <br>
-                <h2>Password:</h2>
-                <input type="password" name="password" id="password">
-                <br>
-                <button type="submit">Login</button>
-            </form>
-        </main>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Login</h1>
+        <br>
+    </header>
+
+    <form action="" id="loginForm">
+        <h2>Username:</h2>
+        <br>
+        <input type="text" name="username" id="username">
+        <br>
+
+        <h2>Password:</h2>
+        <input type="text" name="password" id="password">
+        <br>
+        
+        <button type="submit" onclick="window.location.href = 'html/addrecipe.html';">Login</button>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="scripts\addrecipe\main.js"></script>
+</body>
 </html>

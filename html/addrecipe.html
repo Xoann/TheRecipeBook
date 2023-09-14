@@ -14,7 +14,7 @@
       </div>
 
       <div class="inputbox big">
-        <input type="text" id="recipedesc" placeholder="Recipe description">
+        <input type="text" id="recipeDesc" placeholder="Recipe description">
       </div>
 
       <div class="inputbox number">
@@ -23,6 +23,10 @@
 
       <div class="inputbox number">
         <input type="number" id="prepTime" placeholder="prep time">
+      </div>
+
+      <div class="submit recipe">
+        <button type="submit" id="submit">Submit</button>
       </div>
 
       <div id="list-container-ingredients">
@@ -40,7 +44,9 @@
       <button type="submit" id="submit">Add recipe</button>
     </form>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
   <script src="../scripts/addrecipe/ingredientForm.js"></script>
   <script src="../scripts/addrecipe/recipeStepForm.js"></script>
+  
 </body>
 </html>

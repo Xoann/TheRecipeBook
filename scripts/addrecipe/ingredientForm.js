@@ -32,9 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
       event.preventDefault();
 
       // Retrieve the values of the list items and do something with them
+      /*
       const formData = new FormData(form);
       for (const [key, value] of formData.entries()) {
           console.log(`Item ${key}: ${value}`);
       }
+      */
   });
 });

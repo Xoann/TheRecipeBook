@@ -1,3 +1,5 @@
+import { getDatabase, ref, set } from "firebase/database";
+
 const firebaseConfig = {
     apiKey: "AIzaSyBdZGDDPJC-PYljU0HDnnZi64Z6do0w7K0",
     authDomain: "recipebook2-a9e9a.firebaseapp.com",
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+//Submit recipe name, recipe desc, cooktime, preptime to database
 var addRecipeDB = firebase.database().ref("addRecipe");
 
 document.getElementById("addRecipeForm").addEventListener("submit", submitForm);
@@ -78,7 +81,8 @@ const getElementVal = (id) => {
 const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
     var newAddRecipe = addRecipeDB.push();
 
-    newAddRecipe.set({
+    const db=getDatabase();
+    newAddRecipe.set(ref(db, 'users/' + userId),{
         recipeName:recipeName,
         recipeDesc:recipeDesc,
         cookTime:cookTime,

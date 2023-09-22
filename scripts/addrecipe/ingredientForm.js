@@ -4,28 +4,48 @@ document.addEventListener("DOMContentLoaded", function() {
   const addItemButton = document.getElementById("add-ingredient");
 
   let itemCount = 0;
+  const units = ['mg', 'kg']
 
   addItemButton.addEventListener("click", function() {
-      const listItem = document.createElement("div");
-      listItem.classList.add("list-item");
+        const listItem = document.createElement("div");
+        listItem.classList.add("list-item");
 
-      const input = document.createElement("input");
-      input.type = "text";
-      input.id = `ingredient_${itemCount}`;
-      input.placeholder = "Enter an ingredient";
+        const input_name = document.createElement("input");
+        input_name.type = "text";
+        input_name.id = `ingredient_${itemCount}`;
+        input_name.className = `ingredient_${itemCount}`;
+        input_name.placeholder = "Enter an ingredient";
 
-      const removeButton = document.createElement("span");
-      removeButton.classList.add("remove-item");
-      removeButton.innerText = "Remove";
-      removeButton.addEventListener("click", function() {
-          listContainer.removeChild(listItem);
-      });
+        const input_value = document.createElement("input");
+        input_value.type = "number";
+        input_value.id = `ingredient_value_${itemCount}`;
+        input_value.placeholder = "Amount";
 
-      listItem.appendChild(input);
-      listItem.appendChild(removeButton);
-      listContainer.appendChild(listItem);
+        const input_unit = document.createElement("select");
+        input_unit.id = `ingredient_unit_${itemCount}`;
 
-      itemCount++;
+        const removeButton = document.createElement("span");
+        removeButton.classList.add("remove-item");
+        removeButton.innerText = "Remove";
+        removeButton.addEventListener("click", function() {
+            listContainer.removeChild(listItem);
+        });
+
+        listItem.appendChild(input_name);
+        listItem.appendChild(input_value);
+        listItem.appendChild(input_unit);
+
+        for (let i = 0; i < units.length; i++) {
+            const drop_down_option = document.createElement("option");
+            drop_down_option.value = units[i];
+            drop_down_option.text = units[i];
+            input_unit.appendChild(drop_down_option);
+        }
+
+        listItem.appendChild(removeButton);
+        listContainer.appendChild(listItem);
+
+        itemCount++;
   });
 
   form.addEventListener("submit", function(event) {

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
       listItem.classList.add("list-item");
 
       const input = document.createElement("textarea");
-      input.id = "recipe-step";
+      input.id = `recipe-step_${itemCount}`;
       input.cols = "30";
       input.rows = "10";
       input.placeholder = "Enter a step";
@@ -55,20 +55,35 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 //Submit recipe name, recipe desc, cooktime, preptime to database
-var addRecipeDB = firebase.database().ref("addRecipe");
+let addRecipeDB = firebase.database().ref("addRecipe");
 
 document.getElementById("addRecipeForm").addEventListener("submit", submitForm);
 
 function submitForm(e){
     e.preventDefault();
 
-    var recipeName = getElementVal("recipeName");
-    var recipeDesc = getElementVal("recipeDesc");
-    var cookTime = getElementVal("cookTime");
-    var prepTime = getElementVal("prepTime");
+    let recipeName = getElementVal("recipeName");
+    let recipeDesc = getElementVal("recipeDesc");
+    let cookTime = getElementVal("cookTime");
+    let prepTime = getElementVal("prepTime");
+    let ingredients = [];
+    let steps = [];
 
-    console.log(recipeName, recipeDesc, cookTime, prepTime);
-    writeUserData(recipeName, recipeDesc, cookTime, prepTime);
+    const num_ingredients = document.getElementById("list-container-ingredients").getElementsByClassName("list-item").length; 
+    for (let i = 0; i < num_ingredients; i++) {
+        ingredients.push({
+            name: getElementVal(`ingredient_${i}`),
+            value: getElementVal(`ingredient_value_${i}`),
+            unit: getElementVal(`ingredient_unit_${i}`)
+        });
+    }
+
+    const num_steps = document.getElementById("list-container-steps").getElementsByClassName("list-item").length;
+    for (let i = 0; i < num_steps; i++) {
+        steps.push(getElementVal(`recipe-step_${i}`));
+    }
+
+    writeUserData(recipeName, recipeDesc, cookTime, prepTime, ingredients, steps);
 }
 
 
@@ -77,7 +92,7 @@ const getElementVal = (id) => {
 };
 
 const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
-    var newAddRecipe = addRecipeDB.push();
+    let newAddRecipe = addRecipeDB.push();
 
     const db = firebase.database();
     newAddRecipe.set(ref(db, 'users/' + userId),{
@@ -87,11 +102,12 @@ const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
         prepTime:prepTime
     });
 };
-function writeUserData(recipeName, recipeDesc, cookTime, prepTime) {
-    firebase.database().ref('users/').set({
-        recipeName:recipeName,
+function writeUserData(recipeName, recipeDesc, cookTime, prepTime, ingredients, steps) {
+    firebase.database().ref(`users/${recipeName}`).set({
         recipeDesc:recipeDesc,
         cookTime:cookTime,
-        prepTime:prepTime
+        prepTime:prepTime,
+        ingredients: ingredients,
+        steps: steps
     });
   }

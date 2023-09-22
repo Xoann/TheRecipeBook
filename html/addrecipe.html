@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Recipe</title>
-</head>
-<body>
-  <h1 class="title">Add Recipe</h1>
-  <div id="add-recipe-form" class="add-recipe-form">
-    <form action="" id="addRecipeForm">
-      <div class="inputbox">
-        <input type="text" id="recipeName" placeholder="Recipe name">
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Recipe</title>
+  </head>
+  <body>
+    <h1 class="title">Add Recipe</h1>
+    <div id="add-recipe-form" class="add-recipe-form">
+      <form action="" id="addRecipeForm">
+        <div class="inputbox">
+          <input type="text" id="recipeName" placeholder="Recipe name" />
+        </div>
 
-      <div class="inputbox big">
-        <input type="text" id="recipeDesc" placeholder="Recipe description">
-      </div>
+        <div class="inputbox">
+          <input type="file" id="recipeImg" accept="image/*" />
+        </div>
 
-      <div class="inputbox number">
-        <input type="number" id="cookTime" placeholder="cook time">
-      </div>
+        <div class="inputbox big">
+          <input type="text" id="recipeDesc" placeholder="Recipe description" />
+        </div>
 
-      <div class="inputbox number">
-        <input type="number" id="prepTime" placeholder="prep time">
-      </div>
+        <div class="inputbox number">
+          <input type="number" id="cookTime" placeholder="cook time" />
+        </div>
 
-      <div class="submit recipe">
-        <button type="submit" id="submit">Submit</button>
-      </div>
+        <div class="inputbox number">
+          <input type="number" id="prepTime" placeholder="prep time" />
+        </div>
 
-      <div id="list-container-ingredients">
-        <h2 class="form-heading">Ingredients</h2>
-        <!-- Ingredients go here -->
-      </div>
-      <button type="button" id="add-ingredient">Add Item</button>
+        <div class="submit recipe">
+          <button type="submit" id="submit">Submit</button>
+        </div>
 
-      <div id="list-container-steps">
-        <h2 class="form-heading">Steps</h2>
-        <!-- Steps go here -->
-      </div>
-      <button type="button" id="add-step">Add Item</button>
-      <br>
-      <button type="submit" id="submit">Add recipe</button>
-    </form>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script> 
-  <script src="../scripts/addrecipe/ingredientForm.js"></script>
-  <script type="module" src="../scripts/addrecipe/recipeStepForm.js"></script>
-  <script src="../scripts/setup.js"></script>
+        <div id="list-container-ingredients">
+          <h2 class="form-heading">Ingredients</h2>
+          <!-- Ingredients go here -->
+        </div>
+        <button type="button" id="add-ingredient">Add Item</button>
 
-</body>
+        <div id="list-container-steps">
+          <h2 class="form-heading">Steps</h2>
+          <!-- Steps go here -->
+        </div>
+        <button type="button" id="add-step">Add Item</button>
+        <br />
+        <button type="submit" id="submit">Add recipe</button>
+      </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../scripts/addrecipe/ingredientForm.js"></script>
+    <script type="module" src="../scripts/addrecipe/recipeStepForm.js"></script>
+    <script src="../scripts/setup.js"></script>
+  </body>
 </html>

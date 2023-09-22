@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const addItemButton = document.getElementById("add-ingredient");
 
   let itemCount = 0;
-  const units = ['mg', 'kg']
+  const units = ['mg', 'g', 'kg' ,'tsp','tbsp','cups', 'L' ,'mL']
 
   addItemButton.addEventListener("click", function() {
         const listItem = document.createElement("div");

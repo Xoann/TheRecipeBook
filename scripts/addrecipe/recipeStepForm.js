@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 //Submit recipe name, recipe desc, cooktime, preptime to database
-let addRecipeDB = firebase.database().ref("addRecipe");
+// let addRecipeDB = firebase.database().ref("addRecipe");
 
 document.getElementById("addRecipeForm").addEventListener("submit", submitForm);
 
@@ -79,17 +79,17 @@ const getElementVal = (id) => {
     return document.getElementById(id).value;
 };
 
-const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
-    let newAddRecipe = addRecipeDB.push();
+// const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
+//     let newAddRecipe = addRecipeDB.push();
 
-    const db = firebase.database();
-    newAddRecipe.set(ref(db, 'users/' + userId),{
-        recipeName:recipeName,
-        recipeDesc:recipeDesc,
-        cookTime:cookTime,
-        prepTime:prepTime
-    });
-};
+//     const db = firebase.database();
+//     newAddRecipe.set(ref(db, 'users/' + userId),{
+//         recipeName:recipeName,
+//         recipeDesc:recipeDesc,
+//         cookTime:cookTime,
+//         prepTime:prepTime
+//     });
+// };
 function writeUserData(recipeName, recipeDesc, cookTime, prepTime, ingredients, steps) {
     firebase.database().ref(`users/${recipeName}`).set({
         recipeDesc:recipeDesc,
@@ -98,4 +98,4 @@ function writeUserData(recipeName, recipeDesc, cookTime, prepTime, ingredients, 
         ingredients: ingredients,
         steps: steps
     });
-  }
+};

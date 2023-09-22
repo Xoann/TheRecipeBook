@@ -1,5 +1,3 @@
-import { getDatabase, ref, set } from "firebase/database";
-
 const firebaseConfig = {
     apiKey: "AIzaSyBdZGDDPJC-PYljU0HDnnZi64Z6do0w7K0",
     authDomain: "recipebook2-a9e9a.firebaseapp.com",
@@ -70,7 +68,7 @@ function submitForm(e){
     var prepTime = getElementVal("prepTime");
 
     console.log(recipeName, recipeDesc, cookTime, prepTime);
-    saveMessages(recipeName, recipeDesc, cookTime, prepTime);
+    writeUserData(recipeName, recipeDesc, cookTime, prepTime);
 }
 
 
@@ -81,7 +79,7 @@ const getElementVal = (id) => {
 const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
     var newAddRecipe = addRecipeDB.push();
 
-    const db=getDatabase();
+    const db = firebase.database();
     newAddRecipe.set(ref(db, 'users/' + userId),{
         recipeName:recipeName,
         recipeDesc:recipeDesc,
@@ -89,3 +87,11 @@ const saveMessages = (recipeName, recipeDesc, cookTime, prepTime) => {
         prepTime:prepTime
     });
 };
+function writeUserData(recipeName, recipeDesc, cookTime, prepTime) {
+    firebase.database().ref('users/').set({
+        recipeName:recipeName,
+        recipeDesc:recipeDesc,
+        cookTime:cookTime,
+        prepTime:prepTime
+    });
+  }

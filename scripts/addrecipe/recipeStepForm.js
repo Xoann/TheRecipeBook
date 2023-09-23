@@ -85,7 +85,8 @@ function submitForm(e) {
     prepTime,
     ingredients,
     steps,
-    image
+    image,
+    "users"
   );
 }
 
@@ -121,9 +122,8 @@ function writeUserData(
     ingredients: ingredients,
     steps: steps,
   });
-
   const storageRef = firebase.storage().ref();
-  const imageRef = storageRef.child(`${uid}/images/${image.name}`);
+  const imageRef = storageRef.child(`${uid}/images/${recipeName}`);
 
   imageRef.put(image).then((snapshot) => {
     console.log("Uploaded");

@@ -1,18 +1,29 @@
-const uid = "users";
-const dbr = firebase.database().ref(`${uid}/`);
+var currentUid;
 
-dbr.once("value").then((snapshot) => {
-  const recipes = snapshot.val();
-  const imageNames = [];
-  const recipeContainer = document.getElementById("recipe-container");
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    currentUid = firebase.auth().currentUser.uid;
+    console.log(firebase.auth().currentUser.uid);
+    console.log("uid found");
 
-  for (const key in recipes) {
-    if (recipes.hasOwnProperty(key)) {
-      imageNames.push(key);
-    }
+    const dbr = firebase.database().ref(`${currentUid}/`);
+
+    dbr.once("value").then((snapshot) => {
+      const recipes = snapshot.val();
+      const imageNames = [];
+
+      for (const key in recipes) {
+        if (recipes.hasOwnProperty(key)) {
+          imageNames.push(key);
+        }
+      }
+      console.log(recipes);
+      const imageURLs = getImageURLs(imageNames, currentUid);
+      displayRecipes(recipes, imageNames, imageURLs);
+    });
+  } else {
+    console.log("uid not found");
   }
-  const imageURLs = getImageURLs(imageNames, uid);
-  displayRecipes(recipes, imageNames, imageURLs);
 });
 
 async function getImageURLs(image_names, uid) {

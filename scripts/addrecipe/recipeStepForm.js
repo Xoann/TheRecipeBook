@@ -105,6 +105,7 @@ const getElementVal = (id) => {
 //         prepTime:prepTime
 //     });
 // };
+
 function writeUserData(
   recipeName,
   recipeDesc,
@@ -115,15 +116,20 @@ function writeUserData(
   image,
   uid
 ) {
-  firebase.database().ref(`users/${recipeName}`).set({
-    recipeDesc: recipeDesc,
-    cookTime: cookTime,
-    prepTime: prepTime,
-    ingredients: ingredients,
-    steps: steps,
-  });
+  firebase
+    .database()
+    .ref(`${firebase.auth().currentUser.uid}/${recipeName}`)
+    .set({
+      recipeDesc: recipeDesc,
+      cookTime: cookTime,
+      prepTime: prepTime,
+      ingredients: ingredients,
+      steps: steps,
+    });
   const storageRef = firebase.storage().ref();
-  const imageRef = storageRef.child(`${uid}/images/${recipeName}`);
+  const imageRef = storageRef.child(
+    `${firebase.auth().currentUser.uid}/images/${recipeName}`
+  );
 
   imageRef.put(image).then((snapshot) => {
     console.log("Uploaded");

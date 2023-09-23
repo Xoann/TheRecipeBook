@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheets/home.css" />
+    <title>Recipes</title>
+  </head>
+  <body>
+    <header>
+      <a href="#">
+        <img class="logo" src="../img/logo.png" />
+      </a>
 
-  
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylesheets/style.css">
-  <title>Recipes</title>
-</head>
-<body>
-  <header>
-    <a href="#">
-      <img class="logo" src="../img/logo.png">
-    </a>
+      <nav class="main-nav">
+        <ul class="nav-list">
+          <li><a class="main-nav-link" href="#">Shopping List</a></li>
+          <li><a class="main-nav-link" href="#">Add Recipe</a></li>
+        </ul>
+      </nav>
+      <main>
+        <a href="html/addrecipe.html">Add Recipe</a>
+        <a href="html/login.html">login</a>
 
-    <nav class="main-nav">
-      <ul class="nav-list">
-        <li><a class="main-nav-link" href="#">Shopping List</a></li>
-        <li><a class="main-nav-link" href="#">Add Recipe</a></li>
-      </ul>
-    </nav>
-    <main>
-      <a href="html/addrecipe.html">Add Recipe</a>
-      <a href="html/login.html">login</a>
+        <br />
+        <section class="recipes">
+          <h2>Past Recipe:</h2>
+          <div class="recipe-container" id="recipe-container"></div>
+        </section>
+      </main>
+    </header>
 
-      <br>
-
-      <h2>Past Recipe:</h2>
-      <br>
-    </main>
-    
-  </header>
-  <script src="scripts/setup.js"></script>
-
-
-  
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-storage.js"></script> -->
+    <script src="scripts/setup.js"></script>
+    <script src="scripts/readrecipe.js"></script>
+  </body>
 </html>

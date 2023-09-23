@@ -1,40 +1,44 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyBdZGDDPJC-PYljU0HDnnZi64Z6do0w7K0",
-    authDomain: "recipebook2-a9e9a.firebaseapp.com",
-    databaseURL: "https://recipebook2-a9e9a-default-rtdb.firebaseio.com",
-    projectId: "recipebook2-a9e9a",
-    storageBucket: "recipebook2-a9e9a.appspot.com",
-    messagingSenderId: "384328070783",
-    appId: "1:384328070783:web:dbdb4004f591e84682314a"
-  };
+// Initialize the FirebaseUI Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-firebase.initializeApp(firebaseConfig);
-
-var loginFormDB = firebase.database().ref("loginForm");
-
-document.getElementById("loginForm").addEventListener("submit", submitForm);
-
-function submitForm(e){
-    e.preventDefault();
-
-    var username = getElementVal("username");
-    var password = getElementVal("password");
-
-    console.log(username, password);
-    saveMessages(username, password);
-}
-
-
-const getElementVal = (id) => {
-    return document.getElementById(id).value;
+var uiConfig = {
+  callbacks: {
+    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+      // User successfully signed in.
+      // Return type determines whether we continue the redirect automatically
+      // or whether we leave that to developer to handle.
+      return true;
+    },
+    uiShown: function () {
+      // The widget is rendered.
+      // Hide the loader.
+      document.getElementById("loader").style.display = "none";
+    },
+  },
+  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+  signInFlow: "popup",
+  signInSuccessUrl: "",
+  signInOptions: [
+    // Leave the lines as is for the providers you want to offer your users.
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+    firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+  ],
+  // Terms of service url.
+  tosUrl: "<your-tos-url>",
+  // Privacy policy url.
+  privacyPolicyUrl: "<your-privacy-policy-url>",
 };
 
-const saveMessages = (username, password) => {
-    var newLoginForm = loginFormDB.push();
+// The start method will wait until the DOM is loaded.
+ui.start("#firebaseui-auth-container", uiConfig);
 
-    newLoginForm.set({
-        username:username,
-        password:password
-    });
-};
+const signOutButton = document.getElementById("signOut");
 
+signOutButton.addEventListener("click", () => {
+  firebase.auth().signOut();
+  console.log("signed out");
+});

@@ -8,27 +8,69 @@ dbr.once("value").then((snapshot) => {
 
   for (const key in recipes) {
     if (recipes.hasOwnProperty(key)) {
-      const value = recipes[key];
       imageNames.push(key);
     }
   }
-  imageURLs = getImageURLs(imageNames, uid);
-  console.log(imageURLs);
+  const imageURLs = getImageURLs(imageNames, uid);
+  displayRecipes(recipes, imageNames, imageURLs);
 });
 
-function getImageURLs(image_names, uid) {
+async function getImageURLs(image_names, uid) {
   const storageRef = firebase.storage().ref();
-  const imageURLs = [];
+  const imageURLs = {};
 
   for (let i = 0; i < image_names.length; i++) {
-    const imageRef = storageRef
-      .child(uid)
-      .child("images")
-      .child(image_names[i]);
+    const imageName = image_names[i];
+    const imageRef = storageRef.child(uid).child("images").child(imageName);
 
-    imageRef.getDownloadURL().then((url) => {
-      imageURLs.push(url);
+    await imageRef.getDownloadURL().then((url) => {
+      imageURLs[imageName] = url;
     });
   }
   return imageURLs;
+}
+
+function displayRecipes(recipes, recipeNames, imageURLs) {
+  for (let i = 0; i < recipeNames.length; i++) {
+    const recipeContainer =
+      document.getElementsByClassName("recipe-container")[0];
+
+    const recipeDiv = document.createElement("div");
+    recipeDiv.classList.add("recipe-div");
+
+    const imgContainer = document.createElement("div");
+    imgContainer.classList.add("img-container");
+
+    const recipeImg = document.createElement("img");
+    recipeImg.classList.add("recipe-img");
+    loadImg(recipeImg, imageURLs, recipeNames[i]);
+
+    const gradientOverlay = document.createElement("div");
+    gradientOverlay.classList.add("gradient-overlay");
+
+    const recipeElements = document.createElement("div");
+    recipeElements.classList.add("recipe-elements");
+
+    const recipeNameElement = document.createElement("h2");
+    recipeNameElement.classList.add("recipe-name");
+    recipeNameElement.innerHTML = recipeNames[i];
+
+    const recipeDescription = document.createElement("div");
+    recipeDescription.classList.add("desc-div");
+    recipeDescription.innerHTML = recipes[recipeNames[i]].recipeDesc;
+
+    recipeContainer.appendChild(recipeDiv);
+    recipeDiv.appendChild(imgContainer);
+    imgContainer.appendChild(recipeImg);
+    imgContainer.appendChild(gradientOverlay);
+    recipeDiv.appendChild(recipeElements);
+    recipeElements.appendChild(recipeNameElement);
+    recipeElements.appendChild(recipeDescription);
+  }
+}
+
+async function loadImg(imgElement, imgURLs, imageName) {
+  const imageURLs = await imgURLs;
+  const imageURL = await imageURLs[imageName];
+  imgElement.src = imageURL;
 }

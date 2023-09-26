@@ -54,6 +54,7 @@ function submitForm(e) {
   let recipeDesc = getElementVal("recipeDesc");
   let cookTime = getElementVal("cookTime");
   let prepTime = getElementVal("prepTime");
+  let servings = getElementVal("servings");
   let ingredients = [];
   let steps = [];
 
@@ -83,10 +84,10 @@ function submitForm(e) {
     recipeDesc,
     cookTime,
     prepTime,
+    servings,
     ingredients,
     steps,
-    image,
-    "users"
+    image
   );
 }
 
@@ -111,18 +112,19 @@ function writeUserData(
   recipeDesc,
   cookTime,
   prepTime,
+  servings,
   ingredients,
   steps,
-  image,
-  uid
+  image
 ) {
   firebase
     .database()
-    .ref(`${firebase.auth().currentUser.uid}/${recipeName}`)
+    .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
     .set({
       recipeDesc: recipeDesc,
       cookTime: cookTime,
       prepTime: prepTime,
+      servings: servings,
       ingredients: ingredients,
       steps: steps,
     });

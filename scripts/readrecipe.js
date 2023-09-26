@@ -1,15 +1,18 @@
 var currentUid;
+let recipes;
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUid = firebase.auth().currentUser.uid;
     console.log(firebase.auth().currentUser.uid);
-    console.log("uid found");
 
-    const dbr = firebase.database().ref(`${currentUid}/`);
+    const usernameElement = document.getElementById("username");
+    // usernameElement.innerHTML = firebase.auth().currentUser.;
+
+    const dbr = firebase.database().ref(`${currentUid}/recipes/`);
 
     dbr.once("value").then((snapshot) => {
-      const recipes = snapshot.val();
+      recipes = snapshot.val();
       const imageNames = [];
 
       for (const key in recipes) {
@@ -17,9 +20,7 @@ firebase.auth().onAuthStateChanged((user) => {
           imageNames.push(key);
         }
       }
-      console.log(recipes);
-      const imageURLs = getImageURLs(imageNames, currentUid);
-      displayRecipes(recipes, imageNames, imageURLs);
+      displayRecipes(imageNames);
     });
   } else {
     console.log("uid not found");
@@ -41,13 +42,21 @@ async function getImageURLs(image_names, uid) {
   return imageURLs;
 }
 
-function displayRecipes(recipes, recipeNames, imageURLs) {
+function displayRecipes(recipeNames) {
+  const imageURLs = getImageURLs(recipeNames, currentUid);
+
   for (let i = 0; i < recipeNames.length; i++) {
+    generateRecipeModal(recipeNames[i]);
+
     const recipeContainer =
       document.getElementsByClassName("recipe-container")[0];
 
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
+
+    recipeDiv.addEventListener("click", () =>
+      displayRecipeModal(recipeNames[i])
+    );
 
     const imgContainer = document.createElement("div");
     imgContainer.classList.add("img-container");
@@ -84,4 +93,88 @@ async function loadImg(imgElement, imgURLs, imageName) {
   const imageURLs = await imgURLs;
   const imageURL = await imageURLs[imageName];
   imgElement.src = imageURL;
+}
+
+////////////////////////
+/// SEARCH BAR CODE ///
+////////////////////////
+
+const searchInput = document.getElementById("search-input");
+let searchQuery = "";
+
+function narrowSearch(search) {
+  const matches = [];
+  const names = Object.keys(recipes);
+
+  for (const recipe of names) {
+    if (recipe.includes(search)) {
+      matches.push(recipe);
+    }
+  }
+  return matches;
+}
+
+function updateRecipes(recipeNames) {
+  const recipeContainer = document.getElementById("recipe-container");
+  recipeContainer.innerHTML = "";
+  displayRecipes(recipeNames);
+}
+
+searchInput.addEventListener("input", function (event) {
+  searchQuery = event.target.value;
+
+  const searchedRecipeNames = narrowSearch(searchQuery);
+  updateRecipes(searchedRecipeNames);
+});
+
+//////////////////////////////
+/// Generate Recipe Modals ///
+//////////////////////////////
+
+function generateRecipeModal(recipeName) {
+  const modalElement = document.createElement("div");
+  modalElement.classList.add("modal");
+  modalElement.id = recipeName;
+
+  const modalContentElement = document.createElement("div");
+  modalContentElement.classList.add("modal-content");
+
+  const recipeNameElement = document.createElement("h2");
+  recipeNameElement.classList.add("modal-recipe-name");
+  recipeNameElement.textContent = recipeName;
+
+  const closeModalButton = document.createElement("span");
+  closeModalButton.id = "closeModalButton";
+  closeModalButton.textContent = "Close";
+
+  closeModalButton.addEventListener("click", () => closeModal(modalElement));
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modalElement) {
+      closeModal(modalElement);
+    }
+  });
+
+  const documentBody = document.getElementById("body");
+
+  documentBody.appendChild(modalElement);
+  modalElement.appendChild(modalContentElement);
+  modalContentElement.appendChild(recipeNameElement);
+  modalContentElement.appendChild(closeModalButton);
+}
+
+// Modal window interactivity
+
+function displayRecipeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  console.log(modal);
+  openModal(modal);
+}
+
+function openModal(modal) {
+  modal.style.display = "block";
+}
+
+function closeModal(modal) {
+  modal.style.display = "none";
 }

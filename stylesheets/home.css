@@ -1,12 +1,79 @@
+/* Nav bar styles */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 100px;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-list-item {
+}
+
+.main-nav-link {
+  text-decoration: none;
+}
+
+/* Serach section styles */
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 500px;
+}
+
+.search-bar-div {
+  max-width: 700px;
+  width: 60%;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  border-radius: 100px;
+  font-size: 18px;
+  padding-left: 25px;
+  text-align: left;
+  font-family: sans-serif;
+  border: none;
+  background-color: #f0f0f0;
+}
+
 /* Recipe div styles */
+
+.recipe-container {
+  text-align: center;
+  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2));
+}
 
 .recipe-div {
   width: 25vw;
+  min-width: 300px;
   height: 400px;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   overflow: hidden;
+  display: inline-block;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.recipe-div:last-child {
+  margin-right: 0;
 }
 
 .recipe-div > .img-container {
@@ -40,4 +107,34 @@
 .recipe-div > .recipe-elements > h2 {
   font-size: 24px;
   font-family: sans-serif;
+}
+
+/* Recipe Modal Window Styles */
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  cursor: pointer;
 }

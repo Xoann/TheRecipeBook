@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 /* Nav bar styles */
 
 .main-nav {
@@ -16,6 +21,7 @@
   justify-content: center;
   gap: 20px;
   list-style: none;
+  margin-right: 40px;
 }
 
 .nav-list-item {

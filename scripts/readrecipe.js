@@ -73,7 +73,7 @@ function displayRecipes(recipeNames) {
 
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("recipe-name");
-    recipeNameElement.innerHTML = recipeNames[i];
+    recipeNameElement.textContent = recipeNames[i];
 
     const recipeDescription = document.createElement("div");
     recipeDescription.classList.add("desc-div");
@@ -167,7 +167,6 @@ function generateRecipeModal(recipeName) {
 
 function displayRecipeModal(modalId) {
   const modal = document.getElementById(modalId);
-  console.log(modal);
   openModal(modal);
 }
 

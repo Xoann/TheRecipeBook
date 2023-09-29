@@ -7,33 +7,49 @@
     <link rel="stylesheet" href="stylesheets/home.css" />
     <title>Recipes</title>
   </head>
-  <body>
+  <body id="body">
     <header>
-      <a href="#">
-        <img class="logo" src="../img/logo.png" />
-      </a>
+      
 
       <nav class="main-nav">
+        <a href="">
+          <img class="logo" id="h" src="../img/logo.png" />
+        </a>
+        <!-- <button id="hh">test</button> -->
         <ul class="nav-list">
-          <li><a class="main-nav-link" href="#">Shopping List</a></li>
-          <li><a class="main-nav-link" href="#">Add Recipe</a></li>
+          <li class="nav-list-item"><span class="main-nav-link" id="shopping-list">Shopping List</span></li>
+          <li class="nav-list-item"><a class="main-nav-link" href="html/addrecipe.html">Add Recipe</a></li>
+          <li class="nav-list-item"><a id="username" class="main-nav-link" href="html/login.html">Username</a></li>
         </ul>
       </nav>
-      <main>
-        <a href="html/addrecipe.html">Add Recipe</a>
-        <a href="html/login.html">login</a>
 
-        <br />
+      
+    </header>
+
+    <main>
+        <div class="search">
+        <div class="search-bar-div">
+          <input
+            class="search-input"
+            id="search-input"
+            type="text"
+            placeholder="Search..."
+          ></input>
+        </div>
+        </div>
         <section class="recipes">
-          <h2>Past Recipe:</h2>
           <div class="recipe-container" id="recipe-container"></div>
         </section>
       </main>
-    </header>
+
+    <div class="modal" id="shopping-list-modal">
+      <div class="modal-content" id="shopping-list-modal-content">
+        
+      </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-storage.js"></script> -->
     <script src="scripts/setup.js"></script>
-    <script src="scripts/readrecipe.js"></script>
+    <script type="module" src="scripts/readrecipe.js"></script>
   </body>
 </html>

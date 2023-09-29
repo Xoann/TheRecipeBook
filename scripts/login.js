@@ -12,7 +12,7 @@ var uiConfig = {
     uiShown: function () {
       // The widget is rendered.
       // Hide the loader.
-      document.getElementById("loader").style.display = "none";
+      // document.getElementById("loader").style.display = "none";
     },
   },
   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
@@ -31,9 +31,25 @@ var uiConfig = {
 // The start method will wait until the DOM is loaded.
 ui.start("#firebaseui-auth-container", uiConfig);
 
-const signOutButton = document.getElementById("signOut");
+// const signOutButton = document.getElementById("signOut");
 
-signOutButton.addEventListener("click", () => {
-  firebase.auth().signOut();
-  console.log("signed out");
+// signOutButton.addEventListener("click", () => {
+//   firebase.auth().signOut();
+//   console.log("signed out");
+// });
+
+// Sign in/up interactivity
+const signUpButton = document.getElementById("signUp");
+const signInButton = document.getElementById("signIn");
+const container = document.getElementById("login-container");
+
+signUpButton.addEventListener("click", function () {
+  console.log("h");
+  container.classList.add("right-panel-active");
 });
+
+signInButton.addEventListener("click", () =>
+  container.classList.remove("right-panel-active")
+);
+
+// BUG nothing happens on button click

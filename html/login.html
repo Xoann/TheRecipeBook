@@ -11,32 +11,51 @@
       rel="stylesheet"
       href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
     />
+    <link rel="stylesheet" href="../stylesheets/login.css" />
   </head>
   <body>
-    <header>
-      <h1>Login</h1>
-      <br />
-    </header>
+    <header></header>
 
     <div id="firebaseui-auth-container"></div>
-    <div id="loader">Loading...</div>
-    <button id="signOut">sign out</button>
-    <a href="addrecipe.html">Add Recipe</a>
 
-    <form action="" id="loginForm">
-      <h2>Username:</h2>
-      <br />
-      <input type="text" name="username" id="username" />
-      <br />
-
-      <h2>Password:</h2>
-      <input type="text" name="password" id="password" />
-      <br />
-
-      <button type="submit" onclick="window.location.href = 'addrecipe.html';">
-        Login
-      </button>
-    </form>
+    <div class="login-container" id="login-container">
+      <div class="form-container sign-up-container">
+        <form action="#">
+          <h1 class="form-header">Create Account</h1>
+          <input type="text" placeholder="Username" />
+          <input type="text" placeholder="First name" />
+          <input type="text" placeholder="Last name" />
+          <input type="email" placeholder="Email" />
+          <input type="password" placeholder="Password" />
+          <button type="submit">Sign Up</button>
+        </form>
+      </div>
+      <div class="form-container sign-ip-container">
+        <form action="#">
+          <h1 class="form-header">Sign In</h1>
+          <input type="email" placeholder="Email" />
+          <input type="password" placeholder="Password" />
+          <a href="#" class="forgot-you-password">Forgot your password?</a>
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>Log in</h1>
+            <p class="form-text">Sign in here if you already have an account</p>
+            <button class="ghost mt-5" id="signIn">Sign In</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>Create, Account!</h1>
+            <p class="form-text">
+              Sign up if you still don't have an account ...
+            </p>
+            <button class="ghost" id="signUp">Sign Up</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
     <script src="../scripts/setup.js"></script>

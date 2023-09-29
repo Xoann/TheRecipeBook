@@ -12,11 +12,12 @@
       
 
       <nav class="main-nav">
-        <a href="#">
+        <a href="">
           <img class="logo" id="h" src="../img/logo.png" />
         </a>
+        <!-- <button id="hh">test</button> -->
         <ul class="nav-list">
-          <li class="nav-list-item"><a class="main-nav-link" href="#">Shopping List</a></li>
+          <li class="nav-list-item"><span class="main-nav-link" id="shopping-list">Shopping List</span></li>
           <li class="nav-list-item"><a class="main-nav-link" href="html/addrecipe.html">Add Recipe</a></li>
           <li class="nav-list-item"><a id="username" class="main-nav-link" href="html/login.html">Username</a></li>
         </ul>
@@ -40,6 +41,12 @@
           <div class="recipe-container" id="recipe-container"></div>
         </section>
       </main>
+
+    <div class="modal" id="shopping-list-modal">
+      <div class="modal-content" id="shopping-list-modal-content">
+        
+      </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
     <script src="scripts/setup.js"></script>

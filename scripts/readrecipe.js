@@ -51,12 +51,24 @@ function displayRecipes(recipeNames) {
     const recipeContainer =
       document.getElementsByClassName("recipe-container")[0];
 
+    const shoppingListCheckBox = document.createElement("input");
+    shoppingListCheckBox.type = "checkbox";
+    shoppingListCheckBox.classList.add("shopping-checkbox");
+    shoppingListCheckBox.id = `checkbox_${recipeNames[i]}`;
+
+    // I'm almost positive this prevents a bug (maybe)
+    shoppingListCheckBox.addEventListener("change", function () {
+      handleShoppingCheckbox(shoppingListCheckBox);
+    });
+
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
 
-    recipeDiv.addEventListener("click", () =>
-      displayRecipeModal(recipeNames[i])
-    );
+    recipeDiv.addEventListener("click", function (event) {
+      if (event.target !== shoppingListCheckBox) {
+        displayRecipeModal(recipeNames[i]);
+      }
+    });
 
     const imgContainer = document.createElement("div");
     imgContainer.classList.add("img-container");
@@ -86,6 +98,7 @@ function displayRecipes(recipeNames) {
     recipeDiv.appendChild(recipeElements);
     recipeElements.appendChild(recipeNameElement);
     recipeElements.appendChild(recipeDescription);
+    recipeElements.appendChild(shoppingListCheckBox);
   }
 }
 
@@ -100,7 +113,6 @@ async function loadImg(imgElement, imgURLs, imageName) {
 ////////////////////////
 
 const searchInput = document.getElementById("search-input");
-let searchQuery = "";
 
 function narrowSearch(search) {
   const matches = [];
@@ -176,4 +188,128 @@ function openModal(modal) {
 
 function closeModal(modal) {
   modal.style.display = "none";
+}
+
+///////////////////////////
+/// Shopping List Logic ///
+///////////////////////////
+
+let shoppingList = [];
+const shoppingListButton = document.getElementById("shopping-list");
+const shoppingListModal = document.getElementById("shopping-list-modal");
+
+shoppingListButton.addEventListener("click", function () {
+  updateShoppingListModal();
+  openModal(shoppingListModal);
+});
+
+window.addEventListener("click", (event) => {
+  if (event.target === shoppingListModal) {
+    closeModal(shoppingListModal);
+  }
+});
+
+function handleShoppingCheckbox(checkbox) {
+  const checkedRecipe = checkbox.id.slice(9);
+  if (checkbox.checked) {
+    shoppingList.push(checkedRecipe);
+  } else {
+    const idxToRemove = shoppingList.indexOf(checkedRecipe);
+    if (idxToRemove !== -1) {
+      shoppingList.splice(idxToRemove, 1);
+    }
+  }
+  // console.log(shoppingList);
+}
+
+// Values retreived from https://en.wikipedia.org/wiki/Cooking_weights_and_measures
+const volUnitsToMl = {
+  "dr.": 0.0513429,
+  "smdg.": 0.115522,
+  "pn.": 0.231043,
+  "ds.": 0.462086,
+  "ssp.": 0.924173,
+  "csp.": 1.84835,
+  "fl.dr.": 3.69669,
+  "tsp.": 4.92892,
+  "dsp.": 9.85784,
+  "tbsp.": 14.7868,
+  "oz.": 29.5735,
+  "wgf.": 59.1471,
+  "tcf.": 118.294,
+  C: 236.588,
+  "pt.": 473.176,
+  "qt.": 946.353,
+  "gal.": 3785.41,
+};
+
+// testing
+// document.getElementById("hh").addEventListener("click", combineIngredients);
+
+function combineIngredients() {
+  let shoppingIngredientObject = {};
+  let prefferedIngredientUnit = {};
+
+  // loop thru recipes
+  for (const shoppingRecipeName of shoppingList) {
+    const recipeIngredients = recipes[shoppingRecipeName]["ingredients"];
+    // console.log(recipeIngredients);
+    // loop thru ingredients
+    for (let i = 0; i < recipeIngredients.length; i++) {
+      const ingredient = recipeIngredients[i]["name"];
+      const ingredientUnit = recipeIngredients[i]["unit"];
+
+      // Add to shoppingIngredientObject
+      if (!shoppingIngredientObject.hasOwnProperty(ingredient)) {
+        shoppingIngredientObject[ingredient] = convertToMl(
+          recipeIngredients[i]
+        );
+      } else {
+        shoppingIngredientObject[ingredient] += convertToMl(
+          recipeIngredients[i]
+        );
+      }
+
+      // Add to prefferedIngredientUnit
+      if (!prefferedIngredientUnit.hasOwnProperty(ingredientUnit)) {
+        prefferedIngredientUnit[ingredient] = ingredientUnit;
+      }
+    }
+  }
+  // console.log(prefferedIngredientUnit);
+  // console.log(shoppingIngredientObject);
+  return [shoppingIngredientObject, prefferedIngredientUnit];
+}
+
+function convertToMl(ingredient) {
+  return ingredient["value"] * volUnitsToMl[ingredient["unit"]];
+}
+
+function convertMlToOther(mlValue, unit) {
+  return (mlValue / volUnitsToMl[unit]).toFixed(2);
+}
+
+function updateShoppingListModal() {
+  const shoppingModalContent = document.getElementById(
+    "shopping-list-modal-content"
+  );
+  shoppingModalContent.innerHTML = "";
+
+  const ingComb = combineIngredients();
+  const ingredientObjects = ingComb[0];
+  const ingredients = Object.keys(ingredientObjects);
+  const prefferedIngredientUnit = ingComb[1];
+
+  for (const ingredient of ingredients) {
+    const unit = prefferedIngredientUnit[ingredient];
+    const ingredientValue = convertMlToOther(
+      ingredientObjects[ingredient],
+      unit
+    );
+
+    const ingredientNameElement = document.createElement("h3");
+    ingredientNameElement.textContent = `${ingredient} ${ingredientValue} ${unit}`;
+
+    shoppingModalContent.appendChild(ingredientNameElement);
+  }
 }

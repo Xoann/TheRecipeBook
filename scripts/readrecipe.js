@@ -1,5 +1,6 @@
 var currentUid;
 let recipes;
+let searchQuery = "";
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
@@ -313,3 +314,6 @@ function updateShoppingListModal() {
     shoppingModalContent.appendChild(ingredientNameElement);
   }
 }
+
+// BUG Shopping list doesnt reset when you select a recipe after searching it
+// BUG Checkboxes don't data persist when searching recipes

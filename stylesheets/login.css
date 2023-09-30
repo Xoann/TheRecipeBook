@@ -121,6 +121,10 @@ form h1 {
   color: var(--light-colour);
 }
 
+.inputColor {
+  color: var(--light-colour);
+}
+
 .input-field input:focus ~ label {
   top: -4px;
   background-color: var(--grey-colour);

@@ -51,8 +51,9 @@ a {
   overflow: hidden;
   opacity: 85%;
   width: 768px;
+  height: 480px;
   max-width: 100%;
-  min-height: 480px;
+  max-height: 100%;
   transition: 333ms;
 }
 

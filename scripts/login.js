@@ -120,3 +120,11 @@ async function signInUser(email, password) {
     console.error(error.code, error.message);
   }
 }
+
+const inputField = inputField.addEventListener("focus", function () {
+  inputField.classList.add("focused");
+});
+
+inputField.addEventListener("blur", function () {
+  inputField.classList.remove("focused");
+});

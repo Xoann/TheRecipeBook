@@ -1,10 +1,14 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+  --primary-colour: #d57009;
+  --light-colour: #f6e9e9;
+  --light-low-opacity-colour: #f6e9e922;
+  --dark-grey-colour: #121212;
+  --grey-colour: #302f34;
 }
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -14,14 +18,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
   margin: -20px 0 50px;
   margin-top: 20px;
+  background-color: var(--dark-grey-colour);
 }
 
 h1 {
   font-weight: bold;
   margin: 0;
+  color: var(--light-colour);
 }
 
 p {
@@ -37,20 +43,25 @@ span {
 }
 
 a {
-  color: #4c2606;
+  color: var(--light-colour);
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
 }
 
+.logo {
+  width: 200px;
+}
+
 .container {
-  background: #fff;
+  background: var(--grey-colour);
   border-radius: 30px;
-  box-shadow: 30px 14px 28px rgba(0, 0, 5, 0.2), 0 10px 10px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 0px 20px var(--light-low-opacity-colour), */
+  /* 0 0px 20px var(--light-low-opacity-colour); */
   position: relative;
   overflow: hidden;
   opacity: 85%;
-  width: 768px;
+  width: 70%;
   height: 480px;
   max-width: 100%;
   max-height: 100%;
@@ -58,9 +69,10 @@ a {
 }
 
 .form-container form {
-  background: #fff;
+  background: var(--grey-colour);
   display: flex;
   flex-direction: column;
+  gap: 10px;
   padding: 0 50px;
   height: 100%;
   justify-content: center;
@@ -68,45 +80,73 @@ a {
   text-align: center;
 }
 
-.social-container {
-  margin: 20px 0;
-  display: block;
+form h1 {
+  margin-bottom: 20px;
 }
 
-.social-container a {
-  border: 1px solid #fd7e14;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px;
-  height: 40px;
-  width: 40px;
-  transition: 333ms;
-}
-.social-container a:hover {
-  transform: rotateZ(13deg);
-  border: 1px solid #4c2606;
-}
-
-.form-container input {
-  background: #eee;
+.form-container .input-field input {
+  background: var(--grey-colour);
+  font-size: 16px;
   border: none;
   border-radius: 50px;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  outline: 2px solid var(--light-colour);
 }
+
+.form-container .input-field input:focus {
+  outline: 2px solid var(--primary-colour);
+}
+
 .form-container input:hover {
   transform: scale(101%);
 }
 
+.input-field {
+  position: relative;
+  width: 100%;
+}
+
+.input-field label {
+  display: inline-block;
+  position: absolute;
+  text-align: left;
+  padding: 0 3px;
+  z-index: 3;
+  pointer-events: none;
+  top: 22px;
+  left: 20px;
+  transition: top 0.2s ease-out;
+  color: var(--light-colour);
+}
+
+.input-field input:focus ~ label {
+  top: -4px;
+  background-color: var(--grey-colour);
+}
+
+.double-input input {
+  width: 48.75%;
+}
+
+.double-input {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5%;
+}
+
+.overlay-panel p {
+  color: var(--light-colour);
+}
+
 button {
   border-radius: 50px;
-  box-shadow: 0 1px 1px;
-  border: 1px solid #fd7e14;
-  background: #fd7e14;
-  color: #fff;
+  /* box-shadow: 0 1px 1px; */
+  /* border: 1px solid var(--primary-colour); */
+  border: none;
+  background-color: var(--primary-colour);
+  color: var(--light-colour);
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
@@ -128,9 +168,8 @@ button:focus {
   outline: none;
 }
 
-button.ghost {
-  background: transparent;
-  border-color: #fff;
+.overlay button {
+  background-color: var(--grey-colour);
 }
 
 .form-container {
@@ -165,9 +204,14 @@ button.ghost {
 }
 
 .overlay {
-  background: #fd7e14;
-  background: linear-gradient(to right, #fd7e14, #fd7e14) no-repeat 0 0 / cover;
-  color: #fff;
+  background: var(--primary-colour);
+  background: linear-gradient(
+      to right,
+      var(--primary-colour),
+      var(--primary-colour)
+    )
+    no-repeat 0 0 / cover;
+  color: var(--grey-colour);
   position: relative;
   left: -100%;
   height: 100%;

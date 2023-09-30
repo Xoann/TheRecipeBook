@@ -121,10 +121,10 @@ async function signInUser(email, password) {
   }
 }
 
-const inputField = inputField.addEventListener("focus", function () {
-  inputField.classList.add("focused");
-});
+// const inputField = inputField.addEventListener("focus", function () {
+//   inputField.classList.add("focused");
+// });
 
-inputField.addEventListener("blur", function () {
-  inputField.classList.remove("focused");
-});
+// inputField.addEventListener("blur", function () {
+//   inputField.classList.remove("focused");
+// });

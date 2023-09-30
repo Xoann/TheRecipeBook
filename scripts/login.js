@@ -105,7 +105,6 @@ function signUpUser(email, password, username, name) {
     });
 }
 
-// BUG you have to sign in twice
 async function signInUser(email, password) {
   console.log("signin1");
   try {

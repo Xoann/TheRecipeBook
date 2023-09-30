@@ -55,21 +55,21 @@ const signUpAccountButton = document.getElementById("signUpAccount");
 const signInAccountButton = document.getElementById("signInAccount");
 
 signUpAccountButton.addEventListener("click", function () {
-  const email = document.getElementById("sign-up-email").value;
+  const signUpEmail = document.getElementById("sign-up-email").value;
   const passwordOne = document.getElementById("sign-up-password-one").value;
   const passwordTwo = document.getElementById("sign-up-password-Two").value;
   const username = document.getElementById("sign-up-username").value;
   const name = document.getElementById("sign-up-name").value;
 
-  signUpUser(email, password, username, name);
+  signUpUser(signUpEmail, password, username, name);
 });
 
-signInAccountButton.addEventListener("click", function () {
-  const email = document.getElementById("sign-in-email").value;
-  // console.log(email);
+signInAccountButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  const signInEmail = document.getElementById("sign-in-email").value;
   const password = document.getElementById("sign-in-password").value;
 
-  signInUser(email, password);
+  signInUser(signInEmail, password);
 });
 
 function signUpUser(email, password, username, name) {
@@ -106,17 +106,18 @@ function signUpUser(email, password, username, name) {
 }
 
 // BUG you have to sign in twice
-function signInUser(email, password) {
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // Signed in
-      var user = userCredential.user;
-      window.location.replace("../index.html");
-    })
-    .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-    });
+async function signInUser(email, password) {
+  console.log("signin1");
+  try {
+    let userCredential = await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password);
+    let user = userCredential.user;
+    console.log(user);
+    // Redirect or do other tasks after successful sign-in
+    window.location.href = "../index.html";
+  } catch (error) {
+    // Handle errors
+    console.error(error.code, error.message);
+  }
 }

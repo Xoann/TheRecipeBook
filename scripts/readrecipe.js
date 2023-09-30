@@ -9,6 +9,9 @@ firebase.auth().onAuthStateChanged((user) => {
 
     const usernameElement = document.getElementById("username");
     // usernameElement.innerHTML = firebase.auth().currentUser.;
+    usernameElement.addEventListener("click", function () {
+      firebase.auth().signOut();
+    });
 
     const dbr = firebase.database().ref(`${currentUid}/recipes/`);
 

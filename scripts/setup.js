@@ -16,7 +16,6 @@ firebase.auth().onAuthStateChanged((user) => {
     var uid = user.uid;
     console.log(firebase.auth().currentUser.uid);
     console.log("signed in");
-    // ...
   } else {
     console.log("signed out");
     // User is signed out

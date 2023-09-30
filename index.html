@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheets/home.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap" rel="stylesheet">
     <title>Recipes</title>
   </head>
   <body id="body">
@@ -27,27 +30,33 @@
     </header>
 
     <main>
-        <div class="search">
+    <div class="mainBg">
+      <div class="search">
         <div class="search-bar-div">
+          <h1 class="title">Recipe Book</h1>
           <input
-            class="search-input"
+          class="search-input"
             id="search-input"
             type="text"
-            placeholder="Search..."
+            placeholder="Search Your Recipes..."
           ></input>
         </div>
         </div>
         <section class="recipes">
-          <div class="recipe-container" id="recipe-container"></div>
+          <div class="recipe-container" id="recipe-container">
+            <h2 class="addRecipeMsg">when you add your recipes they'll be here fool</h2>
+
+          </div>
         </section>
-      </main>
+      
 
     <div class="modal" id="shopping-list-modal">
       <div class="modal-content" id="shopping-list-modal-content">
         
       </div>
     </div>
-
+    </div>
+    </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
     <script src="scripts/setup.js"></script>
     <script type="module" src="scripts/readrecipe.js"></script>

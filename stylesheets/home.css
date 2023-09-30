@@ -3,42 +3,88 @@
   padding: 0;
 }
 
+:root {
+  --navBgColor: #1e1f20;
+  --navTextColor: #d5d5d5;
+  --navButtonHoverColor: #2b2c2e;
+  --mainBgColor: #111212;
+  --recipeBgColor: #2b2c2e;
+  --titleColor: #d57009;
+  --searchOutline: #d57009;
+  --recipeCardColor: ;
+  --recipeCardTextColor: ;
+}
+
 /* Nav bar styles */
 
 .main-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: var(--navBgColor);
+  height: 6vh;
+}
+
+.title {
+  color: #d57009;
+  font-size: 80px;
+  font-family: Gabarito;
+}
+
+.main-nav a {
+  height: 100%;
 }
 
 .logo {
-  width: 100px;
+  height: 100%;
+}
+
+.mainBg {
+  background-color: var(--mainBgColor);
 }
 
 .nav-list {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
   list-style: none;
-  margin-right: 40px;
+  color: var(--navTextColor);
+  height: 100%;
+}
+
+.addRecipeMsg {
+  padding: 20px 10px;
+  display: block;
+}
+
+.nav-list-item a:visited {
+  color: var(--navTextColor);
+}
+
+.nav-list li:hover {
+  background-color: var(--navButtonHoverColor);
 }
 
 .nav-list-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0px 30px;
 }
 
 .main-nav-link {
   text-decoration: none;
+  font-family: Gabarito;
 }
 
-/* Serach section styles */
+/* Search section styles */
 
 .search {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 500px;
+  height: 45vh;
 }
 
 .search-bar-div {
@@ -48,14 +94,15 @@
 
 .search-input {
   width: 100%;
-  height: 40px;
+  height: 4vh;
   border-radius: 100px;
   font-size: 18px;
   padding-left: 25px;
   text-align: left;
   font-family: sans-serif;
   border: none;
-  background-color: #f0f0f0;
+  outline: 2px solid #d57009;
+  background: transparent;
 }
 
 /* Recipe div styles */
@@ -63,6 +110,9 @@
 .recipe-container {
   text-align: center;
   background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2));
+  background-color: var(--recipeBgColor);
+  min-height: 49vh;
+  border-radius: 40px 40px 0 0;
 }
 
 .recipe-div {

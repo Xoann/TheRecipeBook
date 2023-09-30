@@ -93,6 +93,7 @@ form h1 {
   margin: 8px 0;
   width: 100%;
   outline: 2px solid var(--light-colour);
+  transition: outline 0.2s ease;
 }
 
 .form-container .input-field input:focus {
@@ -117,8 +118,13 @@ form h1 {
   pointer-events: none;
   top: 22px;
   left: 20px;
-  transition: top 0.2s ease-out;
+  transition: top 0.2s ease-out, color 0.2s ease;
   color: var(--light-colour);
+}
+
+.input-field input:not(:placeholder-shown) ~ label {
+  top: -4px;
+  background-color: var(--grey-colour);
 }
 
 .inputColor {
@@ -127,6 +133,7 @@ form h1 {
 
 .input-field input:focus ~ label {
   top: -4px;
+  color: var(--primary-colour);
   background-color: var(--grey-colour);
 }
 

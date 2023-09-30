@@ -57,11 +57,19 @@ const signInAccountButton = document.getElementById("signInAccount");
 signUpAccountButton.addEventListener("click", function () {
   const signUpEmail = document.getElementById("sign-up-email").value;
   const passwordOne = document.getElementById("sign-up-password-one").value;
-  const passwordTwo = document.getElementById("sign-up-password-Two").value;
+  const passwordTwo = document.getElementById("sign-up-password-two").value;
   const username = document.getElementById("sign-up-username").value;
-  const name = document.getElementById("sign-up-name").value;
+  const firstName = document.getElementById("sign-up-first-name").value;
+  const lastName = document.getElementById("sign-up-last-name").value;
 
-  signUpUser(signUpEmail, password, username, name);
+  signUpUser(
+    signUpEmail,
+    passwordOne,
+    passwordTwo,
+    username,
+    firstName,
+    lastName
+  );
 });
 
 signInAccountButton.addEventListener("click", function (event) {
@@ -72,10 +80,20 @@ signInAccountButton.addEventListener("click", function (event) {
   signInUser(signInEmail, password);
 });
 
-function signUpUser(email, password, username, name) {
+function signUpUser(
+  email,
+  passwordOne,
+  passwordTwo,
+  username,
+  firstName,
+  lastName
+) {
+  if (passwordOne !== passwordTwo) {
+    return;
+  }
   firebase
     .auth()
-    .createUserWithEmailAndPassword(email, password)
+    .createUserWithEmailAndPassword(email, passwordOne)
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
@@ -88,7 +106,8 @@ function signUpUser(email, password, username, name) {
         .set({
           email: email,
           username: username,
-          name: name,
+          firstName: firstName,
+          lastName: lastName,
         })
         .then(() => {
           // User data saved successfully

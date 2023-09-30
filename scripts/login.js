@@ -88,17 +88,73 @@ function signUpUser(
   firstName,
   lastName
 ) {
-  if (passwordOne !== passwordTwo) {
-    return;
+  // Checking for empty inputs
+  if (!email) {
+    const errorElement = document.getElementById("errorMissingEmail");
+    const errorInput = document.getElementById("sign-up-email");
+    const errorLabel = document.getElementById("sign-up-email-label");
+    handleInputError(errorElement, errorInput, errorLabel);
   }
+  if (!firstName) {
+    const errorElement = document.getElementById("errorMissingFirst");
+    const errorInput = document.getElementById("sign-up-first-name");
+    const errorLabel = document.getElementById("sign-up-first-name-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  }
+  if (!lastName) {
+    const errorElement = document.getElementById("errorMissingLast");
+    const errorInput = document.getElementById("sign-up-last-name");
+    const errorLabel = document.getElementById("sign-up-last-name-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  }
+  if (!username) {
+    const errorElement = document.getElementById("errorMissingUser");
+    const errorInput = document.getElementById("sign-up-username");
+    const errorLabel = document.getElementById("sign-up-username-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  } else if (isUsernameTaken(username)) {
+    const errorElement = document.getElementById("errorUsernameTaken");
+    const errorInput = document.getElementById("sign-up-username");
+    const errorLabel = document.getElementById("sign-up-username-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  }
+  if (!passwordOne) {
+    const errorElement = document.getElementById("errorMissingPassword");
+    const errorInput = document.getElementById("sign-up-password-one");
+    const errorLabel = document.getElementById("sign-up-password-one-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  }
+
+  if (!passwordTwo) {
+    const errorElement = document.getElementById("errorMissingConfirm");
+    const errorInput = document.getElementById("sign-up-password-two");
+    const errorLabel = document.getElementById("sign-up-password-two-label");
+    handleInputError(errorElement, errorInput, errorLabel);
+  }
+
+  if (passwordOne !== passwordTwo) {
+  }
+
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, passwordOne)
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
-      // Update additional user information (username, name, etc.) in Firestore or Realtime Database
-      // For example, if you are using Firestore:
+      firebase
+        .firestore()
+        .collection("fastData")
+        .doc("usernames")
+        .get()
+        .then(function (doc) {
+          let currUsernames = doc.data().usernames || [];
+          currUsernames.push(username);
+
+          firebase.firestore().collection("fastData").doc("usernames").update({
+            usernames: currUsernames,
+          });
+        });
+
       firebase
         .firestore()
         .collection("users")
@@ -125,25 +181,57 @@ function signUpUser(
 }
 
 async function signInUser(email, password) {
-  console.log("signin1");
   try {
     let userCredential = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
     let user = userCredential.user;
     console.log(user);
-    // Redirect or do other tasks after successful sign-in
     window.location.href = "../index.html";
   } catch (error) {
-    // Handle errors
-    console.error(error.code, error.message);
+    // console.log(error.code);
+
+    if (error.code === "auth/invalid-email") {
+      const errorElement = document.getElementById("errorInvalidEmail");
+      const errorInput = document.getElementById("sign-in-email");
+      const errorLabel = document.getElementById("sign-in-email-label");
+      handleInputError(errorElement, errorInput, errorLabel);
+    } else if (error.code === "auth/wrong-password") {
+      const errorElement = document.getElementById("errorUserPasswordWrong");
+      const errorInput = document.getElementById("sign-in-password");
+      const errorLabel = document.getElementById("sign-in-password-label");
+      handleInputError(errorElement, errorInput, errorLabel);
+    } else if (error.code === "auth/user-not-found") {
+      const errorElement = document.getElementById("errorUserNotFound");
+      const errorInput = document.getElementById("sign-in-email");
+      const errorLabel = document.getElementById("sign-in-email-label");
+      handleInputError(errorElement, errorInput, errorLabel);
+    }
+    handleInputError();
   }
 }
 
-// const inputField = inputField.addEventListener("focus", function () {
-//   inputField.classList.add("focused");
-// });
+function handleInputError(errorElement, errorInput, errorLabel) {
+  errorInput.value = "";
+  errorElement.classList.remove("hide");
+  errorInput.classList.add("error-input");
+  errorLabel.classList.add("error-label");
 
-// inputField.addEventListener("blur", function () {
-//   inputField.classList.remove("focused");
-// });
+  errorInput.addEventListener("focus", function () {
+    errorElement.classList.add("hide");
+    errorInput.classList.remove("error-input");
+    errorLabel.classList.remove("error-label");
+  });
+}
+
+function isUsernameTaken(username) {
+  firebase
+    .firestore()
+    .collection("fastData")
+    .doc("usernames")
+    .get()
+    .then(function (doc) {
+      let currUsernames = doc.data().usernames;
+      return currUsernames.includes(username);
+    });
+}

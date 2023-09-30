@@ -14,15 +14,9 @@
     <link rel="stylesheet" href="../stylesheets/login.css" />
   </head>
   <body>
-    <header>
-      <nav class="signin-nav">
-        <a href="../index.html">
-          <img class="logo" src="../img/logo.png" />
-        </a>
-      </nav>
-    </header>
-
-    <div id="firebaseui-auth-container"></div>
+    <a class="logo-link" href="../index.html">
+      <img class="logo" src="../img/logo.png" />
+    </a>
 
     <div class="container" id="container">
       <div class="form-container sign-up-container">
@@ -36,7 +30,17 @@
               id="sign-up-username"
               type="text"
             />
-            <label>Username</label>
+            <label id="sign-up-username-label">Username</label>
+            <span
+              class="error-message hide errorMissingField"
+              id="errorMissingUser"
+              >Missing username</span
+            >
+            <span
+              class="error-message hide errorMissingField"
+              id="errorUsernameTaken"
+              >Missing username</span
+            >
           </div>
           <div class="double-input">
             <div class="input-field">
@@ -47,7 +51,12 @@
                 class="name"
                 type="text"
               />
-              <label for="">First</label>
+              <label id="sign-up-first-name-label" for="">First</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingFirst"
+                >Missing first</span
+              >
             </div>
             <div class="input-field">
               <input
@@ -57,7 +66,12 @@
                 class="name"
                 type="text"
               />
-              <label for="">Last</label>
+              <label id="sign-up-last-name-label" for="">Last</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingLast"
+                >Missing last</span
+              >
             </div>
           </div>
           <div class="input-field">
@@ -67,7 +81,12 @@
               id="sign-up-email"
               type="email"
             />
-            <label for="">Email</label>
+            <label id="sign-up-email-label" for="">Email</label>
+            <span
+              class="error-message hide errorMissingField"
+              id="errorMissingEmail"
+              >Missing email</span
+            >
           </div>
           <div class="double-input">
             <div class="input-field">
@@ -77,7 +96,12 @@
                 id="sign-up-password-one"
                 type="password"
               />
-              <label for="">Password</label>
+              <label id="sign-up-password-one-label" for="">Password</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingPassword"
+                >Missing password</span
+              >
             </div>
             <div class="input-field">
               <input
@@ -86,7 +110,12 @@
                 id="sign-up-password-two"
                 type="password"
               />
-              <label for="">Confirm</label>
+              <label id="sign-up-password-two-label" for="">Confirm</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingConfirm"
+                >Missing confirm</span
+              >
             </div>
           </div>
           <button id="signUpAccount" style="margin-top: 9px">Sign Up</button>
@@ -102,7 +131,17 @@
               id="sign-in-email"
               type="email"
             />
-            <label for="">Email</label>
+            <label id="sign-in-email-label" for="">Email</label>
+            <span
+              class="error-message hide errorInvalidEmail"
+              id="errorInvalidEmail"
+              >Invalid Email</span
+            >
+            <span
+              class="error-message hide errorUserNotFound"
+              id="errorUserNotFound"
+              >User not found</span
+            >
           </div>
           <div class="input-field">
             <input
@@ -111,7 +150,14 @@
               id="sign-in-password"
               type="password"
             />
-            <label for="">Password</label>
+            <label id="sign-in-password-label" class="placeholder" for=""
+              >Password</label
+            >
+            <span
+              class="error-message hide errorUserPasswordWrong"
+              id="errorUserPasswordWrong"
+              >Incorrect email or password</span
+            >
           </div>
           <a href="#">Forgot your password?</a>
           <button id="signInAccount">Sign In</button>

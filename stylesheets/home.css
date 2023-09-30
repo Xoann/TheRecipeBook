@@ -65,6 +65,12 @@
   background-color: var(--navButtonHoverColor);
 }
 
+.nav-list-item a {
+  height: 100%;
+  align-items: center;
+  display: flex;
+}
+
 .nav-list-item {
   display: flex;
   align-items: center;

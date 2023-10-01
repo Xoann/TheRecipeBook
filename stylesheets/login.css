@@ -6,6 +6,7 @@
   --grey-colour: #302f34;
   --error-red: #ee4144;
   --suggestion-colour: #f6e9e9;
+  --svg-colour: #d56f0966;
 }
 
 * {
@@ -61,7 +62,32 @@ a {
   width: 7%;
 }
 
+svg {
+  pointer-events: none;
+}
+
+#fork {
+  z-index: 0;
+  top: -200px;
+  right: 60px;
+  position: absolute;
+  stroke: var(--svg-colour);
+  stroke-width: 4px;
+  animation: bobbing 3s infinite;
+}
+
+#book {
+  z-index: 0;
+  bottom: 80px;
+  left: 50px;
+  position: absolute;
+  stroke: var(--svg-colour);
+  stroke-width: 4px;
+  animation: shaking 3s infinite;
+}
+
 .container {
+  /* z-index: 3; */
   background: var(--grey-colour);
   border-radius: 30px;
   /* box-shadow: 0px 0px 20px var(--light-low-opacity-colour), */
@@ -119,6 +145,7 @@ form h1 {
 }
 
 .input-field label {
+  border-radius: 5px;
   display: inline-block;
   position: absolute;
   text-align: left;
@@ -344,4 +371,24 @@ button:focus {
 
 .error-label {
   color: var(--error-red) !important;
+}
+
+@keyframes bobbing {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes shaking {
+  0%,
+  100% {
+    transform: rotate(-30deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
 }

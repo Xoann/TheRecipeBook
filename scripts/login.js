@@ -163,6 +163,11 @@ async function signUpUser(
     isError = true;
     const errorElement = document.getElementById("errorPasswordDontMatch");
     errorElement.classList.add("error-message");
+    document
+      .getElementById("signIn")
+      .addEventListener("click", () =>
+        errorElement.classList.remove("error-message")
+      );
 
     const errorInput = document.getElementById("sign-up-password-two");
     const errorLabel = document.getElementById("sign-up-password-two-label");
@@ -227,6 +232,7 @@ async function signUpUser(
           .then(() => {
             // User data saved successfully
             console.log("User signed up successfully!");
+            window.location.href = "../index.html";
           })
           .catch((error) => {
             // Handle errors while saving additional user information

@@ -4,6 +4,9 @@
   --light-low-opacity-colour: #f6e9e922;
   --dark-grey-colour: #121212;
   --grey-colour: #302f34;
+  --error-red: #ee4144;
+  --suggestion-colour: #f6e9e9;
+  --svg-colour: #d56f0966;
 }
 
 * {
@@ -13,14 +16,13 @@
 }
 
 body {
+  position: relative;
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 100vh; */
-  margin: -20px 0 50px;
-  margin-top: 20px;
+  height: 100vh;
   background-color: var(--dark-grey-colour);
 }
 
@@ -49,11 +51,43 @@ a {
   margin: 15px 0;
 }
 
+.logo-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .logo {
-  width: 200px;
+  width: 7%;
+}
+
+svg {
+  pointer-events: none;
+}
+
+#fork {
+  z-index: 0;
+  top: -200px;
+  right: 60px;
+  position: absolute;
+  stroke: var(--svg-colour);
+  stroke-width: 4px;
+  animation: bobbing 3s infinite;
+}
+
+#book {
+  z-index: 0;
+  bottom: 80px;
+  left: 50px;
+  position: absolute;
+  stroke: var(--svg-colour);
+  stroke-width: 4px;
+  animation: shaking 3s infinite;
 }
 
 .container {
+  /* z-index: 3; */
   background: var(--grey-colour);
   border-radius: 30px;
   /* box-shadow: 0px 0px 20px var(--light-low-opacity-colour), */
@@ -62,10 +96,11 @@ a {
   overflow: hidden;
   opacity: 85%;
   width: 70%;
-  height: 480px;
+  height: 75%;
   max-width: 100%;
   max-height: 100%;
   transition: 333ms;
+  min-width: 880px;
 }
 
 .form-container form {
@@ -93,6 +128,7 @@ form h1 {
   margin: 8px 0;
   width: 100%;
   outline: 2px solid var(--light-colour);
+  transition: outline 0.2s ease;
 }
 
 .form-container .input-field input:focus {
@@ -109,25 +145,74 @@ form h1 {
 }
 
 .input-field label {
+  border-radius: 5px;
   display: inline-block;
   position: absolute;
   text-align: left;
-  padding: 0 3px;
+  padding: 0 5px;
   z-index: 3;
   pointer-events: none;
   top: 22px;
   left: 20px;
-  transition: top 0.2s ease-out;
+  font-size: 16px;
+  transition: top 0.2s ease-out, color 0.2s ease, font-size 0.2s ease;
   color: var(--light-colour);
+}
+
+.input-field input:not(:placeholder-shown) ~ label {
+  top: -3px;
+  font-size: 12px;
+  background-color: var(--grey-colour);
 }
 
 .inputColor {
   color: var(--light-colour);
 }
 
+.hide {
+  display: none;
+  transition: display 0.2s ease;
+}
+
+.suggestion {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  pointer-events: none;
+  padding: 0 5px;
+  background-color: var(--grey-colour);
+  color: var(--suggestion-colour);
+}
+
+.suggestion-confirm {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  pointer-events: none;
+  padding: 0 5px;
+  background-color: var(--grey-colour);
+  color: var(--suggestion-colour);
+}
+
+.error-message {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  pointer-events: none;
+  padding: 0 5px;
+  background-color: var(--grey-colour);
+  color: var(--error-red);
+}
+
 .input-field input:focus ~ label {
   top: -4px;
+  font-size: 12px;
+  color: var(--primary-colour);
   background-color: var(--grey-colour);
+}
+
+.double-input {
+  width: 100%;
 }
 
 .double-input input {
@@ -278,4 +363,32 @@ button:focus {
 /* Same effect for right */
 .container.right-panel-active .overlay-right {
   transform: translateX(20%);
+}
+
+.error-input {
+  outline: 2px solid var(--error-red) !important;
+}
+
+.error-label {
+  color: var(--error-red) !important;
+}
+
+@keyframes bobbing {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes shaking {
+  0%,
+  100% {
+    transform: rotate(-30deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
 }

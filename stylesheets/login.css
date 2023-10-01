@@ -4,7 +4,8 @@
   --light-low-opacity-colour: #f6e9e922;
   --dark-grey-colour: #121212;
   --grey-colour: #302f34;
-  --error-red: red;
+  --error-red: #ee4144;
+  --suggestion-colour: #f6e9e9;
 }
 
 * {
@@ -73,6 +74,7 @@ a {
   max-width: 100%;
   max-height: 100%;
   transition: 333ms;
+  min-width: 880px;
 }
 
 .form-container form {
@@ -120,7 +122,7 @@ form h1 {
   display: inline-block;
   position: absolute;
   text-align: left;
-  padding: 0 3px;
+  padding: 0 5px;
   z-index: 3;
   pointer-events: none;
   top: 22px;
@@ -143,6 +145,26 @@ form h1 {
 .hide {
   display: none;
   transition: display 0.2s ease;
+}
+
+.suggestion {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  pointer-events: none;
+  padding: 0 5px;
+  background-color: var(--grey-colour);
+  color: var(--suggestion-colour);
+}
+
+.suggestion-confirm {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  pointer-events: none;
+  padding: 0 5px;
+  background-color: var(--grey-colour);
+  color: var(--suggestion-colour);
 }
 
 .error-message {

@@ -6,11 +6,6 @@
     <title>Recipe Book</title>
 
     <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
-    />
     <link rel="stylesheet" href="../stylesheets/login.css" />
   </head>
   <body>
@@ -39,7 +34,7 @@
             <span
               class="error-message hide errorMissingField"
               id="errorUsernameTaken"
-              >Missing username</span
+              >Username taken</span
             >
           </div>
           <div class="double-input">
@@ -55,7 +50,7 @@
               <span
                 class="error-message hide errorMissingField"
                 id="errorMissingFirst"
-                >Missing first</span
+                >Missing first name</span
               >
             </div>
             <div class="input-field">
@@ -70,7 +65,7 @@
               <span
                 class="error-message hide errorMissingField"
                 id="errorMissingLast"
-                >Missing last</span
+                >Missing last name</span
               >
             </div>
           </div>
@@ -87,6 +82,11 @@
               id="errorMissingEmail"
               >Missing email</span
             >
+            <span
+              class="error-message hide errorMissingField"
+              id="errorInvalidEmail"
+              >Invalid email</span
+            >
           </div>
           <div class="double-input">
             <div class="input-field">
@@ -102,6 +102,18 @@
                 id="errorMissingPassword"
                 >Missing password</span
               >
+              <span class="suggestion hide" id="errorPasswordTooShort"
+                >At least 8 characters</span
+              >
+              <span class="suggestion hide" id="errorPasswordNoUppercase"
+                >Add a capital</span
+              >
+              <span class="suggestion hide" id="errorNoNumber"
+                >Add a number</span
+              >
+              <span class="suggestion hide" id="errorNoSpecialCharacter"
+                >Add a special character</span
+              >
             </div>
             <div class="input-field">
               <input
@@ -115,6 +127,9 @@
                 class="error-message hide errorMissingField"
                 id="errorMissingConfirm"
                 >Missing confirm</span
+              >
+              <span class="suggestion-confirm hide" id="errorPasswordDontMatch"
+                >Passwords don't match</span
               >
             </div>
           </div>

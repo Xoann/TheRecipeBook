@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
     input.rows = "10";
     input.placeholder = "Enter a step";
 
-    const removeButton = document.createElement("span");
+    const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
-    removeButton.innerText = "Remove";
+    removeButton.innerText = "-";
     removeButton.addEventListener("click", function () {
       listContainer.removeChild(listItem);
     });

@@ -7,17 +7,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   addItemButton.addEventListener("click", function () {
     const listItem = document.createElement("div");
-    listItem.classList.add("list-item");
+    listItem.classList.add("step-item");
 
     const input = document.createElement("textarea");
     input.id = `recipe-step_${itemCount}`;
-    input.cols = "30";
-    input.rows = "10";
+    input.classList.add("step-input");
+    input.classList.add("ingredient-input");
     input.placeholder = "Enter a step";
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
     removeButton.innerText = "-";
+    removeButton.classList.add("plus-button");
     removeButton.addEventListener("click", function () {
       listContainer.removeChild(listItem);
     });

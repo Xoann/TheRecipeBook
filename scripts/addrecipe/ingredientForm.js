@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "C",
     "pt.",
     "qt.",
-    "gal.",
+    // "gal.",
   ];
 
   addItemButton.addEventListener("click", function () {
@@ -43,12 +43,48 @@ document.addEventListener("DOMContentLoaded", function () {
     input_value.placeholder = "Amount";
     input_value.classList.add("ingredient-input");
 
-    const input_unit = document.createElement("input");
-    input_unit.setAttribute("list", "units");
-    input_unit.id = `ingredient_unit_${itemCount}`;
-    input_unit.classList.add("ingredient-unit");
-    input_unit.classList.add("ingredient-input");
-    input_unit.placeholder = "Unit";
+    // const input_unit = document.createElement("input");
+    // input_unit.setAttribute("list", "units");
+    // input_unit.id = `ingredient_unit_${itemCount}`;
+    // input_unit.classList.add("ingredient-unit");
+    // input_unit.classList.add("ingredient-input");
+    // input_unit.placeholder = "Unit";
+    const unitDiv = document.createElement("fieldset");
+    // unitDiv.classList.add("unit-dropdown");
+
+    const unitInput = document.createElement("input");
+    unitInput.classList.add("ingredient-input");
+    unitInput.classList.add("unit-input");
+    unitInput.autocomplete = "off";
+    unitInput.role = "combobox";
+    unitInput.list = "";
+    unitInput.id = `ingredient_unit_${itemCount}`;
+    unitInput.name = "unitslist";
+    unitInput.placeholder = "Unit";
+
+    const unitDatalist = document.createElement("datalist");
+    unitDatalist.id = "units";
+    unitDiv.appendChild(unitInput);
+    unitDiv.appendChild(unitDatalist);
+
+    for (const unit of units) {
+      const option = document.createElement("option");
+      option.innerHTML = unit;
+      option.value = unit;
+      unitDatalist.appendChild(option);
+    }
+
+    unitInput.onfocus = function () {
+      unitDatalist.style.display = "block";
+      unitInput.style.borderRadius = "5px 5px 0 0";
+    };
+    for (let option of unitDatalist.options) {
+      option.onclick = function () {
+        unitInput.value = option.value;
+        unitDatalist.style.display = "none";
+        unitInput.style.borderRadius = "5px";
+      };
+    }
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
@@ -60,14 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     listItem.appendChild(input_name);
     listItem.appendChild(input_value);
-    listItem.appendChild(input_unit);
+    listItem.appendChild(unitDiv);
+    // listItem.appendChild(input_unit);
 
-    for (let i = 0; i < units.length; i++) {
-      const drop_down_option = document.createElement("option");
-      drop_down_option.value = units[i];
-      drop_down_option.text = units[i];
-      input_unit.appendChild(drop_down_option);
-    }
+    // for (let i = 0; i < units.length; i++) {
+    //   const drop_down_option = document.createElement("option");
+    //   drop_down_option.value = units[i];
+    //   drop_down_option.text = units[i];
+    //   input_unit.appendChild(drop_down_option);
+    // }
 
     listItem.appendChild(removeButton);
     listContainer.appendChild(listItem);

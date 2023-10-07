@@ -486,7 +486,8 @@ input::-webkit-inner-spin-button {
   width: 85%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: space-between;
+  gap: 10px;
 }
 
 .ingredient-input {
@@ -499,9 +500,9 @@ input::-webkit-inner-spin-button {
   padding: 0 3%;
   font-size: inherit;
 }
-.ingredient-input + .ingredient-input {
+/* .ingredient-input + .ingredient-input {
   margin-left: 2%;
-}
+} */
 
 .ingredient-name {
   width: 45%;
@@ -571,10 +572,14 @@ input::-webkit-inner-spin-button {
   height: 90vh;
 }
 
+fieldset {
+  border: none;
+}
+
 datalist {
   position: absolute;
-  background-color: white;
-  border: 1px solid blue;
+  background-color: var(--mainBgColor);
+  /* border: 1px solid blue; */
   border-radius: 0 0 5px 5px;
   border-top: none;
   font-family: sans-serif;
@@ -585,9 +590,9 @@ datalist {
 }
 
 option {
-  background-color: white;
+  background-color: var(--navBgColor);
   padding: 4px;
-  color: blue;
+  color: var(--navTextColor);
   margin-bottom: 1px;
   font-size: 18px;
   cursor: pointer;
@@ -595,5 +600,5 @@ option {
 
 option:hover,
 .active {
-  background-color: lightblue;
+  background-color: var(--inputHover);
 }

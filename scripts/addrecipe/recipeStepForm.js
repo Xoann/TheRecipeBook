@@ -9,11 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const listItem = document.createElement("div");
     listItem.classList.add("step-item");
 
-    const input = document.createElement("textarea");
-    input.id = `recipe-step_${itemCount}`;
-    input.classList.add("step-input");
-    input.classList.add("ingredient-input");
-    input.placeholder = "Enter a step";
+    const paragraph = document.createElement("p");
+    paragraph.classList.add("resizable-p");
+    const stepInput = document.createElement("span");
+    stepInput.classList.add("textarea");
+    stepInput.setAttribute("role", "textbox");
+    stepInput.contentEditable = true;
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
       listContainer.removeChild(listItem);
     });
 
-    listItem.appendChild(input);
+    listItem.appendChild(stepInput);
     listItem.appendChild(removeButton);
     listContainer.appendChild(listItem);
 

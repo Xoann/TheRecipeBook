@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     input_name.className = `ingredient_${itemCount}`;
     input_name.classList.add("ingredient-name");
     input_name.classList.add("ingredient-input");
-    input_name.placeholder = "Enter an ingredient";
+    input_name.placeholder = "Add an ingredient";
 
     const input_value = document.createElement("input");
     input_value.type = "number";
@@ -75,14 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-
-    // Retrieve the values of the list items and do something with them
-    /*
-      const formData = new FormData(form);
-      for (const [key, value] of formData.entries()) {
-          console.log(`Item ${key}: ${value}`);
-      }
-      */
   });
 });
 

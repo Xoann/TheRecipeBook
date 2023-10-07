@@ -25,6 +25,7 @@
   background-color: var(--navBgColor);
   height: 6vh;
   width: 100vw;
+  z-index: 2;
 }
 
 .title {
@@ -297,7 +298,7 @@
 }
 
 .textarea[contenteditable]:empty::before {
-  content: "Enter description";
+  content: "Add a description";
   color: gray;
 }
 
@@ -316,9 +317,9 @@
   gap: 10px;
 }
 
-.small-row-container {
+.number-column-container .small-row-container {
   height: 100%;
-  width: 80%;
+  width: 100%;
   max-width: 280px;
   display: flex;
   justify-content: space-between;
@@ -491,13 +492,6 @@ input::-webkit-inner-spin-button {
   font-size: 24px;
 }
 
-.step-input {
-  resize: none;
-  width: 75%;
-  height: 50px;
-  padding: 3% 5%;
-}
-
 .step-item {
   width: 80%;
   display: flex;
@@ -512,4 +506,25 @@ input::-webkit-inner-spin-button {
 
 .form-heading {
   margin-bottom: 3%;
+}
+
+.step-item .textarea {
+  font-size: 17px;
+  width: 70%;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--recipeBgColor);
+  border-radius: 10px;
+  width: 5px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--mainBgColor);
+  z-index: 1;
+  height: 90vh;
 }

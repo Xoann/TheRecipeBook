@@ -15,6 +15,8 @@
   --searchHoverColor: #292a2a;
   --inputOutline: #070707;
   --submitHover: #414141;
+  --plusButtonHover: #aaaaaa;
+  --scrollbarHover: #222325;
 }
 
 .main-nav {
@@ -238,7 +240,7 @@
 
 .name-description-container {
   height: 100%;
-  width: 68%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -319,8 +321,8 @@
 
 .number-column-container .small-row-container {
   height: 100%;
-  width: 100%;
-  max-width: 280px;
+  width: 90%;
+  max-width: 300px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -333,7 +335,7 @@
 
 .servings-name {
   font-size: 20px;
-  padding-right: 5%;
+  padding-right: 8%;
 }
 
 .small-details-input {
@@ -363,6 +365,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.hour-label {
+  position: absolute;
+  margin-left: 50px;
+  font-size: inherit;
+  font-family: inherit;
+  color: gray;
+}
+
+.min-label {
+  position: absolute;
+  margin-left: 130px;
+  font-size: inherit;
+  font-family: inherit;
+  color: gray;
 }
 
 .inputbox-number .small-details-input {
@@ -490,6 +508,11 @@ input::-webkit-inner-spin-button {
   height: 27px;
   width: 27px;
   font-size: 24px;
+  transition: background-color 0.1s ease;
+}
+
+.plus-button:hover {
+  background-color: var(--plusButtonHover);
 }
 
 .step-item {
@@ -519,8 +542,12 @@ input::-webkit-inner-spin-button {
   width: 5px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbarHover);
+}
+
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {

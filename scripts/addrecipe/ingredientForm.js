@@ -120,3 +120,11 @@ window.addEventListener("click", function (event) {
     }, 20);
   }
 });
+
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
+}

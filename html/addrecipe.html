@@ -86,17 +86,21 @@
                   <div class="small-row-container">
                     <label class="small-name">Prep Time:</label>
                     <div class="inputbox-2number">
+                      <label class="hour-label">Hrs</label>
                       <input
                         type="number"
                         id="prepTime"
-                        placeholder="Hours"
+                        placeholder="0"
                         class="small-details-input"
+                        oninput="limitInputLength(this, 4)"
                       />
+                      <label class="min-label">Mins</label>
                       <input
                         type="number"
                         id="prepTime"
-                        placeholder="Minutes"
+                        placeholder="0"
                         class="small-details-input"
+                        oninput="limitInputLength(this, 2)"
                       />
                     </div>
                   </div>
@@ -104,17 +108,21 @@
                     <label class="small-name">Cook Time:</label>
 
                     <div class="inputbox-2number">
+                      <label class="hour-label">Hrs</label>
                       <input
                         type="number"
                         id="cookTimeHours"
-                        placeholder="Hours"
+                        placeholder="0"
                         class="small-details-input"
+                        oninput="limitInputLength(this, 4)"
                       />
+                      <label class="min-label">Mins</label>
                       <input
                         type="number"
                         id="cookTimeMins"
-                        placeholder="Minutes"
+                        placeholder="0"
                         class="small-details-input"
+                        oninput="limitInputLength(this, 2)"
                       />
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("add-recipe-form");
+  const form = document.getElementById("addRecipeForm");
   const listContainer = document.getElementById("list-container-ingredients");
   const addItemButton = document.getElementById("add-ingredient");
 
@@ -43,10 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
     input_value.placeholder = "Amount";
     input_value.classList.add("ingredient-input");
 
-    const input_unit = document.createElement("select");
+    const input_unit = document.createElement("input");
+    input_unit.setAttribute("list", "units");
     input_unit.id = `ingredient_unit_${itemCount}`;
     input_unit.classList.add("ingredient-unit");
     input_unit.classList.add("ingredient-input");
+    input_unit.placeholder = "Unit";
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
@@ -85,8 +87,6 @@ const userMenuItems = document.getElementsByClassName("user-menu-list-item");
 let userMenuOpen = false;
 
 window.addEventListener("click", function (event) {
-  console.log("window click");
-  console.log(userMenu.style.display);
   if (
     (event.target === usernameButtonOut || event.target === usernameButtonIn) &&
     !userMenuOpen

@@ -5,7 +5,7 @@
 
 :root {
   --navBgColor: #1e1f20;
-  --navTextColor: #d5d5d5;
+  --navTextColor: #e2e2e2;
   --navButtonHoverColor: #2b2c2e;
   --mainBgColor: #111212;
   --recipeBgColor: #2b2c2e;
@@ -14,9 +14,11 @@
   --userMenuColor: #2b2c2e;
   --searchHoverColor: #292a2a;
   --inputOutline: #070707;
+  --inputHover: #404143;
   --submitHover: #414141;
   --plusButtonHover: #aaaaaa;
   --scrollbarHover: #222325;
+  --titleText: #e2e2e2;
 }
 
 .main-nav {
@@ -260,7 +262,7 @@
   max-height: 30px;
   width: 90%;
   border-width: 1px;
-  border-color: var(--navTextColor);
+  border-color: var(--plusButtonHover);
   padding: 2% 5%;
   font-family: inherit;
   font-size: inherit;
@@ -304,7 +306,7 @@
   color: gray;
 }
 
-.name {
+.step-item .name {
   font-size: 22px;
   margin-bottom: -6%;
   margin-top: -2%;
@@ -348,7 +350,7 @@
   margin-right: 3%;
   border-style: solid;
   border-width: 1px;
-  border-color: var(--navTextColor);
+  border-color: var(--plusButtonHover);
   color: var(--navTextColor);
   padding: 0 5%;
 }
@@ -367,12 +369,26 @@
   align-items: center;
 }
 
+.input-transition {
+  transition: border-color 0.2s ease;
+}
+
+.input-transition:hover {
+  border-color: white;
+}
+
+.input-transition:focus {
+  border-color: var(--searchOutline);
+  outline: none;
+}
+
 .hour-label {
   position: absolute;
   margin-left: 50px;
   font-size: inherit;
   font-family: inherit;
   color: gray;
+  user-select: none;
 }
 
 .min-label {
@@ -381,6 +397,7 @@
   font-size: inherit;
   font-family: inherit;
   color: gray;
+  user-select: none;
 }
 
 .inputbox-number .small-details-input {
@@ -420,12 +437,6 @@ input::-webkit-inner-spin-button {
   font-size: 14px;
 }
 
-/* copy pasta */
-
-.submit-button {
-  margin-bottom: 5%;
-}
-
 .image-input {
   display: none;
 }
@@ -435,6 +446,7 @@ input::-webkit-inner-spin-button {
 }
 
 .submit-button {
+  margin-bottom: 5%;
   border-radius: 10px;
   font-size: 18px;
   font-family: Gabarito;
@@ -444,6 +456,7 @@ input::-webkit-inner-spin-button {
   background-color: var(--recipeBgColor);
   color: var(--navTextColor);
   transition: background-color 0.1s ease;
+  cursor: pointer;
 }
 
 .submit-button:hover {
@@ -477,7 +490,7 @@ input::-webkit-inner-spin-button {
 }
 
 .ingredient-input {
-  border: 1px solid var(--navTextColor);
+  border: 1px solid var(--plusButtonHover);
   background-color: inherit;
   border-radius: 7px;
   height: 4vh;
@@ -491,15 +504,16 @@ input::-webkit-inner-spin-button {
 }
 
 .ingredient-name {
-  width: 40%;
+  width: 45%;
 }
 
 .ingredient-amount {
-  width: 12%;
+  width: 18%;
 }
 
 .ingredient-unit {
   margin-right: 2%;
+  width: 10%;
 }
 
 .plus-button {
@@ -509,6 +523,7 @@ input::-webkit-inner-spin-button {
   width: 27px;
   font-size: 24px;
   transition: background-color 0.1s ease;
+  cursor: pointer;
 }
 
 .plus-button:hover {
@@ -554,4 +569,31 @@ input::-webkit-inner-spin-button {
   background-color: var(--mainBgColor);
   z-index: 1;
   height: 90vh;
+}
+
+datalist {
+  position: absolute;
+  background-color: white;
+  border: 1px solid blue;
+  border-radius: 0 0 5px 5px;
+  border-top: none;
+  font-family: sans-serif;
+  width: 350px;
+  padding: 5px;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+
+option {
+  background-color: white;
+  padding: 4px;
+  color: blue;
+  margin-bottom: 1px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+option:hover,
+.active {
+  background-color: lightblue;
 }

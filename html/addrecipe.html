@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recipe Book</title>
-    <link rel="stylesheet" href="stylesheets/home.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -56,7 +55,12 @@
           <div class="column-container">
             <!-- Details Side -->
             <div id="left-recipe-form" class="add-recipe-form">
-              <form action="" id="addRecipeForm" class="details-form">
+              <form
+                autocomplete="off"
+                action=""
+                id="addRecipeForm"
+                class="details-form"
+              >
                 <label class="details">Details</label>
                 <div class="name-description-container">
                   <div class="justify-left">
@@ -66,7 +70,7 @@
                   <input
                     type="text"
                     id="recipeName"
-                    class="details-text"
+                    class="details-text input-transition"
                     placeholder="Add a recipe name"
                   />
 
@@ -148,6 +152,17 @@
                   >
                 </div>
                 <div id="list-container-ingredients">
+                  <datalist id="units">
+                    <option value="dr."></option>
+                    <option value="tsp."></option>
+                    <option value="dsp."></option>
+                    <option value="tbsp."></option>
+                    <option value="oz."></option>
+                    <option value="pt."></option>
+                    <option value="qt."></option>
+                    <option value="gal."></option>
+                  </datalist>
+
                   <h2 class="ingredient-title">Ingredients</h2>
                   <!-- Ingredients go here -->
                 </div>

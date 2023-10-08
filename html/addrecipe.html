@@ -47,7 +47,7 @@
       </div>
 
       <!-- Create Recipe -->
-      <div class="center-overlay">
+      <div id="main-add-recipe" class="center-overlay">
         <div class="overlay">
           <div class="title">
             <h1>Create a Recipe</h1>
@@ -82,6 +82,7 @@
                     <span
                       class="textarea input-transition"
                       role="textbox"
+                      id="description"
                       contenteditable
                     ></span>
                   </p>
@@ -115,7 +116,7 @@
                       <label class="hour-label">Hrs</label>
                       <input
                         type="number"
-                        id="cookTimeHours"
+                        id="cookTimeHrs"
                         placeholder="0"
                         class="small-details-input input-transition"
                         oninput="limitInputLength(this, 4)"

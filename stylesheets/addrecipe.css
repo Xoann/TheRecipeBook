@@ -19,6 +19,7 @@
   --plusButtonHover: #aaaaaa;
   --scrollbarHover: #222325;
   --titleText: #e2e2e2;
+  --errorBorder: red;
 }
 
 .main-nav {
@@ -182,7 +183,7 @@
   border-radius: 30px;
   margin-top: 4%;
   min-height: 92%;
-  min-width: 810px;
+  min-width: 900px;
   width: 70%;
   background-color: var(--recipeBgColor);
 }
@@ -523,6 +524,7 @@ input::-webkit-inner-spin-button {
 
 .ingredient-name {
   width: 40%;
+  min-width: 130px;
 }
 
 .ingredient-amount {
@@ -535,6 +537,7 @@ input::-webkit-inner-spin-button {
   width: 100%;
   padding: 0 16%;
   font-size: inherit;
+  min-width: 60px;
 }
 
 .ingredient-animation {
@@ -633,6 +636,7 @@ datalist {
   padding: 5px;
   max-height: 10rem;
   overflow-y: auto;
+  margin-top: 34px;
 }
 
 option {
@@ -652,4 +656,13 @@ datalist::-webkit-scrollbar {
 option:hover,
 .active {
   background-color: var(--inputHover);
+}
+
+.input-error {
+  border-color: var(--errorBorder) !important;
+}
+
+.input-error.plus-button {
+  border-width: 2px;
+  border-style: solid;
 }

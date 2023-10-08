@@ -4,59 +4,184 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recipe Book</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../stylesheets/addrecipe.css" />
   </head>
   <body>
-    <h1 class="title">Add Recipe</h1>
-    <div id="add-recipe-form" class="add-recipe-form">
-      <form action="" id="addRecipeForm">
-        <div class="home button">
-          <a href="../index.html">
-            <button type="button" id="homeButton">Home</button>
-          </a>
-        </div>
+    <header>
+      <nav class="main-nav">
+        <a href="../index.html">
+          <img class="logo" id="h" src="../img/logo.png" />
+        </a>
+        <!-- Nav bar -->
+        <ul class="nav-list">
+          <span class="nav-list-link" id="shopping-list"
+            ><li class="nav-list-item">Shopping List</li></span
+          >
+          <a class="nav-list-link" href="#"
+            ><li class="nav-list-item">Add Recipe</li></a
+          >
+          <a id="username" class="nav-list-link"
+            ><li class="nav-list-item" id="username-button">Username</li></a
+          >
+        </ul>
+      </nav>
+    </header>
+    <!-- Profile Dropdown -->
+    <div class="mainBg">
+      <div class="user-menu">
+        <ul class="user-menu-list">
+          <li class="user-menu-list-item"><a href="#">Profile</a></li>
+          <li class="user-menu-list-item" id="sign-out">
+            <a href="../index.html">Sign out</a>
+          </li>
+          <li class="user-menu-list-item">
+            <a href="html/login.html">Switch Account</a>
+          </li>
+        </ul>
+      </div>
 
-        <div class="inputbox">
-          <input type="text" id="recipeName" placeholder="Recipe name" />
-        </div>
+      <!-- Create Recipe -->
+      <div id="main-add-recipe" class="center-overlay">
+        <div class="overlay">
+          <div class="title">
+            <h1>Create a Recipe</h1>
+          </div>
+          <div class="column-container">
+            <!-- Details Side -->
+            <div id="left-recipe-form" class="add-recipe-form">
+              <form
+                autocomplete="off"
+                action=""
+                id="addRecipeForm"
+                class="details-form"
+              >
+                <label class="details">Details</label>
+                <div class="name-description-container">
+                  <div class="justify-left">
+                    <label class="name">Recipe Name</label>
+                  </div>
 
-        <div class="inputbox">
-          <input type="file" id="recipeImg" accept="image/*" />
-        </div>
+                  <input
+                    type="text"
+                    id="recipeName"
+                    class="details-text input-transition"
+                    placeholder="Add a recipe name"
+                  />
 
-        <div class="inputbox big">
-          <input type="text" id="recipeDesc" placeholder="Recipe description" />
-        </div>
+                  <div class="justify-left">
+                    <label class="name">Description</label>
+                  </div>
 
-        <div class="inputbox number">
-          <input type="number" id="cookTime" placeholder="cook time" />
-        </div>
+                  <p class="resizable-p">
+                    <span
+                      class="textarea input-transition"
+                      role="textbox"
+                      id="description"
+                      contenteditable
+                    ></span>
+                  </p>
+                </div>
+                <div class="number-column-container">
+                  <div class="small-row-container">
+                    <label class="small-name">Prep Time:</label>
+                    <div class="inputbox-2number">
+                      <label class="hour-label">Hrs</label>
+                      <input
+                        type="number"
+                        id="prepTimeHrs"
+                        placeholder="0"
+                        class="small-details-input input-transition"
+                        oninput="limitInputLength(this, 4)"
+                      />
+                      <label class="min-label">Mins</label>
+                      <input
+                        type="number"
+                        id="prepTimeMins"
+                        placeholder="0"
+                        class="small-details-input input-transition"
+                        oninput="limitInputLength(this, 2)"
+                      />
+                    </div>
+                  </div>
+                  <div class="small-row-container">
+                    <label class="small-name">Cook Time:</label>
 
-        <div class="inputbox number">
-          <input type="number" id="prepTime" placeholder="prep time" />
-        </div>
+                    <div class="inputbox-2number">
+                      <label class="hour-label">Hrs</label>
+                      <input
+                        type="number"
+                        id="cookTimeHrs"
+                        placeholder="0"
+                        class="small-details-input input-transition"
+                        oninput="limitInputLength(this, 4)"
+                      />
+                      <label class="min-label">Mins</label>
+                      <input
+                        type="number"
+                        id="cookTimeMins"
+                        placeholder="0"
+                        class="small-details-input input-transition"
+                        oninput="limitInputLength(this, 2)"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="inputbox-number">
+                  <label class="servings-name">Servings:</label>
+                  <input
+                    type="number"
+                    id="servings"
+                    placeholder="#"
+                    class="small-details-input input-transition"
+                    oninput="limitInputLength(this, 4)"
+                  />
+                </div>
+                <div class="inputbox">
+                  <input
+                    type="file"
+                    id="recipeImg"
+                    accept="image/*"
+                    class="image-input"
+                  />
+                  <label for="recipeImg" class="custom-file-input"
+                    >Add Image</label
+                  >
+                </div>
+                <div id="list-container-ingredients">
+                  <h2 class="ingredient-title">Ingredients</h2>
+                  <!-- Ingredients go here -->
+                </div>
 
-        <div class="inputbox number">
-          <input type="number" id="servings" placeholder="servings" />
-        </div>
+                <button type="button" id="add-ingredient" class="plus-button">
+                  +
+                </button>
+              </form>
+            </div>
+            <div id="right-recipe-form">
+              <div id="list-container-steps">
+                <h2 class="form-heading details">Steps</h2>
+                <!-- Steps go here -->
+              </div>
 
-        <div class="submit recipe">
-          <button type="submit" id="submit">Submit</button>
-        </div>
+              <div class="add-item">
+                <button type="button" id="add-step" class="plus-button">
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
 
-        <div id="list-container-ingredients">
-          <h2 class="form-heading">Ingredients</h2>
-          <!-- Ingredients go here -->
+          <button class="submit-button" type="submit" id="submit">
+            Submit
+          </button>
         </div>
-        <button type="button" id="add-ingredient">Add Item</button>
-
-        <div id="list-container-steps">
-          <h2 class="form-heading">Steps</h2>
-          <!-- Steps go here -->
-        </div>
-        <button type="button" id="add-step">Add Item</button>
-        <br />
-        <button type="submit" id="submit">Add recipe</button>
-      </form>
+      </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
     <script src="../scripts/addrecipe/ingredientForm.js"></script>

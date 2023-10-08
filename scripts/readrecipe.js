@@ -1,15 +1,16 @@
 var currentUid;
 let recipes;
 let searchQuery = "";
+const navbarHoverColor = "#2b2c2e";
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUid = firebase.auth().currentUser.uid;
     console.log(firebase.auth().currentUser.uid);
 
-    const usernameElement = document.getElementById("username");
+    const signOutButton = document.getElementById("sign-out");
     // usernameElement.innerHTML = firebase.auth().currentUser.;
-    usernameElement.addEventListener("click", function () {
+    signOutButton.addEventListener("click", function () {
       firebase.auth().signOut();
     });
 
@@ -28,6 +29,49 @@ firebase.auth().onAuthStateChanged((user) => {
     });
   } else {
     console.log("uid not found");
+  }
+});
+
+const userMenu = document.getElementsByClassName("user-menu")[0];
+const usernameButtonOut = document.getElementById("username-button");
+const usernameButtonIn = document.getElementById("username");
+const userMenuItems = document.getElementsByClassName("user-menu-list-item");
+let userMenuOpen = false;
+
+window.addEventListener("click", function (event) {
+  console.log("window click");
+  console.log(userMenu.style.display);
+  if (
+    (event.target === usernameButtonOut || event.target === usernameButtonIn) &&
+    !userMenuOpen
+  ) {
+    usernameButtonOut.classList.add("user-menu-button-maintain-hover");
+    userMenuOpen = true;
+    console.log("username clicked");
+    userMenu.classList.add("user-menu-appear");
+    for (const item of userMenuItems) {
+      item.classList.add("user-menu-item-appear");
+    }
+    this.setTimeout(function () {
+      for (const item of userMenuItems) {
+        console.log("block");
+        item.classList.add("user-menu-item-block");
+      }
+    }, 40);
+  } else if (event.target !== userMenu && userMenuOpen) {
+    usernameButtonOut.classList.remove("user-menu-button-maintain-hover");
+    userMenuOpen = false;
+    console.log("not username clicked");
+    userMenu.classList.remove("user-menu-appear");
+    for (const item of userMenuItems) {
+      item.classList.remove("user-menu-item-appear");
+    }
+    this.setTimeout(function () {
+      console.log("none");
+      for (const item of userMenuItems) {
+        item.classList.remove("user-menu-item-block");
+      }
+    }, 20);
   }
 });
 

@@ -5,20 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let itemCount = 0;
   const units = [
-    "dr.",
-    "smdg.",
-    "pn.",
-    "ds.",
-    "ssp.",
-    "csp.",
-    "fl.dr.",
+    "Grams",
+    "Ounces",
+    "lbs",
+    "kg",
+    "Liters",
+    "drop",
     "tsp.",
-    "dsp.",
     "tbsp.",
-    "oz.",
-    "wgf.",
-    "tcf.",
-    "C",
     "pt.",
     "qt.",
     // "gal.",
@@ -34,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     input_name.className = `ingredient_${itemCount}`;
     input_name.classList.add("ingredient-name");
     input_name.classList.add("ingredient-input");
+    input_name.classList.add("input-transition");
     input_name.placeholder = "Add an ingredient";
 
     const input_value = document.createElement("input");
@@ -42,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
     input_value.id = `ingredient_value_${itemCount}`;
     input_value.placeholder = "Amount";
     input_value.classList.add("ingredient-input");
+    input_value.classList.add("input-transition");
+    input_value.setAttribute("oninput", "limitInputLength(this, 4)");
 
     // const input_unit = document.createElement("input");
     // input_unit.setAttribute("list", "units");
@@ -55,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const unitInput = document.createElement("input");
     unitInput.classList.add("ingredient-input");
     unitInput.classList.add("unit-input");
+    unitInput.classList.add("input-transition");
     unitInput.autocomplete = "off";
     unitInput.role = "combobox";
     unitInput.list = "";
@@ -64,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const unitDatalist = document.createElement("datalist");
     unitDatalist.id = "units";
+    unitDatalist.classList.add("data-list");
     unitDiv.appendChild(unitInput);
     unitDiv.appendChild(unitDatalist);
 
@@ -76,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     unitInput.onfocus = function () {
       unitDatalist.style.display = "block";
-      unitInput.style.borderRadius = "5px 5px 0 0";
     };
     for (let option of unitDatalist.options) {
       option.onclick = function () {
@@ -86,12 +84,34 @@ document.addEventListener("DOMContentLoaded", function () {
       };
     }
 
+    var currentFocus = -1;
+    unitInput.oninput = function () {
+      currentFocus = -1;
+      var text = unitInput.value.toUpperCase();
+      for (let option of unitDatalist.options) {
+        if (option.value.toUpperCase().indexOf(text) > -1) {
+          option.style.display = "block";
+        } else {
+          option.style.display = "none";
+        }
+      }
+    };
+
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
     removeButton.classList.add("plus-button");
     removeButton.innerText = "-";
     removeButton.addEventListener("click", function () {
+      let nameList = document.getElementsByClassName("ingredient-name");
+      let amountList = document.getElementsByClassName("ingredient-amount");
+      let unitList = document.getElementsByClassName("unit-input");
       listContainer.removeChild(listItem);
+      itemCount--;
+      for (let i = 0; i < itemCount; i++) {
+        nameList[i].id = `ingredient_${i}`;
+        amountList[i].id = `ingredient_value_${i}`;
+        unitList[i].id = `ingredient_unit_${i}`;
+      }
     });
 
     listItem.appendChild(input_name);
@@ -115,6 +135,21 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
   });
+});
+
+window.addEventListener("click", function (event) {
+  let datalistList = document.getElementsByClassName("data-list");
+  let unitInputList = document.getElementsByClassName("unit-input");
+
+  for (let i = 0; i < datalistList.length; i++) {
+    if (
+      datalistList[i].style.display === "block" &&
+      event.target !== datalistList[i] &&
+      event.target !== unitInputList[i]
+    ) {
+      datalistList[i].style.display = "none";
+    }
+  }
 });
 
 const userMenu = document.getElementsByClassName("user-menu")[0];

@@ -9,12 +9,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const listItem = document.createElement("div");
     listItem.classList.add("step-item");
 
+    const number = document.createElement("label");
+    number.classList.add("step-number");
+    number.id = `step-number_${itemCount}`;
+    number.innerText = `${itemCount + 1}:`;
+
     const paragraph = document.createElement("p");
     paragraph.classList.add("resizable-p");
     const stepInput = document.createElement("span");
-    stepInput.classList.add("textarea");
+
     stepInput.setAttribute("role", "textbox");
     stepInput.contentEditable = true;
+    stepInput.classList.add("input-transition");
+    stepInput.classList.add("textarea");
+    stepInput.classList.add("step-input");
+    stepInput.id = `recipe-step_${itemCount}`;
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("remove-item");
@@ -22,8 +31,18 @@ document.addEventListener("DOMContentLoaded", function () {
     removeButton.classList.add("plus-button");
     removeButton.addEventListener("click", function () {
       listContainer.removeChild(listItem);
-    });
+      itemCount--;
 
+      let labelList = document.getElementsByClassName("step-number");
+      let textareaList = document.getElementsByClassName("step-input");
+      console.log(labelList);
+      for (let i = 0; i < itemCount; i++) {
+        labelList[i].id = `step-number_${i}`;
+        labelList[i].innerText = `${i + 1}:`;
+        textareaList[i].id = `recipe-step_${i}`;
+      }
+    });
+    listItem.append(number);
     listItem.appendChild(stepInput);
     listItem.appendChild(removeButton);
     listContainer.appendChild(listItem);
@@ -46,8 +65,10 @@ function submitForm(e) {
 
   let recipeName = getElementVal("recipeName");
   let recipeDesc = getElementVal("recipeDesc");
-  let cookTime = getElementVal("cookTime");
-  let prepTime = getElementVal("prepTime");
+  let cookTimeHrs = getElementVal("cookTimeHrs");
+  let cookTimeMins = getElementVal("cookTimeMins");
+  let prepTimeHrs = getElementVal("prepTimeHrs");
+  let prepTimeMins = getElementVal("prepTimeMins");
   let servings = getElementVal("servings");
   let ingredients = [];
   let steps = [];
@@ -76,8 +97,10 @@ function submitForm(e) {
   writeUserData(
     recipeName,
     recipeDesc,
-    cookTime,
-    prepTime,
+    cookTimeHrs,
+    cookTimeMins,
+    prepTimeHrs,
+    prepTimeMins,
     servings,
     ingredients,
     steps,
@@ -104,8 +127,10 @@ const getElementVal = (id) => {
 function writeUserData(
   recipeName,
   recipeDesc,
-  cookTime,
-  prepTime,
+  cookTimeHrs,
+  cookTimeMins,
+  prepTimeHrs,
+  prepTimeMins,
   servings,
   ingredients,
   steps,
@@ -116,8 +141,10 @@ function writeUserData(
     .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
     .set({
       recipeDesc: recipeDesc,
-      cookTime: cookTime,
-      prepTime: prepTime,
+      cookTimeHrs: cookTimeHrs,
+      cookTimeMins: cookTimeMins,
+      prepTimeHrs: prepTimeHrs,
+      prepTimeMins: prepTimeMins,
       servings: servings,
       ingredients: ingredients,
       steps: steps,

@@ -117,6 +117,7 @@
   position: fixed;
   height: 0;
   width: 12%;
+  min-width: 130px;
   margin-top: 6.5vh;
   margin-left: 87%;
   background: var(--navBgColor);
@@ -452,6 +453,7 @@ input::-webkit-inner-spin-button {
   font-family: Gabarito;
   height: 5vh;
   width: 7vw;
+  min-width: 80px;
   border: 2px solid var(--titleColor);
   background-color: var(--recipeBgColor);
   color: var(--navTextColor);
@@ -505,16 +507,18 @@ input::-webkit-inner-spin-button {
 } */
 
 .ingredient-name {
-  width: 45%;
+  width: 40%;
 }
 
 .ingredient-amount {
-  width: 18%;
+  width: 15%;
 }
 
-.ingredient-unit {
+.unit-input {
   margin-right: 2%;
-  width: 10%;
+  width: 100%;
+  padding: 0 16%;
+  font-size: inherit;
 }
 
 .plus-button {
@@ -552,6 +556,11 @@ input::-webkit-inner-spin-button {
   width: 70%;
 }
 
+.step-number {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
 ::-webkit-scrollbar-thumb {
   background: var(--recipeBgColor);
   border-radius: 10px;
@@ -574,6 +583,8 @@ input::-webkit-inner-spin-button {
 
 fieldset {
   border: none;
+  width: 60px;
+  margin-right: 4%;
 }
 
 datalist {
@@ -582,8 +593,8 @@ datalist {
   /* border: 1px solid blue; */
   border-radius: 0 0 5px 5px;
   border-top: none;
+  width: 70px;
   font-family: sans-serif;
-  width: 350px;
   padding: 5px;
   max-height: 10rem;
   overflow-y: auto;
@@ -594,8 +605,13 @@ option {
   padding: 4px;
   color: var(--navTextColor);
   margin-bottom: 1px;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
+  font-family: Gabarito;
+}
+
+datalist::-webkit-scrollbar {
+  width: 0;
 }
 
 option:hover,

@@ -102,10 +102,17 @@ document.addEventListener("DOMContentLoaded", function () {
     removeButton.classList.add("plus-button");
     removeButton.innerText = "-";
     removeButton.addEventListener("click", function () {
+      input_name.classList.remove("ingredient-animation");
+      input_value.classList.remove("ingredient-animation");
+      unitInput.classList.remove("ingredient-animation");
+      setTimeout(function () {
+        listContainer.removeChild(listItem);
+      }, 50);
+
       let nameList = document.getElementsByClassName("ingredient-name");
       let amountList = document.getElementsByClassName("ingredient-amount");
       let unitList = document.getElementsByClassName("unit-input");
-      listContainer.removeChild(listItem);
+
       itemCount--;
       for (let i = 0; i < itemCount; i++) {
         nameList[i].id = `ingredient_${i}`;
@@ -117,17 +124,14 @@ document.addEventListener("DOMContentLoaded", function () {
     listItem.appendChild(input_name);
     listItem.appendChild(input_value);
     listItem.appendChild(unitDiv);
-    // listItem.appendChild(input_unit);
-
-    // for (let i = 0; i < units.length; i++) {
-    //   const drop_down_option = document.createElement("option");
-    //   drop_down_option.value = units[i];
-    //   drop_down_option.text = units[i];
-    //   input_unit.appendChild(drop_down_option);
-    // }
-
     listItem.appendChild(removeButton);
     listContainer.appendChild(listItem);
+
+    setTimeout(function () {
+      input_name.classList.add("ingredient-animation");
+      input_value.classList.add("ingredient-animation");
+      unitInput.classList.add("ingredient-animation");
+    }, 10);
 
     itemCount++;
   });

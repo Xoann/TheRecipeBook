@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     stepInput.classList.add("input-transition");
     stepInput.classList.add("textarea");
     stepInput.classList.add("step-input");
+
     stepInput.id = `recipe-step_${itemCount}`;
 
     const removeButton = document.createElement("button");
@@ -30,12 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
     removeButton.innerText = "-";
     removeButton.classList.add("plus-button");
     removeButton.addEventListener("click", function () {
-      listContainer.removeChild(listItem);
-      itemCount--;
+      stepInput.classList.remove("textarea-animation");
+      listItem.classList.remove("step-container-animation");
+      setTimeout(function () {
+        listContainer.removeChild(listItem);
+        itemCount--;
+      }, 40);
 
       let labelList = document.getElementsByClassName("step-number");
       let textareaList = document.getElementsByClassName("step-input");
-      console.log(labelList);
       for (let i = 0; i < itemCount; i++) {
         labelList[i].id = `step-number_${i}`;
         labelList[i].innerText = `${i + 1}:`;
@@ -46,6 +50,11 @@ document.addEventListener("DOMContentLoaded", function () {
     listItem.appendChild(stepInput);
     listItem.appendChild(removeButton);
     listContainer.appendChild(listItem);
+
+    setTimeout(function () {
+      stepInput.classList.add("textarea-animation");
+      listItem.classList.add("step-container-animation");
+    }, 10);
 
     itemCount++;
   });
@@ -59,6 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // let addRecipeDB = firebase.database().ref("addRecipe");
 
 document.getElementById("addRecipeForm").addEventListener("submit", submitForm);
+
+// function trySubmitform(){
+//   if (){
+
+//   }
+// }
 
 function submitForm(e) {
   e.preventDefault();

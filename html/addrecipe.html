@@ -138,6 +138,7 @@
                     id="servings"
                     placeholder="#"
                     class="small-details-input input-transition"
+                    oninput="limitInputLength(this, 4)"
                   />
                 </div>
                 <div class="inputbox">
@@ -163,7 +164,7 @@
             </div>
             <div id="right-recipe-form">
               <div id="list-container-steps">
-                <h2 class="form-heading">Steps</h2>
+                <h2 class="form-heading details">Steps</h2>
                 <!-- Steps go here -->
               </div>
 

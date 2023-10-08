@@ -261,6 +261,7 @@
   border-radius: 13px;
   height: 4vh;
   max-height: 30px;
+  min-width: 300px;
   width: 90%;
   border-width: 1px;
   border-color: var(--plusButtonHover);
@@ -296,15 +297,24 @@
 .textarea {
   width: 100%;
   overflow: hidden;
-  min-height: 50px;
+  height: 50px;
   line-height: 20px;
   border-radius: 13px;
+}
+
+.name-description-container .textarea {
+  min-height: 50px;
+  min-width: 300px;
   padding: 3% 5%;
 }
 
 .textarea[contenteditable]:empty::before {
   content: "Add a description";
   color: gray;
+}
+
+.step-item .textarea[contenteditable]:empty::before {
+  content: "Add a step";
 }
 
 .step-item .name {
@@ -345,6 +355,7 @@
   font-size: inherit;
   font-family: inherit;
   width: 65px;
+  min-width: 68px;
   height: 28px;
   border-radius: 11px;
   background-color: inherit;
@@ -354,6 +365,7 @@
   border-color: var(--plusButtonHover);
   color: var(--navTextColor);
   padding: 0 5%;
+  z-index: 2;
 }
 
 .inputbox-2number {
@@ -390,6 +402,7 @@
   font-family: inherit;
   color: gray;
   user-select: none;
+  z-index: 1;
 }
 
 .min-label {
@@ -399,6 +412,7 @@
   font-family: inherit;
   color: gray;
   user-select: none;
+  z-index: 1;
 }
 
 .inputbox-number .small-details-input {
@@ -496,11 +510,12 @@ input::-webkit-inner-spin-button {
   border: 1px solid var(--plusButtonHover);
   background-color: inherit;
   border-radius: 7px;
-  height: 4vh;
+  height: 0px;
   font-family: Gabarito;
   color: var(--navTextColor);
   padding: 0 3%;
   font-size: inherit;
+  transition: height 0.05s ease-out, border-color 0.2s ease;
 }
 /* .ingredient-input + .ingredient-input {
   margin-left: 2%;
@@ -512,6 +527,7 @@ input::-webkit-inner-spin-button {
 
 .ingredient-amount {
   width: 15%;
+  min-width: 60px;
 }
 
 .unit-input {
@@ -519,6 +535,10 @@ input::-webkit-inner-spin-button {
   width: 100%;
   padding: 0 16%;
   font-size: inherit;
+}
+
+.ingredient-animation {
+  height: 32px;
 }
 
 .plus-button {
@@ -537,9 +557,11 @@ input::-webkit-inner-spin-button {
 
 .step-item {
   width: 80%;
+  height: 0;
   display: flex;
   justify-content: space-evenly;
   margin-bottom: 4%;
+  transition: height 0.05s ease-out;
 }
 
 #list-container-steps {
@@ -554,6 +576,17 @@ input::-webkit-inner-spin-button {
 .step-item .textarea {
   font-size: 17px;
   width: 70%;
+  height: 0;
+  transition: height 0.05s ease-out, border-color 0.2s ease;
+}
+
+.textarea-animation {
+  height: 50px !important;
+  padding: 3% 5%;
+}
+
+.step-container-animation {
+  height: 100% !important;
 }
 
 .step-number {
@@ -585,6 +618,8 @@ fieldset {
   border: none;
   width: 60px;
   margin-right: 4%;
+  display: flex;
+  align-items: flex-start;
 }
 
 datalist {

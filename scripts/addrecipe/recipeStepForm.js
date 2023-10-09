@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     stepInput.setAttribute("role", "textbox");
     stepInput.contentEditable = true;
     stepInput.classList.add("input-transition");
+    stepInput.classList.add("details-input");
     stepInput.classList.add("textarea");
     stepInput.classList.add("step-input");
 
@@ -43,16 +44,16 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(function () {
         listContainer.removeChild(listItem);
         itemCount--;
-      }, 40);
 
-      //Reassign indexes for label and ids
-      let labelList = document.getElementsByClassName("step-number");
-      let textareaList = document.getElementsByClassName("step-input");
-      for (let i = 0; i < itemCount; i++) {
-        labelList[i].id = `step-number_${i}`;
-        labelList[i].innerText = `${i + 1}:`;
-        textareaList[i].id = `recipe-step_${i}`;
-      }
+        //Reassign indexes for label and ids
+        const labelList = document.getElementsByClassName("step-number");
+        const textareaList = document.getElementsByClassName("step-input");
+        for (let i = 0; i < itemCount; i++) {
+          labelList[i].id = `step-number_${i}`;
+          labelList[i].innerText = `${i + 1}:`;
+          textareaList[i].id = `recipe-step_${i}`;
+        }
+      }, 40);
     });
     listItem.append(number);
     listItem.appendChild(stepInput);

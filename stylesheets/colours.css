@@ -1,0 +1,22 @@
+:root {
+  /* Primary colours */
+  --primary-colour: #d57009;
+  --svg-colour: #d56f0966;
+
+  /* Light colours */
+  --light-colour: #f6e9e9;
+  --light-text-colour: #eee;
+
+  /* Dark colours */
+  --dark-one-colour: #121212;
+  --dark-two-colour: #1e1f20; /* Used for nav */
+
+  --grey-one-colour: #2b2c2e; /* Used for nav hover */
+  --grey-two-colour: #414141;
+
+  --light-button-hover: #aaa;
+  --grey-text-colour: #808080
+
+  /* Accent colours */
+  --error-red: #ee4144;
+}

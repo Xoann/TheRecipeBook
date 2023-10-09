@@ -11,6 +11,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../stylesheets/addrecipe.css" />
+    <link rel="stylesheet" href="../stylesheets/colours.css" />
+    <link rel="stylesheet" href="../stylesheets/default.css" />
+    <link rel="stylesheet" href="../stylesheets/sizes.css" />
   </head>
   <body>
     <header>
@@ -61,84 +64,90 @@
                 id="addRecipeForm"
                 class="details-form"
               >
-                <label class="details">Details</label>
+                <h2 class="form-heading">Details</h2>
                 <div class="name-description-container">
                   <div class="justify-left">
-                    <label class="name">Recipe Name</label>
+                    <label class="detail-name">Recipe Name</label>
                   </div>
 
                   <input
                     type="text"
                     id="recipeName"
-                    class="details-text input-transition"
+                    class="details-input recipe-name-input input-transition"
                     placeholder="Add a recipe name"
                   />
 
                   <div class="justify-left">
-                    <label class="name">Description</label>
+                    <label class="detail-name">Description</label>
                   </div>
 
-                  <p class="resizable-p">
-                    <span
-                      class="textarea input-transition"
-                      role="textbox"
-                      id="description"
-                      contenteditable
-                    ></span>
-                  </p>
+                  <span
+                    class="textarea details-input input-transition"
+                    role="textbox"
+                    id="description"
+                    contenteditable
+                  ></span>
                 </div>
                 <div class="number-column-container">
                   <div class="small-row-container">
-                    <label class="small-name">Prep Time:</label>
+                    <label class="detail-name">Prep Time:</label>
                     <div class="inputbox-2number">
-                      <label class="hour-label">Hrs</label>
-                      <input
-                        type="number"
-                        id="prepTimeHrs"
-                        placeholder="0"
-                        class="small-details-input input-transition"
-                        oninput="limitInputLength(this, 4)"
-                      />
-                      <label class="min-label">Mins</label>
-                      <input
-                        type="number"
-                        id="prepTimeMins"
-                        placeholder="0"
-                        class="small-details-input input-transition"
-                        oninput="limitInputLength(this, 2)"
-                      />
+                      <div class="input-label">
+                        <label class="time-label">Hrs</label>
+                        <input
+                          type="number"
+                          id="prepTimeHrs"
+                          placeholder="0"
+                          class="small-details-input time-input details-input input-transition"
+                          oninput="limitInputLength(this, 4)"
+                        />
+                      </div>
+                      <div class="input-label">
+                        <label class="time-label">Mins</label>
+                        <input
+                          type="number"
+                          id="prepTimeMins"
+                          placeholder="0"
+                          class="small-details-input time-input details-input input-transition"
+                          oninput="limitInputLength(this, 2)"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div class="small-row-container">
-                    <label class="small-name">Cook Time:</label>
+                    <label class="detail-name">Cook Time:</label>
 
                     <div class="inputbox-2number">
-                      <label class="hour-label">Hrs</label>
-                      <input
-                        type="number"
-                        id="cookTimeHrs"
-                        placeholder="0"
-                        class="small-details-input input-transition"
-                        oninput="limitInputLength(this, 4)"
-                      />
-                      <label class="min-label">Mins</label>
-                      <input
-                        type="number"
-                        id="cookTimeMins"
-                        placeholder="0"
-                        class="small-details-input input-transition"
-                        oninput="limitInputLength(this, 2)"
-                      />
+                      <div class="input-label">
+                        <label class="time-label">Hrs</label>
+                        <input
+                          type="number"
+                          id="cookTimeHrs"
+                          placeholder="0"
+                          class="small-details-input time-input details-input input-transition"
+                          oninput="limitInputLength(this, 4)"
+                        />
+                      </div>
+                      <div class="input-label">
+                        <label class="time-label">Mins</label>
+                        <input
+                          type="number"
+                          id="cookTimeMins"
+                          placeholder="0"
+                          class="small-details-input time-input details-input input-transition"
+                          oninput="limitInputLength(this, 2)"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="inputbox-number">
-                  <label class="servings-name">Servings:</label>
+                  <label class="detail-name servings-name">Servings:</label>
                   <input
                     type="number"
                     id="servings"
                     placeholder="#"
-                    class="small-details-input input-transition"
+                    class="small-details-input details-input input-transition"
                     oninput="limitInputLength(this, 4)"
                   />
                 </div>
@@ -154,7 +163,7 @@
                   >
                 </div>
                 <div id="list-container-ingredients">
-                  <h2 class="ingredient-title">Ingredients</h2>
+                  <h2 class="form-heading">Ingredients</h2>
                   <!-- Ingredients go here -->
                 </div>
 
@@ -165,7 +174,7 @@
             </div>
             <div id="right-recipe-form">
               <div id="list-container-steps">
-                <h2 class="form-heading details">Steps</h2>
+                <h2 class="form-heading">Steps</h2>
                 <!-- Steps go here -->
               </div>
 

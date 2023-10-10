@@ -5,7 +5,7 @@
 }
 
 svg {
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 /* NAVBAR */
@@ -80,6 +80,10 @@ svg {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--grey-one-colour);
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 10px;
 }
 
 ::-webkit-scrollbar {

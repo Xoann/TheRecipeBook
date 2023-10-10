@@ -151,17 +151,6 @@
                     oninput="limitInputLength(this, 4)"
                   />
                 </div>
-                <div class="inputbox">
-                  <input
-                    type="file"
-                    id="recipeImg"
-                    accept="image/*"
-                    class="image-input"
-                  />
-                  <label for="recipeImg" class="custom-file-input"
-                    >Add Image</label
-                  >
-                </div>
                 <div id="list-container-ingredients">
                   <h2 class="form-heading">Ingredients</h2>
                   <!-- Ingredients go here -->
@@ -170,6 +159,35 @@
                 <button type="button" id="add-ingredient" class="plus-button">
                   +
                 </button>
+                <div class="inputbox">
+                  <input
+                    type="file"
+                    id="recipeImg"
+                    accept="image/*"
+                    class="image-input"
+                    onchange="displayImage()"
+                  />
+                  <label for="recipeImg" class="custom-file-input"
+                    >Add Image</label
+                  >
+                </div>
+                <div class="image-container">
+                  <div id="display-image"></div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6 close"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
               </form>
             </div>
             <div id="right-recipe-form">

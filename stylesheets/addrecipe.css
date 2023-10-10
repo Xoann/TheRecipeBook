@@ -464,11 +464,11 @@ input::-webkit-inner-spin-button {
 
 .step-item {
   width: 90%;
-  height: 0;
+  min-height: 0;
   display: flex;
   justify-content: space-evenly;
   margin-bottom: 4%;
-  transition: height 0.05s ease-out;
+  transition: min-height 0.05s ease-out;
 }
 
 #list-container-steps {

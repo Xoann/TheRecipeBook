@@ -133,16 +133,19 @@
 }
 
 .recipe-div {
-  width: 25vw;
-  min-width: 300px;
-  height: 100%;
+
+  width: 330px;
+  height: 330px;
+
   background-color: var(--light-colour);
+
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
   margin-right: 20px;
   margin-top: 20px;
+  font-family: Gabarito;
 }
 
 .recipe-div:last-child {
@@ -152,7 +155,7 @@
 .recipe-div .img-container {
   position: relative;
   max-width: 100%;
-  max-height: 50%;
+  height: 190px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -160,7 +163,8 @@
 
 .recipe-div .img-container img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 .gradient-overlay::before {
@@ -175,11 +179,19 @@
 
 .recipe-div .recipe-elements {
   margin: 10px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .recipe-div .recipe-elements h2 {
-  font-size: 24px;
+  font-size: 26px;
   font-family: sans-serif;
+}
+
+.recipe-div .desc-div {
+  font-size: 18px;
 }
 
 /* Recipe Modal Window Styles */

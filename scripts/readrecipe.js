@@ -4,15 +4,17 @@ let searchQuery = "";
 const navbarHoverColor = "#2b2c2e";
 
 firebase.auth().onAuthStateChanged((user) => {
+  const signOutButton = document.getElementById("sign-out");
+  signOutButton.addEventListener("click", function () {
+    if (user) {
+      firebase.auth().signOut();
+    } else {
+      window.location.href = "html/login.html";
+    }
+  });
   if (user) {
     currentUid = firebase.auth().currentUser.uid;
     console.log(firebase.auth().currentUser.uid);
-
-    const signOutButton = document.getElementById("sign-out");
-    // usernameElement.innerHTML = firebase.auth().currentUser.;
-    signOutButton.addEventListener("click", function () {
-      firebase.auth().signOut();
-    });
 
     const dbr = firebase.database().ref(`${currentUid}/recipes/`);
 
@@ -27,8 +29,11 @@ firebase.auth().onAuthStateChanged((user) => {
       }
       displayRecipes(imageNames);
     });
+
+    document.getElementById("sign-out").innerText = "Sign Out";
   } else {
     console.log("uid not found");
+    document.getElementById("sign-out").innerText = "Sign In";
   }
 });
 
@@ -39,35 +44,29 @@ const userMenuItems = document.getElementsByClassName("user-menu-list-item");
 let userMenuOpen = false;
 
 window.addEventListener("click", function (event) {
-  console.log("window click");
-  console.log(userMenu.style.display);
   if (
     (event.target === usernameButtonOut || event.target === usernameButtonIn) &&
     !userMenuOpen
   ) {
     usernameButtonOut.classList.add("user-menu-button-maintain-hover");
     userMenuOpen = true;
-    console.log("username clicked");
     userMenu.classList.add("user-menu-appear");
     for (const item of userMenuItems) {
       item.classList.add("user-menu-item-appear");
     }
     this.setTimeout(function () {
       for (const item of userMenuItems) {
-        console.log("block");
         item.classList.add("user-menu-item-block");
       }
     }, 40);
   } else if (event.target !== userMenu && userMenuOpen) {
     usernameButtonOut.classList.remove("user-menu-button-maintain-hover");
     userMenuOpen = false;
-    console.log("not username clicked");
     userMenu.classList.remove("user-menu-appear");
     for (const item of userMenuItems) {
       item.classList.remove("user-menu-item-appear");
     }
     this.setTimeout(function () {
-      console.log("none");
       for (const item of userMenuItems) {
         item.classList.remove("user-menu-item-block");
       }
@@ -81,6 +80,7 @@ async function getImageURLs(image_names, uid) {
 
   for (let i = 0; i < image_names.length; i++) {
     const imageName = image_names[i];
+
     const imageRef = storageRef.child(uid).child("images").child(imageName);
 
     await imageRef.getDownloadURL().then((url) => {
@@ -192,6 +192,14 @@ searchInput.addEventListener("input", function (event) {
 //////////////////////////////
 
 function generateRecipeModal(recipeName) {
+  const uid = firebase.auth().currentUid;
+  const recipe = recipes[recipeName];
+  const description = recipe.recipeDesc;
+  const steps = recipe.steps;
+  const ingredients = recipe.ingredients;
+  const prepTimeHrs = recipe.prepTimeHrs;
+  const prepTimeMins = recipe.prepTimeMins;
+
   const modalElement = document.createElement("div");
   modalElement.classList.add("modal");
   modalElement.id = recipeName;
@@ -202,6 +210,19 @@ function generateRecipeModal(recipeName) {
   const recipeNameElement = document.createElement("h2");
   recipeNameElement.classList.add("modal-recipe-name");
   recipeNameElement.textContent = recipeName;
+
+  const descriptionElement = document.createElement("h2");
+  descriptionElement.classList.add("modal-description");
+  descriptionElement.textContent = description;
+
+  const prepTimeContainer = document.createElement("div");
+  prepTimeContainer.classList.add("prep-time-container");
+
+  const prepTimeLabel = document.createElement("label");
+  prepTimeLabel.classList.add("detail-label");
+  prepTimeLabel.textContent = "Prep Time";
+
+  const prepTimeHrsElement = document.create;
 
   const closeModalButton = document.createElement("span");
   closeModalButton.id = "closeModalButton";
@@ -220,6 +241,7 @@ function generateRecipeModal(recipeName) {
   documentBody.appendChild(modalElement);
   modalElement.appendChild(modalContentElement);
   modalContentElement.appendChild(recipeNameElement);
+  modalContentElement.appendChild(descriptionElement);
   modalContentElement.appendChild(closeModalButton);
 }
 

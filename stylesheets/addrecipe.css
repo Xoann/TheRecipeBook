@@ -93,7 +93,7 @@
   justify-content: flex-start;
   align-items: center;
   border-radius: 30px;
-  margin-top: 4%;
+  margin-top: 15px;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -161,6 +161,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  margin-top: -20px;
 }
 
 .justify-left {
@@ -168,6 +169,36 @@
   display: flex;
   justify-content: left;
   margin-left: 4%;
+}
+
+.details-text {
+  border-radius: 13px;
+  height: 4vh;
+  max-height: 30px;
+  min-width: 300px;
+  width: 90%;
+  border-width: 1px;
+  border-color: var(--plusButtonHover);
+  padding: 2% 5%;
+  font-family: inherit;
+  font-size: inherit;
+  border-style: solid;
+  background-color: inherit;
+  color: var(--navTextColor);
+}
+
+.details {
+  color: var(--navTextColor);
+  font-size: 35px;
+  font-family: Gabarito;
+  margin-top: -4%;
+  font-weight: normal;
+}
+
+.resizable-p {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .input,
@@ -287,8 +318,7 @@
 }
 
 .recipe-name-input {
-  height: 6vh;
-  max-height: 30px;
+  max-height: 40px;
   min-height: 25px;
 }
 
@@ -478,6 +508,7 @@ input::-webkit-inner-spin-button {
 
 .form-heading {
   margin-bottom: 3%;
+  font-size: 30px;
 }
 
 .step-item .textarea {
@@ -488,7 +519,7 @@ input::-webkit-inner-spin-button {
 }
 
 .textarea-animation {
-  min-height: 50px !important;
+  min-height: 70px !important;
   padding: 3% 5%;
 }
 

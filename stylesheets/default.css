@@ -70,6 +70,67 @@ svg {
   height: 100%;
 }
 
+.user-menu {
+  display: block;
+  position: fixed;
+  height: 0;
+  width: 12%;
+  margin-top: 6px;
+  margin-left: 87%;
+  background: var(--dark-two-colour);
+  border-radius: 15px;
+  transition: height 0.06s ease-in;
+}
+
+.user-menu-list {
+  position: relative;
+  height: 100%;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  flex-direction: column;
+  list-style-type: none;
+  font-size: 17px;
+}
+
+.user-menu-list-item {
+  z-index: 1;
+  display: none;
+  padding: 12px 15px;
+  color: var(--light-text-colour);
+  font-family: Gabarito;
+  border-radius: 7px;
+  transition: background-color 0.15s, opacity 0.1s ease-in-out;
+  opacity: 0;
+}
+
+.user-menu-list-item:hover {
+  background-color: var(--grey-one-colour);
+}
+
+.user-menu-button-maintain-hover {
+  background-color: var(--grey-one-colour) !important;
+}
+
+.user-menu-appear {
+  height: 20%;
+}
+
+.user-menu-item-appear {
+  opacity: 1 !important;
+  transition-delay: 0.015s;
+}
+
+.user-menu-item-block {
+  display: block !important;
+}
+
+.user-menu-list a {
+  all: unset;
+}
+
 /* SCROLLBAR */
 
 ::-webkit-scrollbar-thumb {

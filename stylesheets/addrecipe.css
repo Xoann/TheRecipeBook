@@ -93,7 +93,7 @@
   justify-content: flex-start;
   align-items: center;
   border-radius: 30px;
-  margin-top: 4%;
+  margin-top: 15px;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -161,6 +161,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  margin-top: -20px;
 }
 
 .justify-left {
@@ -169,7 +170,6 @@
   justify-content: left;
   margin-left: 4%;
 }
-
 
 .details-text {
   border-radius: 13px;
@@ -200,7 +200,6 @@
   display: flex;
   justify-content: center;
 }
-
 
 .input,
 .textarea {
@@ -319,8 +318,7 @@
 }
 
 .recipe-name-input {
-  height: 6vh;
-  max-height: 30px;
+  max-height: 40px;
   min-height: 25px;
 }
 
@@ -510,6 +508,7 @@ input::-webkit-inner-spin-button {
 
 .form-heading {
   margin-bottom: 3%;
+  font-size: 30px;
 }
 
 .step-item .textarea {
@@ -520,7 +519,7 @@ input::-webkit-inner-spin-button {
 }
 
 .textarea-animation {
-  min-height: 50px !important;
+  min-height: 70px !important;
   padding: 3% 5%;
 }
 

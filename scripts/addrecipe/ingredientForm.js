@@ -201,3 +201,41 @@ function limitInputLength(element, maxLength) {
     element.value = inputValue.slice(0, maxLength);
   }
 }
+
+function displayImage() {
+  console.log("displaying");
+  var fileInput = document.getElementById("recipeImg");
+  var imageContainer = document.getElementById("display-image");
+
+  // Check if a file is selected
+  if (fileInput.files.length > 0) {
+    var selectedFile = fileInput.files[0];
+    var reader = new FileReader();
+
+    // Read the content of the file as a data URL
+    reader.onload = function (e) {
+      // Display the image on the page
+      var imageElement = document.createElement("img");
+      imageElement.src = e.target.result;
+      imageElement.alt = "Selected Image";
+      imageElement.id = "image";
+
+      // Clear previous content and append the image
+      imageContainer.innerHTML = "";
+      imageContainer.appendChild(imageElement);
+    };
+
+    // Read the file as a data URL
+    reader.readAsDataURL(selectedFile);
+
+    document.getElementsByClassName("close")[0].style.display = "block";
+  }
+}
+
+const closeButton = document.getElementsByClassName("close")[0];
+closeButton.addEventListener("click", function () {
+  this.style.display = "none";
+  document
+    .getElementById("display-image")
+    .removeChild(document.getElementById("image"));
+});

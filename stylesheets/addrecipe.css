@@ -170,6 +170,38 @@
   margin-left: 4%;
 }
 
+
+.details-text {
+  border-radius: 13px;
+  height: 4vh;
+  max-height: 30px;
+  min-width: 300px;
+  width: 90%;
+  border-width: 1px;
+  border-color: var(--plusButtonHover);
+  padding: 2% 5%;
+  font-family: inherit;
+  font-size: inherit;
+  border-style: solid;
+  background-color: inherit;
+  color: var(--navTextColor);
+}
+
+.details {
+  color: var(--navTextColor);
+  font-size: 35px;
+  font-family: Gabarito;
+  margin-top: -4%;
+  font-weight: normal;
+}
+
+.resizable-p {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+
 .input,
 .textarea {
   border: 1px solid var(--light-text-colour);

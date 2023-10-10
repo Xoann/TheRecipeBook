@@ -105,20 +105,21 @@ document.addEventListener("DOMContentLoaded", function () {
       input_name.classList.remove("ingredient-animation");
       input_value.classList.remove("ingredient-animation");
       unitInput.classList.remove("ingredient-animation");
+
       setTimeout(function () {
         listContainer.removeChild(listItem);
+        let nameList = document.getElementsByClassName("ingredient-name");
+        let amountList = document.getElementsByClassName("ingredient-amount");
+        let unitList = document.getElementsByClassName("unit-input");
+        itemCount--;
+        console.log(itemCount);
+        for (let i = 0; i < itemCount; i++) {
+          console.log("changing");
+          nameList[i].id = `ingredient_${i}`;
+          amountList[i].id = `ingredient_value_${i}`;
+          unitList[i].id = `ingredient_unit_${i}`;
+        }
       }, 50);
-
-      let nameList = document.getElementsByClassName("ingredient-name");
-      let amountList = document.getElementsByClassName("ingredient-amount");
-      let unitList = document.getElementsByClassName("unit-input");
-
-      itemCount--;
-      for (let i = 0; i < itemCount; i++) {
-        nameList[i].id = `ingredient_${i}`;
-        amountList[i].id = `ingredient_value_${i}`;
-        unitList[i].id = `ingredient_unit_${i}`;
-      }
     });
 
     listItem.appendChild(input_name);
@@ -169,27 +170,23 @@ window.addEventListener("click", function (event) {
   ) {
     usernameButtonOut.classList.add("user-menu-button-maintain-hover");
     userMenuOpen = true;
-    console.log("username clicked");
     userMenu.classList.add("user-menu-appear");
     for (const item of userMenuItems) {
       item.classList.add("user-menu-item-appear");
     }
     this.setTimeout(function () {
       for (const item of userMenuItems) {
-        console.log("block");
         item.classList.add("user-menu-item-block");
       }
     }, 40);
   } else if (event.target !== userMenu && userMenuOpen) {
     usernameButtonOut.classList.remove("user-menu-button-maintain-hover");
     userMenuOpen = false;
-    console.log("not username clicked");
     userMenu.classList.remove("user-menu-appear");
     for (const item of userMenuItems) {
       item.classList.remove("user-menu-item-appear");
     }
     this.setTimeout(function () {
-      console.log("none");
       for (const item of userMenuItems) {
         item.classList.remove("user-menu-item-block");
       }

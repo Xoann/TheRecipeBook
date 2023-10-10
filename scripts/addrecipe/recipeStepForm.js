@@ -43,16 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(function () {
         listContainer.removeChild(listItem);
         itemCount--;
+        //Reassign indexes for label and ids
+        let labelList = document.getElementsByClassName("step-number");
+        let textareaList = document.getElementsByClassName("step-input");
+        for (let i = 0; i < itemCount; i++) {
+          labelList[i].id = `step-number_${i}`;
+          labelList[i].innerText = `${i + 1}:`;
+          textareaList[i].id = `recipe-step_${i}`;
+        }
       }, 40);
-
-      //Reassign indexes for label and ids
-      let labelList = document.getElementsByClassName("step-number");
-      let textareaList = document.getElementsByClassName("step-input");
-      for (let i = 0; i < itemCount; i++) {
-        labelList[i].id = `step-number_${i}`;
-        labelList[i].innerText = `${i + 1}:`;
-        textareaList[i].id = `recipe-step_${i}`;
-      }
     });
     listItem.append(number);
     listItem.appendChild(stepInput);
@@ -76,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //Submit recipe name, recipe desc, cooktime, preptime to database
 // let addRecipeDB = firebase.database().ref("addRecipe");
 
-document.getElementById("submit").addEventListener("click", function () {
+document.getElementById("submit").addEventListener("click", function (e) {
   //Check Form for errors before submitting
   console.log("try");
   let recipeName = document.getElementById("recipeName");
@@ -89,8 +88,8 @@ document.getElementById("submit").addEventListener("click", function () {
   let addStep = document.getElementById("add-step");
 
   //Get ingredient and step containers, used in submitForm
-  var ingredients = [];
-  var steps = [];
+  let ingredients = [];
+  let steps = [];
   const num_ingredients = document
     .getElementById("list-container-ingredients")
     .getElementsByClassName("ingredient-row-container").length;
@@ -224,7 +223,7 @@ document.getElementById("submit").addEventListener("click", function () {
   }
 
   if (error === 0) {
-    submitForm();
+    submitForm(e);
   }
 });
 
@@ -255,17 +254,45 @@ function checkIfSpanEmpty(element) {
   }
 }
 
+function ifEmptyTime(element) {
+  if (!element) {
+    return "0";
+  } else {
+    return element;
+  }
+}
+
 //Submit data after checks
 function submitForm(e) {
   e.preventDefault();
 
   let recipeName = getElementVal("recipeName");
   let recipeDesc = document.getElementById("description").textContent;
-  let cookTimeHrs = getElementVal("cookTimeHrs");
-  let cookTimeMins = getElementVal("cookTimeMins");
-  let prepTimeHrs = getElementVal("prepTimeHrs");
-  let prepTimeMins = getElementVal("prepTimeMins");
+  let cookTimeHrs = ifEmptyTime(getElementVal("cookTimeHrs"));
+  let cookTimeMins = ifEmptyTime(getElementVal("cookTimeMins"));
+  let prepTimeHrs = ifEmptyTime(getElementVal("prepTimeHrs"));
+  let prepTimeMins = ifEmptyTime(getElementVal("prepTimeMins"));
   let servings = getElementVal("servings");
+
+  let ingredients = [];
+  let steps = [];
+  const num_ingredients = document
+    .getElementById("list-container-ingredients")
+    .getElementsByClassName("ingredient-row-container").length;
+  for (let i = 0; i < num_ingredients; i++) {
+    ingredients.push({
+      name: getElementVal(`ingredient_${i}`),
+      value: getElementVal(`ingredient_value_${i}`),
+      unit: getElementVal(`ingredient_unit_${i}`),
+    });
+  }
+
+  const num_steps = document
+    .getElementById("list-container-steps")
+    .getElementsByClassName("step-item").length;
+  for (let i = 0; i < num_steps; i++) {
+    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+  }
 
   const recipeImage = document.getElementById("recipeImg");
   const image = recipeImage.files[0];
@@ -319,8 +346,35 @@ function writeUserData(
   );
 
   if (image) {
-    imageRef.put(image).then((snapshot) => {
-      console.log("Uploaded");
-    });
+    imageRef.put(image).then((snapshot) => {});
+  } else {
+    const imageUrl = "../../img/food-placeholder-1.jpg";
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a File object from the Blob
+        const fileObject = new File([blob], "image.png", { type: "image/png" });
+        imageRef.put(fileObject);
+      });
   }
+  console.log("Uploaded");
 }
+
+//Sign out / Sign in button
+
+firebase.auth().onAuthStateChanged((user) => {
+  const signOutButton = document.getElementById("sign-out");
+  signOutButton.addEventListener("click", function () {
+    if (user) {
+      firebase.auth().signOut();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+  if (user) {
+    document.getElementById("sign-out").innerText = "Sign Out";
+  } else {
+    console.log("uid not found");
+    document.getElementById("sign-out").innerText = "Sign In";
+  }
+});

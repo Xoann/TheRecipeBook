@@ -522,7 +522,7 @@ input::-webkit-inner-spin-button {
 
 .step-item {
   width: 90%;
-  min-height: 0;
+  height: 0;
   display: flex;
   justify-content: space-evenly;
   margin-bottom: 4%;

@@ -10,6 +10,7 @@
   /* Dark colours */
   --dark-one-colour: #121212;
   --dark-two-colour: #1e1f20; /* Used for nav */
+  --dark-two-alpha-colour: rgba(30, 31, 32, 0.99); /* Used for image gradients */
   
   --grey-one-colour: #2b2c2e; /* Used for nav hover */
   --grey-two-colour: #414141;

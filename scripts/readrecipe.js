@@ -2,6 +2,7 @@ var currentUid;
 let recipes;
 let searchQuery = "";
 const navbarHoverColor = "#2b2c2e";
+let checkboxStatus = {};
 
 firebase.auth().onAuthStateChanged((user) => {
   const signOutButton = document.getElementById("sign-out");
@@ -99,21 +100,68 @@ function displayRecipes(recipeNames) {
     const recipeContainer =
       document.getElementsByClassName("recipe-container")[0];
 
-    const shoppingListCheckBox = document.createElement("input");
-    shoppingListCheckBox.type = "checkbox";
-    shoppingListCheckBox.classList.add("shopping-checkbox");
-    shoppingListCheckBox.id = `checkbox_${recipeNames[i]}`;
+    // Recipe card menu
+    // const menuContainer = document.createElement("div");
+    // menuContainer.classList.add("menu-container");
+
+    const menu = document.createElement("div");
+    menu.classList.add("menu");
+
+    const shoppingDiv = document.createElement("div");
+    shoppingDiv.classList.add("shopping-menu-div");
+    shoppingDiv.innerHTML = "Shop";
+
+    const editDiv = document.createElement("div");
+    editDiv.classList.add("edit-menu-div");
+    editDiv.innerHTML = "Edit";
+
+    const deleteDiv = document.createElement("div");
+    deleteDiv.classList.add("delete-menu-div");
+    deleteDiv.innerHTML = "Delete";
+
+    const menuButtonDiv = document.createElement("div");
+    menuButtonDiv.classList.add("recipe-card-menu-button-div");
+
+    fetch("../svgs/elipses.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        menuButtonDiv.innerHTML = svgData;
+        const svg = document.querySelector(".ellipsis-x");
+
+        function toggleAnimation() {
+          svg.classList.toggle("x");
+        }
+
+        svg.addEventListener("click", toggleAnimation);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    const checkboxDiv = document.createElement("div");
+    checkboxDiv.classList.add("checkbox-div");
+    checkboxDiv.id = `checkbox_${recipeNames[i]}`;
+
+    if (!checkboxStatus.hasOwnProperty(`checkbox_${recipeNames[i]}`)) {
+      checkboxStatus[recipeNames[i]] = false;
+    }
+
+    const check = document.createElement("div");
+    check.classList.add("check");
+    check.id = `checkbox_${recipeNames[i]}`;
 
     // I'm almost positive this prevents a bug (maybe)
-    shoppingListCheckBox.addEventListener("change", function () {
-      handleShoppingCheckbox(shoppingListCheckBox);
+    checkboxDiv.addEventListener("click", function () {
+      handleShoppingCheckbox(recipeNames[i], check);
     });
 
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
 
     recipeDiv.addEventListener("click", function (event) {
-      if (event.target !== shoppingListCheckBox) {
+      if (event.target === recipeDiv) {
+        //FIXME
+        console.log(event.target);
         displayRecipeModal(recipeNames[i]);
       }
     });
@@ -146,7 +194,18 @@ function displayRecipes(recipeNames) {
     recipeDiv.appendChild(recipeElements);
     recipeElements.appendChild(recipeNameElement);
     recipeElements.appendChild(recipeDescription);
-    recipeElements.appendChild(shoppingListCheckBox);
+
+    // recipeDiv.appendChild(checkboxDiv);
+    // checkboxDiv.appendChild(check);
+    recipeDiv.appendChild(menuButtonDiv);
+    // recipeDiv.appendChild(menuContainer);
+    recipeDiv.appendChild(menu);
+
+    menu.appendChild(shoppingDiv);
+    menu.appendChild(editDiv);
+    menu.appendChild(deleteDiv);
+    // checkboxDiv.appendChild(shoppingListCheckBox);
+    // checkboxDiv.appendChild(shoppingListCheckboxLabel);
   }
 }
 
@@ -279,17 +338,19 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function handleShoppingCheckbox(checkbox) {
-  const checkedRecipe = checkbox.id.slice(9);
-  if (checkbox.checked) {
-    shoppingList.push(checkedRecipe);
+function handleShoppingCheckbox(recipeName, check) {
+  if (!checkboxStatus[recipeName]) {
+    shoppingList.push(recipeName);
+    check.classList.add("show");
   } else {
-    const idxToRemove = shoppingList.indexOf(checkedRecipe);
+    const idxToRemove = shoppingList.indexOf(recipeName);
     if (idxToRemove !== -1) {
       shoppingList.splice(idxToRemove, 1);
     }
+    check.classList.remove("show");
   }
-  // console.log(shoppingList);
+  checkboxStatus[recipeName] = !checkboxStatus[recipeName];
+  console.log(shoppingList);
 }
 
 // Values retreived from https://en.wikipedia.org/wiki/Cooking_weights_and_measures

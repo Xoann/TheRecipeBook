@@ -10,6 +10,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: 20px;
 }
 
 .addRecipeMsg {
@@ -19,6 +20,100 @@
 
 #shopping-list {
   height: 100%;
+}
+
+/* Recipe card menu styles */
+
+.menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 100px;
+  height: 30px;
+  background-color: var(--light-colour);
+  /* transition: left 0.3s ease; */
+  /* padding: 10px; */
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  border-radius: 100px;
+  z-index: 3;
+}
+
+.recipe-card-menu-button-div {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px;
+  right: 10px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: var(--light-colour);
+  z-index: 4;
+}
+
+.recipe-card-svg {
+  /* position: relative; */
+  stroke: var(--grey-two-colour);
+  stroke-width: 5px;
+  height: 30px;
+  width: 30px;
+}
+
+.recipe-card-path {
+  /* position: absolute; */
+  /* stroke: var(--grey-two-colour);
+  stroke-width: 5px; */
+}
+
+.ellipsis-x .dot {
+  fill: black;
+  transform-origin: center;
+  transform: scale(1, 1);
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.ellipsis-x.x .dot:nth-child(1) {
+  transform: translateY(7px);
+  opacity: 0;
+}
+
+.ellipsis-x.x .dot:nth-child(2) {
+  transform: translateY(0);
+  opacity: 0;
+}
+
+.ellipsis-x.x .dot:nth-child(3) {
+  transform: translateY(-7px);
+  opacity: 0;
+}
+
+.checkbox-div {
+  content: "";
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  right: 20px;
+  width: 25px;
+  height: 25px;
+  background-color: var(--light-colour);
+  border-radius: 50%;
+  border: solid 2px var(--dark-one-colour);
+}
+
+.check {
+  display: none;
+  width: 14px;
+  height: 14px;
+  background-color: var(--primary-colour);
+  border-radius: 50%;
+}
+
+.show {
+  display: block !important;
 }
 
 /* Search section styles */
@@ -59,9 +154,9 @@
 
 .recipes {
   flex: 1;
-  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2));
-  background-color: var(--grey-one-colour);
-  border-radius: 40px 40px 0 0;
+  /* background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2)); */
+  /* background-color: var(--grey-one-colour); */
+  /* border-radius: 40px 40px 0 0; */
 }
 
 .recipe-container {
@@ -72,6 +167,7 @@
 }
 
 .recipe-div {
+  position: relative;
   width: 330px;
   height: 330px;
 
@@ -123,13 +219,16 @@
   justify-content: space-around;
 }
 
-.recipe-div .recipe-elements h2 {
+.recipe-name {
   font-size: 26px;
-  font-family: sans-serif;
+  font-family: inherit;
+  color: var(--light-colour);
+  text-transform: capitalize;
 }
 
 .recipe-div .desc-div {
   font-size: 18px;
+  color: var(--light-colour);
 }
 
 /* Recipe Modal Window Styles */

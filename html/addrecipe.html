@@ -27,7 +27,7 @@
             ><li class="nav-list-item">Shopping List</li></span
           >
           <a class="nav-list-link" href="#"
-            ><li class="nav-list-item">Add Recipe</li></a
+            ><li class="nav-list-item" id="add-recipe-button">Add Recipe</li></a
           >
           <a id="username" class="nav-list-link"
             ><li class="nav-list-item" id="username-button">Account</li></a
@@ -109,7 +109,7 @@
                           id="prepTimeMins"
                           placeholder="0"
                           class="small-details-input time-input details-input input-transition"
-                          oninput="limitInputLength(this, 2)"
+                          oninput="limitInputLength(event, this, 2)"
                         />
                       </div>
                     </div>

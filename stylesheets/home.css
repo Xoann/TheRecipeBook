@@ -130,6 +130,7 @@
 
 .recipe-div .desc-div {
   font-size: 18px;
+  overflow-y: hidden;
 }
 
 /* Recipe Modal Window Styles */
@@ -142,6 +143,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  overflow-y: scroll;
 }
 
 .modal-content {
@@ -160,4 +162,9 @@
   right: 0;
   padding: 10px;
   cursor: pointer;
+}
+
+.image {
+  max-height: 300px;
+  max-width: auto;
 }

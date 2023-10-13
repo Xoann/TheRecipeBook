@@ -108,52 +108,101 @@ function displayRecipes(recipeNames) {
     menu.classList.add("menu");
 
     const shoppingDiv = document.createElement("div");
-    shoppingDiv.classList.add("shopping-menu-div");
-    shoppingDiv.innerHTML = "Shop";
+    shoppingDiv.classList.add("slideout-menu-btn");
+    const shoppingText = document.createElement("p");
+    shoppingText.textContent = "Shop";
+    shoppingText.classList.add("btn-text");
+
+    shoppingDiv.append(shoppingText);
 
     const editDiv = document.createElement("div");
-    editDiv.classList.add("edit-menu-div");
-    editDiv.innerHTML = "Edit";
+    editDiv.classList.add("slideout-menu-btn");
+    const editText = document.createElement("p");
+    editText.textContent = "Edit";
+    editText.classList.add("btn-text");
+
+    editDiv.append(editText);
 
     const deleteDiv = document.createElement("div");
-    deleteDiv.classList.add("delete-menu-div");
-    deleteDiv.innerHTML = "Delete";
+    deleteDiv.classList.add("slideout-menu-btn");
+    const deleteText = document.createElement("p");
+    deleteText.textContent = "Delete";
+    deleteText.classList.add("btn-text");
+
+    deleteDiv.append(deleteText);
+
+    const slideoutMenuMask = document.createElement("div");
+    slideoutMenuMask.classList.add("slideout-menu-mask");
+
+    const slideoutMenu = document.createElement("div");
+    slideoutMenu.classList.add("slideout-menu");
+    slideoutMenu.id = `slideout-menu-${recipeNames[i]}`;
+    slideoutMenu.appendChild(shoppingDiv);
+    slideoutMenu.appendChild(editDiv);
+    slideoutMenu.appendChild(deleteDiv);
+    slideoutMenuMask.appendChild(slideoutMenu);
 
     const menuButtonDiv = document.createElement("div");
-    menuButtonDiv.classList.add("recipe-card-menu-button-div");
+    menuButtonDiv.classList.add("recipe-card-menu-btn");
+    menuButtonDiv.id = "recipe-card-menu-btn";
+
+    const recipeCardMenu = document.createElement("div");
+    recipeCardMenu.classList.add("recipe-card-menu");
+
+    const recipeCardMenuBtn = document.createElement("div");
+    recipeCardMenuBtn.classList.add("recipe-card-menu-btn");
+    recipeCardMenuBtn.id = "recipe-card-menu-btn";
 
     fetch("../svgs/elipses.svg")
       .then((response) => response.text())
       .then((svgData) => {
-        menuButtonDiv.innerHTML = svgData;
-        const svg = document.querySelector(".ellipsis-x");
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        recipeCardMenuBtn.appendChild(svgElement);
 
         function toggleAnimation() {
-          svg.classList.toggle("x");
+          svgElement.classList.toggle("x");
         }
 
-        svg.addEventListener("click", toggleAnimation);
+        svgElement.addEventListener("click", toggleAnimation);
       })
       .catch((error) => {
         console.error("Error loading SVG:", error);
       });
+    // TODO Make a close menu function that handles animation and class list stuff
+    recipeCardMenuBtn.addEventListener("click", () => {
+      const clickedMenu = document.getElementById(
+        `slideout-menu-${recipeNames[i]}`
+      );
+      clickedMenu.classList.toggle("sliding-menu-transition");
 
-    const checkboxDiv = document.createElement("div");
-    checkboxDiv.classList.add("checkbox-div");
-    checkboxDiv.id = `checkbox_${recipeNames[i]}`;
-
-    if (!checkboxStatus.hasOwnProperty(`checkbox_${recipeNames[i]}`)) {
-      checkboxStatus[recipeNames[i]] = false;
-    }
-
-    const check = document.createElement("div");
-    check.classList.add("check");
-    check.id = `checkbox_${recipeNames[i]}`;
-
-    // I'm almost positive this prevents a bug (maybe)
-    checkboxDiv.addEventListener("click", function () {
-      handleShoppingCheckbox(recipeNames[i], check);
+      const otherMenus = document.getElementsByClassName("slideout-menu");
+      for (let menu of otherMenus) {
+        if (menu !== clickedMenu) {
+          menu.classList.remove("sliding-menu-transition");
+        }
+      }
     });
+
+    recipeCardMenu.appendChild(recipeCardMenuBtn);
+    recipeCardMenu.appendChild(slideoutMenuMask);
+    // const checkboxDiv = document.createElement("div");
+    // checkboxDiv.classList.add("checkbox-div");
+    // checkboxDiv.id = `checkbox_${recipeNames[i]}`;
+
+    // if (!checkboxStatus.hasOwnProperty(`checkbox_${recipeNames[i]}`)) {
+    //   checkboxStatus[recipeNames[i]] = false;
+    // }
+
+    // const check = document.createElement("div");
+    // check.classList.add("check");
+    // check.id = `checkbox_${recipeNames[i]}`;
+
+    // // I'm almost positive this prevents a bug (maybe)
+    // checkboxDiv.addEventListener("click", function () {
+    //   handleShoppingCheckbox(recipeNames[i], check);
+    // });
 
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
@@ -197,13 +246,13 @@ function displayRecipes(recipeNames) {
 
     // recipeDiv.appendChild(checkboxDiv);
     // checkboxDiv.appendChild(check);
-    recipeDiv.appendChild(menuButtonDiv);
-    // recipeDiv.appendChild(menuContainer);
-    recipeDiv.appendChild(menu);
-
-    menu.appendChild(shoppingDiv);
-    menu.appendChild(editDiv);
-    menu.appendChild(deleteDiv);
+    // recipeDiv.appendChild(menuButtonDiv);
+    // // recipeDiv.appendChild(menuContainer);
+    // recipeDiv.appendChild(menu);
+    recipeDiv.appendChild(recipeCardMenu);
+    // menu.appendChild(shoppingDiv);
+    // menu.appendChild(editDiv);
+    // menu.appendChild(deleteDiv);
     // checkboxDiv.appendChild(shoppingListCheckBox);
     // checkboxDiv.appendChild(shoppingListCheckboxLabel);
   }

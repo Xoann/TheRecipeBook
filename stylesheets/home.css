@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .title {
   color: var(--primary-colour);
   font-size: 80px;
@@ -24,10 +28,17 @@
 
 /* Recipe card menu styles */
 
+.recipe-card1 {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  background-color: gray;
+}
+
 .menu {
-  position: absolute;
+  /* position: absolute;
   top: 10px;
-  right: 10px;
+  right: 10px; */
   width: 100px;
   height: 30px;
   background-color: var(--light-colour);
@@ -37,6 +48,71 @@
   border-radius: 100px;
   z-index: 3;
 }
+
+.recipe-card-menu-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border: solid 2px black;
+  border-radius: 50%;
+  z-index: 5;
+  background-color: white;
+}
+
+.btn-text {
+  user-select: none;
+}
+
+.slideout-menu-mask {
+  position: absolute;
+  border-radius: 100px;
+  height: 30px;
+  width: 180px;
+  top: 20px;
+  right: 20px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.slideout-menu {
+  /* position: absolute; */
+  background-color: white;
+  pointer-events: all;
+  margin-left: 150px;
+  top: 20px;
+  right: calc(10px - 140px);
+  right: -130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  width: 180px;
+  border: solid 2px black;
+  border-radius: 100px;
+  padding: 0px 10px;
+  z-index: 3;
+
+  transition: margin-left 0.1s ease-in;
+}
+
+.sliding-menu-transition {
+  margin-left: 0px;
+}
+
+.slideout-menu-btn {
+  cursor: pointer;
+}
+
+/* .slideout-menu:last-child {
+  content: "";
+  width: 20px;
+} */
 
 .recipe-card-menu-button-div {
   position: absolute;

@@ -130,6 +130,7 @@
 
 .recipe-div .desc-div {
   font-size: 18px;
+  overflow-y: hidden;
 }
 
 /* Recipe Modal Window Styles */
@@ -142,16 +143,91 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  overflow-y: scroll;
 }
 
 .modal-content {
-  background-color: var(--light-colour);
+  background-color: var(--grey-one-colour);
   margin: 15% auto;
   padding: 20px;
   border: 1px solid var(--grey-two-colour);
-  width: 60%;
+  width: 75%;
+  min-width: 700px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   text-align: center;
+  font-family: Gabarito;
+  color: var(--light-text-colour);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+}
+
+.modal-recipe-name {
+  font-size: 30px;
+  color: var(--primary-colour);
+}
+
+.image {
+  border-radius: 10px;
+  border: 2px var(--primary-colour) solid;
+}
+
+.details-container {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  min-width: 500px;
+  font-size: 18px;
+  border: 2px var(--primary-colour) solid;
+  border-radius: 10px;
+  padding: 10px 10px;
+}
+
+.modal-description {
+  font-size: 20px;
+}
+
+.description-div {
+  width: 80%;
+}
+
+.ingredients-steps-container {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+}
+
+.ingredients-container {
+  width: 35%;
+  list-style-type: disc;
+  margin-right: 35px;
+  display: flex;
+  flex-direction: column;
+}
+
+.med-label {
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: var(--primary-colour);
+}
+
+.ingredient {
+  margin-bottom: 10px;
+  text-align: left;
+  font-size: 18px;
+}
+
+.steps-container {
+  font-size: 18px;
+  width: 65%;
+  list-style-type: decimal;
+}
+
+.step {
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .close {
@@ -160,4 +236,9 @@
   right: 0;
   padding: 10px;
   cursor: pointer;
+}
+
+.image {
+  max-height: 300px;
+  max-width: auto;
 }

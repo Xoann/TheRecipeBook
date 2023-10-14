@@ -94,7 +94,7 @@ function displayRecipes(recipeNames) {
   const imageURLs = getImageURLs(recipeNames, currentUid);
 
   for (let i = 0; i < recipeNames.length; i++) {
-    generateRecipeModal(recipeNames[i]);
+    generateRecipeModal(recipeNames[i], imageURLs);
 
     const recipeContainer =
       document.getElementsByClassName("recipe-container")[0];
@@ -191,14 +191,10 @@ searchInput.addEventListener("input", function (event) {
 /// Generate Recipe Modals ///
 //////////////////////////////
 
-function generateRecipeModal(recipeName) {
-  const uid = firebase.auth().currentUid;
+async function generateRecipeModal(recipeName, imageURLs) {
   const recipe = recipes[recipeName];
-  const description = recipe.recipeDesc;
-  const steps = recipe.steps;
-  const ingredients = recipe.ingredients;
-  const prepTimeHrs = recipe.prepTimeHrs;
-  const prepTimeMins = recipe.prepTimeMins;
+  const numIngredients = recipe.ingredients.length;
+  const numSteps = recipe.steps.length;
 
   const modalElement = document.createElement("div");
   modalElement.classList.add("modal");
@@ -207,27 +203,120 @@ function generateRecipeModal(recipeName) {
   const modalContentElement = document.createElement("div");
   modalContentElement.classList.add("modal-content");
 
+  //Name
   const recipeNameElement = document.createElement("h2");
   recipeNameElement.classList.add("modal-recipe-name");
   recipeNameElement.textContent = recipeName;
 
+  //Image
+  const image = document.createElement("img");
+  image.classList.add("image");
+  loadImg(image, imageURLs, recipeName);
+
+  //Description
+
+  const descriptionDiv = document.createElement("div");
+  descriptionDiv.classList.add("description-div");
+
   const descriptionElement = document.createElement("h2");
   descriptionElement.classList.add("modal-description");
-  descriptionElement.textContent = description;
+  descriptionElement.textContent = recipe.recipeDesc;
+  descriptionDiv.appendChild(descriptionElement);
 
-  const prepTimeContainer = document.createElement("div");
-  prepTimeContainer.classList.add("prep-time-container");
-
+  //Prep Time
   const prepTimeLabel = document.createElement("label");
   prepTimeLabel.classList.add("detail-label");
-  prepTimeLabel.textContent = "Prep Time";
+  let prepHrsMsg = `${recipe.prepTimeHrs} hrs`;
+  let prepMinsMsg = `${recipe.prepTimeMins} mins`;
 
-  const prepTimeHrsElement = document.create;
+  if (recipe.prepTimeHrs === "0") {
+    prepHrsMsg = "";
+  } else if (recipe.prepTimeHrs === "1") {
+    prepHrsMsg = "1 hr";
+  }
 
+  if (recipe.prepTimeMins === "0") {
+    prepMinsMsg = "";
+  } else if (recipe.prepTimeMins === "1") {
+    prepMinsMsg = "1 min";
+  }
+
+  prepTimeLabel.textContent = `Prep Time: ${prepHrsMsg} ${prepMinsMsg}`;
+
+  //Cook Time
+  const cookTimeLabel = document.createElement("label");
+  cookTimeLabel.classList.add("detail-label");
+  let cookHrsMsg = `${recipe.cookTimeHrs} hrs`;
+  let cookMinsMsg = `${recipe.cookTimeMins} mins`;
+
+  if (recipe.cookTimeHrs === "0") {
+    cookHrsMsg = "";
+  } else if (recipe.cookTimeHrs === "1") {
+    cookHrsMsg = "1 hr";
+  }
+
+  if (recipe.cookTimeMins === "0") {
+    cookMinsMsg = "";
+  } else if (recipe.cookTimeMins === "1") {
+    cookMinsMsg = "1 min";
+  }
+
+  cookTimeLabel.textContent = `Cook Time: ${cookHrsMsg} ${cookMinsMsg}`;
+
+  //Servings
+  const servingsLabel = document.createElement("label");
+  servingsLabel.classList.add("detail-label");
+  servingsLabel.textContent = `Servings: ${recipe.servings}`;
+
+  const detailsContainer = document.createElement("div");
+  detailsContainer.classList.add("details-container");
+  detailsContainer.appendChild(prepTimeLabel);
+  detailsContainer.appendChild(cookTimeLabel);
+  detailsContainer.appendChild(servingsLabel);
+
+  //Ingredients
+  const ingredientsStepsContainer = document.createElement("div");
+  ingredientsStepsContainer.classList.add("ingredients-steps-container");
+
+  const ingredientLabel = document.createElement("h3");
+  ingredientLabel.classList.add("med-label");
+  ingredientLabel.innerText = "Ingredients:";
+
+  const ingredientsContainer = document.createElement("ul");
+  ingredientsContainer.appendChild(ingredientLabel);
+  ingredientsContainer.classList.add("ingredients-container");
+  for (let ingredient of recipe.ingredients) {
+    const ingredientElement = document.createElement("li");
+    ingredientElement.classList.add("ingredient");
+    ingredientElement.textContent = `${ingredient.value} ${ingredient.unit} ${ingredient.name}`;
+    ingredientsContainer.appendChild(ingredientElement);
+  }
+
+  ingredientsStepsContainer.appendChild(ingredientsContainer);
+
+  //Steps
+
+  const stepLabel = document.createElement("h3");
+  stepLabel.classList.add("med-label");
+  stepLabel.innerText = "Steps:";
+
+  const stepsContainer = document.createElement("ul");
+  stepsContainer.appendChild(stepLabel);
+  stepsContainer.classList.add("steps-container");
+  for (let step of recipe.steps) {
+    const stepElement = document.createElement("li");
+    stepElement.classList.add("step");
+    stepElement.textContent = `${step}`;
+    stepsContainer.appendChild(stepElement);
+  }
+
+  ingredientsStepsContainer.appendChild(stepsContainer);
+
+  //Close Button
   const closeModalButton = document.createElement("span");
   closeModalButton.id = "closeModalButton";
   closeModalButton.textContent = "Close";
-
+  closeModalButton.classList.add("close");
   closeModalButton.addEventListener("click", () => closeModal(modalElement));
 
   window.addEventListener("click", (event) => {
@@ -241,7 +330,11 @@ function generateRecipeModal(recipeName) {
   documentBody.appendChild(modalElement);
   modalElement.appendChild(modalContentElement);
   modalContentElement.appendChild(recipeNameElement);
-  modalContentElement.appendChild(descriptionElement);
+  modalContentElement.appendChild(image);
+  modalContentElement.appendChild(descriptionDiv);
+  modalContentElement.appendChild(detailsContainer);
+  modalContentElement.appendChild(ingredientsStepsContainer);
+
   modalContentElement.appendChild(closeModalButton);
 }
 

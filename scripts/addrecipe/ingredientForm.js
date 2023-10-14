@@ -32,13 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
     input_name.placeholder = "Add an ingredient";
 
     const input_value = document.createElement("input");
-    input_value.type = "number";
+    input_value.type = "text";
     input_value.classList.add("ingredient-amount");
     input_value.id = `ingredient_value_${itemCount}`;
     input_value.placeholder = "Amount";
     input_value.classList.add("ingredient-input");
     input_value.classList.add("input-transition");
-    input_value.setAttribute("oninput", "limitInputLength(this, 4)");
+    input_value.setAttribute("oninput", "limitInputLength(this, 14)");
 
     // const input_unit = document.createElement("input");
     // input_unit.setAttribute("list", "units");
@@ -239,3 +239,18 @@ closeButton.addEventListener("click", function () {
     .getElementById("display-image")
     .removeChild(document.getElementById("image"));
 });
+
+// function restrictInput(event, element, maxLength) {
+//   var allowedCharacters = /^[0-9\/]*$/; // Regex for numbers and /
+//   var inputField = event.target;
+//   //var errorMessage = document.getElementById("error-message");
+
+//   // Check if the entered character is allowed
+//   if (!allowedCharacters.test(inputField.value)) {
+//     // Prevent the character from being entered
+//     inputField.value = inputField.value.slice(0, -1);
+
+//     //errorMessage.textContent = "Please enter only numbers and /.";
+//   }
+//   limitInputLength(element, maxLength);
+// }

@@ -214,19 +214,54 @@ async function generateRecipeModal(recipeName, imageURLs) {
   loadImg(image, imageURLs, recipeName);
 
   //Description
+
+  const descriptionDiv = document.createElement("div");
+  descriptionDiv.classList.add("description-div");
+
   const descriptionElement = document.createElement("h2");
   descriptionElement.classList.add("modal-description");
   descriptionElement.textContent = recipe.recipeDesc;
+  descriptionDiv.appendChild(descriptionElement);
 
   //Prep Time
   const prepTimeLabel = document.createElement("label");
   prepTimeLabel.classList.add("detail-label");
-  prepTimeLabel.textContent = `Prep Time: ${recipe.prepTimeHrs} hrs ${recipe.prepTimeMins} mins`;
+  let prepHrsMsg = `${recipe.prepTimeHrs} hrs`;
+  let prepMinsMsg = `${recipe.prepTimeMins} mins`;
+
+  if (recipe.prepTimeHrs === "0") {
+    prepHrsMsg = "";
+  } else if (recipe.prepTimeHrs === "1") {
+    prepHrsMsg = "1 hr";
+  }
+
+  if (recipe.prepTimeMins === "0") {
+    prepMinsMsg = "";
+  } else if (recipe.prepTimeMins === "1") {
+    prepMinsMsg = "1 min";
+  }
+
+  prepTimeLabel.textContent = `Prep Time: ${prepHrsMsg} ${prepMinsMsg}`;
 
   //Cook Time
   const cookTimeLabel = document.createElement("label");
   cookTimeLabel.classList.add("detail-label");
-  cookTimeLabel.textContent = `Cook Time:${recipe.cookTimeHrs} hrs ${recipe.cookTimeMins} mins`;
+  let cookHrsMsg = `${recipe.cookTimeHrs} hrs`;
+  let cookMinsMsg = `${recipe.cookTimeMins} mins`;
+
+  if (recipe.cookTimeHrs === "0") {
+    cookHrsMsg = "";
+  } else if (recipe.cookTimeHrs === "1") {
+    cookHrsMsg = "1 hr";
+  }
+
+  if (recipe.cookTimeMins === "0") {
+    cookMinsMsg = "";
+  } else if (recipe.cookTimeMins === "1") {
+    cookMinsMsg = "1 min";
+  }
+
+  cookTimeLabel.textContent = `Cook Time: ${cookHrsMsg} ${cookMinsMsg}`;
 
   //Servings
   const servingsLabel = document.createElement("label");
@@ -240,7 +275,15 @@ async function generateRecipeModal(recipeName, imageURLs) {
   detailsContainer.appendChild(servingsLabel);
 
   //Ingredients
+  const ingredientsStepsContainer = document.createElement("div");
+  ingredientsStepsContainer.classList.add("ingredients-steps-container");
+
+  const ingredientLabel = document.createElement("h3");
+  ingredientLabel.classList.add("med-label");
+  ingredientLabel.innerText = "Ingredients:";
+
   const ingredientsContainer = document.createElement("ul");
+  ingredientsContainer.appendChild(ingredientLabel);
   ingredientsContainer.classList.add("ingredients-container");
   for (let ingredient of recipe.ingredients) {
     const ingredientElement = document.createElement("li");
@@ -249,8 +292,16 @@ async function generateRecipeModal(recipeName, imageURLs) {
     ingredientsContainer.appendChild(ingredientElement);
   }
 
+  ingredientsStepsContainer.appendChild(ingredientsContainer);
+
   //Steps
+
+  const stepLabel = document.createElement("h3");
+  stepLabel.classList.add("med-label");
+  stepLabel.innerText = "Steps:";
+
   const stepsContainer = document.createElement("ul");
+  stepsContainer.appendChild(stepLabel);
   stepsContainer.classList.add("steps-container");
   for (let step of recipe.steps) {
     const stepElement = document.createElement("li");
@@ -259,11 +310,13 @@ async function generateRecipeModal(recipeName, imageURLs) {
     stepsContainer.appendChild(stepElement);
   }
 
+  ingredientsStepsContainer.appendChild(stepsContainer);
+
   //Close Button
   const closeModalButton = document.createElement("span");
   closeModalButton.id = "closeModalButton";
   closeModalButton.textContent = "Close";
-
+  closeModalButton.classList.add("close");
   closeModalButton.addEventListener("click", () => closeModal(modalElement));
 
   window.addEventListener("click", (event) => {
@@ -278,10 +331,9 @@ async function generateRecipeModal(recipeName, imageURLs) {
   modalElement.appendChild(modalContentElement);
   modalContentElement.appendChild(recipeNameElement);
   modalContentElement.appendChild(image);
-  modalContentElement.appendChild(descriptionElement);
+  modalContentElement.appendChild(descriptionDiv);
   modalContentElement.appendChild(detailsContainer);
-  modalContentElement.appendChild(ingredientsContainer);
-  modalContentElement.appendChild(stepsContainer);
+  modalContentElement.appendChild(ingredientsStepsContainer);
 
   modalContentElement.appendChild(closeModalButton);
 }

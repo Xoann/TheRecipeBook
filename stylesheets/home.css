@@ -28,13 +28,6 @@
 
 /* Recipe card menu styles */
 
-.recipe-card1 {
-  position: relative;
-  width: 400px;
-  height: 500px;
-  background-color: gray;
-}
-
 .menu {
   /* position: absolute;
   top: 10px;
@@ -54,14 +47,15 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  cursor: pointer;
   top: 20px;
   right: 20px;
   width: 30px;
   height: 30px;
-  border: solid 2px black;
+  border: solid 2px var(--light-colour);
   border-radius: 50%;
   z-index: 5;
-  background-color: white;
+  background-color: var(--grey-one-colour);
 }
 
 .btn-text {
@@ -72,28 +66,35 @@
   position: absolute;
   border-radius: 100px;
   height: 30px;
-  width: 180px;
+  width: 220px;
   top: 20px;
   right: 20px;
   overflow: hidden;
   pointer-events: none;
 }
 
+.menu-svgs {
+  stroke: var(--light-colour);
+  width: 18px;
+  height: auto;
+}
+
 .slideout-menu {
   /* position: absolute; */
-  background-color: white;
+  background-color: var(--grey-one-colour);
+  color: var(--light-colour);
   pointer-events: all;
-  margin-left: 150px;
-  top: 20px;
+  margin-left: 190px;
+  /* top: 20px;
   right: calc(10px - 140px);
-  right: -130px;
+  right: -160px; */
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
   height: 30px;
-  width: 180px;
-  border: solid 2px black;
+  width: 220px;
+  border: solid 2px var(--light-colour);
   border-radius: 100px;
   padding: 0px 10px;
   z-index: 3;
@@ -105,14 +106,38 @@
   margin-left: 0px;
 }
 
-.slideout-menu-btn {
-  cursor: pointer;
+.extra-menu-spacer {
+  width: 40px;
 }
 
-/* .slideout-menu:last-child {
-  content: "";
-  width: 20px;
-} */
+.slideout-menu-btn {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  width: 60px;
+  padding: 0px 5px;
+  border-radius: 6px;
+}
+
+.slideout-menu-btn:hover {
+  background-color: var(--grey-two-colour);
+}
+
+.delete-recipe-btn:hover {
+  color: var(--error-colour);
+}
+
+.delete-recipe-btn:hover svg {
+  stroke: var(--error-colour);
+}
+
+.shop-added {
+  color: var(--primary-colour);
+  stroke: var(--primary-colour);
+}
 
 .recipe-card-menu-button-div {
   position: absolute;
@@ -136,14 +161,8 @@
   width: 30px;
 }
 
-.recipe-card-path {
-  /* position: absolute; */
-  /* stroke: var(--grey-two-colour);
-  stroke-width: 5px; */
-}
-
 .ellipsis-x .dot {
-  fill: black;
+  fill: var(--light-colour);
   transform-origin: center;
   transform: scale(1, 1);
   opacity: 1;
@@ -275,10 +294,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  user-select: none;
 }
 
 .gradient-overlay::before {
   content: "";
+  user-select: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -317,6 +338,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99;
 }
 
 .modal-content {

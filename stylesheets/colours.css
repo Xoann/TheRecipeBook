@@ -10,16 +10,21 @@
   /* Dark colours */
   --dark-one-colour: #121212;
   --dark-two-colour: #1e1f20; /* Used for nav */
-  --dark-two-alpha-colour: rgba(30, 31, 32, 0.99); /* Used for image gradients */
-  
+  --dark-two-alpha-colour: rgba(
+    30,
+    31,
+    32,
+    0.99
+  ); /* Used for image gradients */
+
   --grey-one-colour: #2b2c2e; /* Used for nav hover */
   --grey-two-colour: #414141;
 
   --light-button-hover: #aaa;
-  --grey-text-colour: #808080
+  --grey-text-colour: #808080;
 
   /* Accent colours */
-  --error-red: #ee4144;
+  --error-colour: #ee4144;
 }
 
 /* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

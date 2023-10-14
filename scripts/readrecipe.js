@@ -103,6 +103,8 @@ function displayRecipes(recipeNames) {
     // Recipe card menu
     // const menuContainer = document.createElement("div");
     // menuContainer.classList.add("menu-container");
+    const recipeDiv = document.createElement("div");
+    recipeDiv.classList.add("recipe-div");
 
     const menu = document.createElement("div");
     menu.classList.add("menu");
@@ -110,10 +112,27 @@ function displayRecipes(recipeNames) {
     const shoppingDiv = document.createElement("div");
     shoppingDiv.classList.add("slideout-menu-btn");
     const shoppingText = document.createElement("p");
-    shoppingText.textContent = "Shop";
+    shoppingText.textContent = "Add";
     shoppingText.classList.add("btn-text");
+    shoppingText.id = `shop-text-${recipeNames[i]}`;
 
-    shoppingDiv.append(shoppingText);
+    shoppingDiv.addEventListener("click", () => {
+      handleShoppingCheckbox(recipeNames[i]);
+    });
+
+    fetch("../svgs/shop.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        svgElement.id = `shop-icon-${recipeNames[i]}`;
+        shoppingDiv.appendChild(svgElement);
+        shoppingDiv.append(shoppingText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
 
     const editDiv = document.createElement("div");
     editDiv.classList.add("slideout-menu-btn");
@@ -121,15 +140,46 @@ function displayRecipes(recipeNames) {
     editText.textContent = "Edit";
     editText.classList.add("btn-text");
 
-    editDiv.append(editText);
+    fetch("../svgs/edit.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        editDiv.appendChild(svgElement);
+        editDiv.append(editText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
 
     const deleteDiv = document.createElement("div");
     deleteDiv.classList.add("slideout-menu-btn");
+    deleteDiv.classList.add("delete-recipe-btn");
     const deleteText = document.createElement("p");
-    deleteText.textContent = "Delete";
+    deleteText.textContent = "Del";
     deleteText.classList.add("btn-text");
 
-    deleteDiv.append(deleteText);
+    deleteDiv.addEventListener("click", () => {
+      handleDeleteRecipe(recipeNames[i]);
+    });
+
+    fetch("../svgs/trash.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        deleteDiv.appendChild(svgElement);
+        deleteDiv.append(deleteText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    const extraSpace = document.createElement("div");
+    extraSpace.classList.add("extra-menu-spacer");
+    extraSpace.text = "";
 
     const slideoutMenuMask = document.createElement("div");
     slideoutMenuMask.classList.add("slideout-menu-mask");
@@ -140,6 +190,7 @@ function displayRecipes(recipeNames) {
     slideoutMenu.appendChild(shoppingDiv);
     slideoutMenu.appendChild(editDiv);
     slideoutMenu.appendChild(deleteDiv);
+    slideoutMenu.appendChild(extraSpace);
     slideoutMenuMask.appendChild(slideoutMenu);
 
     const menuButtonDiv = document.createElement("div");
@@ -160,29 +211,13 @@ function displayRecipes(recipeNames) {
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         recipeCardMenuBtn.appendChild(svgElement);
-
-        function toggleAnimation() {
-          svgElement.classList.toggle("x");
-        }
-
-        svgElement.addEventListener("click", toggleAnimation);
       })
       .catch((error) => {
         console.error("Error loading SVG:", error);
       });
     // TODO Make a close menu function that handles animation and class list stuff
     recipeCardMenuBtn.addEventListener("click", () => {
-      const clickedMenu = document.getElementById(
-        `slideout-menu-${recipeNames[i]}`
-      );
-      clickedMenu.classList.toggle("sliding-menu-transition");
-
-      const otherMenus = document.getElementsByClassName("slideout-menu");
-      for (let menu of otherMenus) {
-        if (menu !== clickedMenu) {
-          menu.classList.remove("sliding-menu-transition");
-        }
-      }
+      handleElipsisBtnPress(recipeNames[i]);
     });
 
     recipeCardMenu.appendChild(recipeCardMenuBtn);
@@ -203,9 +238,6 @@ function displayRecipes(recipeNames) {
     // checkboxDiv.addEventListener("click", function () {
     //   handleShoppingCheckbox(recipeNames[i], check);
     // });
-
-    const recipeDiv = document.createElement("div");
-    recipeDiv.classList.add("recipe-div");
 
     recipeDiv.addEventListener("click", function (event) {
       if (event.target === recipeDiv) {
@@ -387,17 +419,21 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function handleShoppingCheckbox(recipeName, check) {
+function handleShoppingCheckbox(recipeName) {
   if (!checkboxStatus[recipeName]) {
     shoppingList.push(recipeName);
-    check.classList.add("show");
   } else {
     const idxToRemove = shoppingList.indexOf(recipeName);
     if (idxToRemove !== -1) {
       shoppingList.splice(idxToRemove, 1);
     }
-    check.classList.remove("show");
   }
+  document
+    .getElementById(`shop-text-${recipeName}`)
+    .classList.toggle("shop-added");
+  document
+    .getElementById(`shop-icon-${recipeName}`)
+    .classList.toggle("shop-added");
   checkboxStatus[recipeName] = !checkboxStatus[recipeName];
   console.log(shoppingList);
 }
@@ -492,6 +528,34 @@ function updateShoppingListModal() {
 
     shoppingModalContent.appendChild(ingredientNameElement);
   }
+}
+
+function handleElipsisBtnPress(recipeName) {
+  const clickedMenu = document.getElementById(`slideout-menu-${recipeName}`);
+  clickedMenu.classList.toggle("sliding-menu-transition");
+
+  const otherMenus = document.getElementsByClassName("slideout-menu");
+  for (let menu of otherMenus) {
+    if (menu !== clickedMenu) {
+      menu.classList.remove("sliding-menu-transition");
+    }
+  }
+}
+
+function handleDeleteRecipe(recipeName) {
+  // Modify delete modal
+  const deleteModalText = document.getElementById("delete-modal-text");
+  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
+
+  // Display delete modal
+  const modal = document.getElementById("delete-modal");
+  openModal(modal);
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
 }
 
 // BUG Shopping list doesnt reset when you select a recipe after searching it

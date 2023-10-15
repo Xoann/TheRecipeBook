@@ -556,6 +556,136 @@ function handleDeleteRecipe(recipeName) {
       closeModal(modal);
     }
   });
+
+  const deleteAcountBtn = document.getElementById("delete-recipe-final-btn");
+
+  deleteAcountBtn.addEventListener("click", () => {
+    deleteRecipe(recipeName);
+    closeModal(modal);
+
+    // delete recipes.recipeName;
+
+    // updateRecipes(narrowSearch(searchQuery));
+  });
+}
+
+function deleteRecipe(recipe) {
+  const databaseRef = firebase
+    .database()
+    .ref(`${currentUid}/recipes/${recipe}`);
+  databaseRef
+    .remove()
+    .then(function () {
+      console.log("Element removed successfully!");
+    })
+    .catch(function (error) {
+      console.error("Error removing element: " + error.message);
+    });
+
+  const storageRef = firebase.storage().ref();
+  storageRef
+    .child(`${currentUid}/images/${recipe}`)
+    .delete()
+    .then(function () {
+      console.log("File deleted successfully.");
+    })
+    .catch(function (error) {
+      console.error("Error deleting file:", error);
+    });
+}
+
+function deleteAcount(uid) {
+  // Delete all recipes under this uid
+  const realtimeDatabase = firebase.database();
+  const recipesRef = realtimeDatabase.ref(uid);
+  recipesRef
+    .remove()
+    .then(function () {
+      console.log("Element removed successfully!");
+    })
+    .catch(function (error) {
+      console.error("Error removing element: " + error.message);
+    });
+
+  // Delete from users in Firestore
+  const firestore = firebase.firestore();
+  const userDocRef = firestore.collection("users").doc(uid);
+  userDocRef
+    .delete()
+    .then(function () {
+      console.log("Document successfully deleted!");
+    })
+    .catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
+
+  // Delete username from fast data
+  const fastDataDoc = firestore.collection("fastData").doc("usernames");
+  fastDataDoc
+    .get()
+    .then(function (doc) {
+      if (doc.exists) {
+        const dataArray = doc.data().yourArrayFieldName;
+        // Remove the specific element from the array
+        const updatedArray = dataArray.filter((item) => item !== uid);
+
+        // Update the document with the modified array
+        fastDataDoc
+          .update({
+            yourArrayFieldName: updatedArray,
+          })
+          .then(function () {
+            console.log("Element removed from the array successfully!");
+          })
+          .catch(function (error) {
+            console.error("Error removing element from the array: ", error);
+          });
+      } else {
+        console.log("Document not found!");
+      }
+    })
+    .catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+
+  // Delete img dir in storage
+  const storage = firebase.storage();
+  const storageRef = storage.ref();
+  storageRef
+    .child(uid)
+    .listAll.then(function (result) {
+      result.items.forEach(function (item) {
+        // Delete each file in the folder
+        item
+          .delete()
+          .then(function () {
+            console.log("File deleted successfully.");
+          })
+          .catch(function (error) {
+            console.error("Error deleting file:", error);
+          });
+      });
+    })
+    .catch(function (error) {
+      console.error("Error listing files in the folder:", error);
+    });
+
+  // Delete acount in auth
+  if (uid) {
+    uid
+      .delete()
+      .then(function () {
+        // User deleted.
+        console.log("User account deleted successfully.");
+      })
+      .catch(function (error) {
+        // An error happened.
+        console.error("Error deleting user account:", error);
+      });
+  } else {
+    // No user is signed in.
+    console.log("No user is currently signed in.");
+  }
 }
 
 // BUG Shopping list doesnt reset when you select a recipe after searching it

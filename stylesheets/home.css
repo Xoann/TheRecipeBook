@@ -161,6 +161,13 @@
   width: 30px;
 }
 
+.ellipsis-x {
+  width: 100%;
+  height: auto;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+
 .ellipsis-x .dot {
   fill: var(--light-colour);
   transform-origin: center;
@@ -182,6 +189,32 @@
 .ellipsis-x.x .dot:nth-child(3) {
   transform: translateY(-7px);
   opacity: 0;
+}
+
+#delete-modal-content {
+  background-color: var(--grey-one-colour);
+  color: var(--light-colour);
+  border-radius: 20px;
+  font-family: Gabarito;
+  height: 15vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 60px 0px;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-recipe-final-btn {
+  padding: 10px;
+  background-color: var(--error-colour);
+  border-radius: 10px;
+  transition: transform 0.2 ease;
+}
+
+.delete-recipe-final-btn:hover {
+  cursor: pointer;
+  transform: scale(102%);
 }
 
 .checkbox-div {

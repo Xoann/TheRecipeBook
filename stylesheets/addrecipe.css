@@ -8,6 +8,10 @@
   margin-bottom: 2%;
 }
 
+#add-recipe-button {
+  border-bottom: 2px var(--primary-colour) solid;
+}
+
 .mainBg {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
@@ -231,7 +235,6 @@
   background-color: inherit;
   font-family: inherit;
   color: var(--light-text-colour);
-
   font-size: inherit;
 }
 

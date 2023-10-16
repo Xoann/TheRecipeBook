@@ -288,7 +288,7 @@ async function signInUser(email, password) {
       const errorLabel = document.getElementById("sign-in-email-label");
       handleInputError(errorElement, errorInput, errorLabel);
     }
-    handleInputError();
+    // handleInputError();
   }
 }
 

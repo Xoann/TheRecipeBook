@@ -291,7 +291,7 @@ function narrowSearch(search) {
   const names = Object.keys(recipes);
 
   for (const recipe of names) {
-    if (recipe.includes(search)) {
+    if (recipe.toLowerCase().includes(search)) {
       matches.push(recipe);
     }
   }
@@ -305,7 +305,7 @@ function updateRecipes(recipeNames) {
 }
 
 searchInput.addEventListener("input", function (event) {
-  searchQuery = event.target.value;
+  searchQuery = event.target.value.toLowerCase();
 
   const searchedRecipeNames = narrowSearch(searchQuery);
   updateRecipes(searchedRecipeNames);
@@ -666,9 +666,6 @@ function deleteAcount(uid) {
     console.log("No user is currently signed in.");
   }
 }
-
-// BUG Shopping list doesnt reset when you select a recipe after searching it
-// BUG Checkboxes don't data persist when searching recipes
 
 // For testing to auto add new recipes by pressing =
 function writeUserData(

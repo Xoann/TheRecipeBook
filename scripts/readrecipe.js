@@ -115,6 +115,9 @@ function displayRecipes(recipeNames) {
     const shoppingText = document.createElement("p");
     shoppingText.textContent = "Add";
     shoppingText.classList.add("btn-text");
+    if (shoppingList.includes(recipeNames[i])) {
+      shoppingText.classList.add("shop-added");
+    }
     shoppingText.id = `shop-text-${recipeNames[i]}`;
 
     shoppingDiv.addEventListener("click", () => {
@@ -128,6 +131,9 @@ function displayRecipes(recipeNames) {
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         svgElement.id = `shop-icon-${recipeNames[i]}`;
+        if (shoppingList.includes(recipeNames[i])) {
+          svgElement.classList.add("shop-added");
+        }
         shoppingDiv.appendChild(svgElement);
         shoppingDiv.append(shoppingText);
       })
@@ -223,22 +229,6 @@ function displayRecipes(recipeNames) {
 
     recipeCardMenu.appendChild(recipeCardMenuBtn);
     recipeCardMenu.appendChild(slideoutMenuMask);
-    // const checkboxDiv = document.createElement("div");
-    // checkboxDiv.classList.add("checkbox-div");
-    // checkboxDiv.id = `checkbox_${recipeNames[i]}`;
-
-    // if (!checkboxStatus.hasOwnProperty(`checkbox_${recipeNames[i]}`)) {
-    //   checkboxStatus[recipeNames[i]] = false;
-    // }
-
-    // const check = document.createElement("div");
-    // check.classList.add("check");
-    // check.id = `checkbox_${recipeNames[i]}`;
-
-    // // I'm almost positive this prevents a bug (maybe)
-    // checkboxDiv.addEventListener("click", function () {
-    //   handleShoppingCheckbox(recipeNames[i], check);
-    // });
 
     recipeDiv.addEventListener("click", function (event) {
       if (event.target === recipeDiv) {
@@ -261,6 +251,9 @@ function displayRecipes(recipeNames) {
     const recipeElements = document.createElement("div");
     recipeElements.classList.add("recipe-elements");
 
+    const topElements = document.createElement("div");
+    topElements.classList.add("top-elements");
+
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("recipe-name");
     recipeNameElement.textContent = recipeNames[i];
@@ -274,20 +267,10 @@ function displayRecipes(recipeNames) {
     imgContainer.appendChild(recipeImg);
     imgContainer.appendChild(gradientOverlay);
     recipeDiv.appendChild(recipeElements);
-    recipeElements.appendChild(recipeNameElement);
+    recipeElements.appendChild(topElements);
+    topElements.appendChild(recipeNameElement);
     recipeElements.appendChild(recipeDescription);
-
-    // recipeDiv.appendChild(checkboxDiv);
-    // checkboxDiv.appendChild(check);
-    // recipeDiv.appendChild(menuButtonDiv);
-    // // recipeDiv.appendChild(menuContainer);
-    // recipeDiv.appendChild(menu);
     recipeDiv.appendChild(recipeCardMenu);
-    // menu.appendChild(shoppingDiv);
-    // menu.appendChild(editDiv);
-    // menu.appendChild(deleteDiv);
-    // checkboxDiv.appendChild(shoppingListCheckBox);
-    // checkboxDiv.appendChild(shoppingListCheckboxLabel);
   }
 }
 
@@ -436,7 +419,7 @@ function handleShoppingCheckbox(recipeName) {
     .getElementById(`shop-icon-${recipeName}`)
     .classList.toggle("shop-added");
   checkboxStatus[recipeName] = !checkboxStatus[recipeName];
-  console.log(shoppingList);
+  console.log(`shopping list: ${shoppingList}`);
 }
 
 // Values retreived from https://en.wikipedia.org/wiki/Cooking_weights_and_measures
@@ -459,9 +442,6 @@ const volUnitsToMl = {
   "qt.": 946.353,
   "gal.": 3785.41,
 };
-
-// testing
-// document.getElementById("hh").addEventListener("click", combineIngredients);
 
 function combineIngredients() {
   let shoppingIngredientObject = {};

@@ -199,17 +199,18 @@ document.getElementById("submit").addEventListener("click", function (e) {
         .addEventListener("input", function () {
           checkIfEmpty(document.getElementById(`ingredient_${i}`));
         });
+      error = 1;
     }
-    if (getElementVal(`ingredient_value_${i}`).length === 0) {
-      document
-        .getElementById(`ingredient_value_${i}`)
-        .classList.add("input-error");
-      document
-        .getElementById(`ingredient_value_${i}`)
-        .addEventListener("input", function () {
-          checkIfEmpty(document.getElementById(`ingredient_value_${i}`));
-        });
-    }
+    // if (getElementVal(`ingredient_value_${i}`).length === 0) {
+    //   document
+    //     .getElementById(`ingredient_value_${i}`)
+    //     .classList.add("input-error");
+    //   document
+    //     .getElementById(`ingredient_value_${i}`)
+    //     .addEventListener("input", function () {
+    //       checkIfEmpty(document.getElementById(`ingredient_value_${i}`));
+    //     });
+    // }
   }
 
   //Empty Steps
@@ -221,6 +222,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
         .addEventListener("input", function () {
           checkIfSpanEmpty(document.getElementById(`recipe-step_${i}`));
         });
+      error = 1;
     }
   }
 

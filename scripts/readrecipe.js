@@ -264,15 +264,83 @@ async function generateRecipeModal(recipeName, imageURLs) {
   cookTimeLabel.textContent = `Cook Time: ${cookHrsMsg} ${cookMinsMsg}`;
 
   //Servings
+
+  const servingsContainer = document.createElement("div");
+  servingsContainer.classList.add("servings-container");
+
   const servingsLabel = document.createElement("label");
   servingsLabel.classList.add("detail-label");
-  servingsLabel.textContent = `Servings: ${recipe.servings}`;
+  servingsLabel.textContent = "Servings:";
+  servingsContainer.appendChild(servingsLabel);
+
+  const servingsInput = document.createElement("input");
+  servingsInput.id = "servings-input";
+  servingsInput.value = `${recipe.servings}`;
+
+  //Recalculate ingredient amounts
+  function recalculateIngredients() {
+    let ingredientValueElements = document.getElementsByClassName(
+      `ingredient_${recipeName.replace(/ /g, "-")}`
+    );
+    let numServings = servingsInput.value;
+    let origServings = Number(recipe.servings);
+
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+      let ingredientString = recipe.ingredients[i].value;
+      let ingredientValue;
+
+      ingredientValue = multiplyFractionByNumber(
+        ingredientString,
+        numServings,
+        origServings
+      );
+      ingredientValueElements[i].textContent = ingredientValue;
+    }
+  }
+
+  fetch("../svgs/minus.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      svgElement.classList.add("servings-button");
+      servingsContainer.appendChild(svgElement);
+
+      servingsContainer.appendChild(servingsInput);
+
+      svgElement.addEventListener("click", function () {
+        servingsInput.value = servingsInput.value - 1;
+        recalculateIngredients();
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
+
+  fetch("../svgs/plus.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      svgElement.classList.add("servings-button");
+      servingsContainer.appendChild(svgElement);
+
+      svgElement.addEventListener("click", function () {
+        servingsInput.value = Number(servingsInput.value) + 1;
+        recalculateIngredients();
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
 
   const detailsContainer = document.createElement("div");
   detailsContainer.classList.add("details-container");
   detailsContainer.appendChild(prepTimeLabel);
   detailsContainer.appendChild(cookTimeLabel);
-  detailsContainer.appendChild(servingsLabel);
+  detailsContainer.appendChild(servingsContainer);
 
   //Ingredients
   const ingredientsStepsContainer = document.createElement("div");
@@ -287,8 +355,36 @@ async function generateRecipeModal(recipeName, imageURLs) {
   ingredientsContainer.classList.add("ingredients-container");
   for (let ingredient of recipe.ingredients) {
     const ingredientElement = document.createElement("li");
-    ingredientElement.classList.add("ingredient");
-    ingredientElement.textContent = `${ingredient.value} ${ingredient.unit} ${ingredient.name}`;
+    ingredientElement.classList.add("ingredient-element");
+
+    const ingredientDiv = document.createElement("div");
+    ingredientDiv.classList.add("ingredient-div");
+
+    let ingredientValue = document.createElement("h3");
+    let ingredientNameUnit = document.createElement("h3");
+
+    ingredientValue.textContent = ingredient.value;
+    ingredientNameUnit.textContent = `${ingredient.unit} ${ingredient.name}`;
+
+    ingredientValue.classList.add("ingredient");
+    ingredientValue.classList.add("ingredient-value");
+    ingredientValue.classList.add(
+      `ingredient_${recipeName.replace(/ /g, "-")}`
+    );
+    ingredientNameUnit.classList.add("ingredient");
+
+    if (ingredient.value.length === 0) {
+      ingredientNameUnit.classList.add("no-value");
+    }
+
+    //ingredientValue.classList.add(`${recipeName}-ingredient`);
+
+    ingredientDiv.appendChild(ingredientValue);
+
+    ingredientDiv.appendChild(ingredientNameUnit);
+
+    ingredientElement.appendChild(ingredientDiv);
+
     ingredientsContainer.appendChild(ingredientElement);
   }
 
@@ -479,3 +575,56 @@ function updateShoppingListModal() {
 
 // BUG Shopping list doesnt reset when you select a recipe after searching it
 // BUG Checkboxes don't data persist when searching recipes
+
+function multiplyFractionByNumber(fractionString, numerator, denominator) {
+  if (fractionString.length === 0) {
+    return fractionString;
+  }
+
+  if (fractionString.indexOf("/") === -1) {
+    fractionString = fractionString + "/1";
+  }
+
+  // Extract numerator and denominator from the fraction string
+  const [fractionNumerator, fractionDenominator] = fractionString.split("/");
+
+  // Convert the extracted parts to numbers
+  const parsedNumerator = parseFloat(fractionNumerator);
+  const parsedDenominator = parseFloat(fractionDenominator);
+
+  // Check if parsing was successful
+  if (isNaN(parsedNumerator) || isNaN(parsedDenominator)) {
+    console.log("Invalid fraction format");
+    return NaN;
+  }
+
+  // Multiply the fraction by the given numerator and denominator
+  const resultNumerator = parsedNumerator * numerator;
+  const resultDenominator = parsedDenominator * denominator;
+
+  // Return the result as a simplified fraction
+  return simplifyFraction(resultNumerator, resultDenominator);
+}
+
+// Function to simplify a fraction
+function simplifyFraction(numerator, denominator) {
+  const gcd = calculateGCD(numerator, denominator);
+  const simplifiedNumerator = numerator / gcd;
+  const simplifiedDenominator = denominator / gcd;
+  if (simplifiedDenominator === 1) {
+    return `${simplifiedNumerator}`;
+  } else if (simplifiedNumerator > simplifiedDenominator) {
+    let whole =
+      (simplifiedNumerator - (simplifiedNumerator % simplifiedDenominator)) /
+      simplifiedDenominator;
+    let fractionNumerator = simplifiedNumerator % simplifiedDenominator;
+    return `${whole} ${fractionNumerator}/${simplifiedDenominator}`;
+  } else {
+    return `${simplifiedNumerator}/${simplifiedDenominator}`;
+  }
+}
+
+// Function to calculate the Greatest Common Divisor (GCD)
+function calculateGCD(a, b) {
+  return b === 0 ? a : calculateGCD(b, a % b);
+}

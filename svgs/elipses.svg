@@ -1,0 +1,5 @@
+<svg id="recipe-card-menu-svg" class="ellipsis-x" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="15" cy="8" r="2.5" class="dot"></circle>
+    <circle cx="15" cy="15" r="2.5" class="dot"></circle>
+    <circle cx="15" cy="22" r="2.5" class="dot"></circle>
+</svg>

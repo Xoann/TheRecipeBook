@@ -2,6 +2,7 @@ var currentUid;
 let recipes;
 let searchQuery = "";
 const navbarHoverColor = "#2b2c2e";
+let checkboxStatus = {};
 
 firebase.auth().onAuthStateChanged((user) => {
   const signOutButton = document.getElementById("sign-out");
@@ -91,6 +92,7 @@ async function getImageURLs(image_names, uid) {
 }
 
 function displayRecipes(recipeNames) {
+  console.log(recipeNames);
   const imageURLs = getImageURLs(recipeNames, currentUid);
 
   for (let i = 0; i < recipeNames.length; i++) {
@@ -99,21 +101,139 @@ function displayRecipes(recipeNames) {
     const recipeContainer =
       document.getElementsByClassName("recipe-container")[0];
 
-    const shoppingListCheckBox = document.createElement("input");
-    shoppingListCheckBox.type = "checkbox";
-    shoppingListCheckBox.classList.add("shopping-checkbox");
-    shoppingListCheckBox.id = `checkbox_${recipeNames[i]}`;
-
-    // I'm almost positive this prevents a bug (maybe)
-    shoppingListCheckBox.addEventListener("change", function () {
-      handleShoppingCheckbox(shoppingListCheckBox);
-    });
-
+    // Recipe card menu
+    // const menuContainer = document.createElement("div");
+    // menuContainer.classList.add("menu-container");
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
 
+    const menu = document.createElement("div");
+    menu.classList.add("menu");
+
+    const shoppingDiv = document.createElement("div");
+    shoppingDiv.classList.add("slideout-menu-btn");
+    const shoppingText = document.createElement("p");
+    shoppingText.textContent = "Add";
+    shoppingText.classList.add("btn-text");
+    if (shoppingList.includes(recipeNames[i])) {
+      shoppingText.classList.add("shop-added");
+    }
+    shoppingText.id = `shop-text-${recipeNames[i]}`;
+
+    shoppingDiv.addEventListener("click", () => {
+      handleShoppingCheckbox(recipeNames[i]);
+    });
+
+    fetch("../svgs/shop.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        svgElement.id = `shop-icon-${recipeNames[i]}`;
+        if (shoppingList.includes(recipeNames[i])) {
+          svgElement.classList.add("shop-added");
+        }
+        shoppingDiv.appendChild(svgElement);
+        shoppingDiv.append(shoppingText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    const editDiv = document.createElement("div");
+    editDiv.classList.add("slideout-menu-btn");
+    const editText = document.createElement("p");
+    editText.textContent = "Edit";
+    editText.classList.add("btn-text");
+
+    fetch("../svgs/edit.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        editDiv.appendChild(svgElement);
+        editDiv.append(editText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    const deleteDiv = document.createElement("div");
+    deleteDiv.classList.add("slideout-menu-btn");
+    deleteDiv.classList.add("delete-recipe-btn");
+    const deleteText = document.createElement("p");
+    deleteText.textContent = "Del";
+    deleteText.classList.add("btn-text");
+
+    deleteDiv.addEventListener("click", () => {
+      handleDeleteRecipe(recipeNames[i]);
+    });
+
+    fetch("../svgs/trash.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        deleteDiv.appendChild(svgElement);
+        deleteDiv.append(deleteText);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    const extraSpace = document.createElement("div");
+    extraSpace.classList.add("extra-menu-spacer");
+    extraSpace.text = "";
+
+    const slideoutMenuMask = document.createElement("div");
+    slideoutMenuMask.classList.add("slideout-menu-mask");
+
+    const slideoutMenu = document.createElement("div");
+    slideoutMenu.classList.add("slideout-menu");
+    slideoutMenu.id = `slideout-menu-${recipeNames[i]}`;
+    slideoutMenu.appendChild(shoppingDiv);
+    slideoutMenu.appendChild(editDiv);
+    slideoutMenu.appendChild(deleteDiv);
+    slideoutMenu.appendChild(extraSpace);
+    slideoutMenuMask.appendChild(slideoutMenu);
+
+    const menuButtonDiv = document.createElement("div");
+    menuButtonDiv.classList.add("recipe-card-menu-btn");
+    menuButtonDiv.id = "recipe-card-menu-btn";
+
+    const recipeCardMenu = document.createElement("div");
+    recipeCardMenu.classList.add("recipe-card-menu");
+
+    const recipeCardMenuBtn = document.createElement("div");
+    recipeCardMenuBtn.classList.add("recipe-card-menu-btn");
+    recipeCardMenuBtn.id = "recipe-card-menu-btn";
+
+    fetch("../svgs/elipses.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        recipeCardMenuBtn.appendChild(svgElement);
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+    // TODO Make a close menu function that handles animation and class list stuff
+    recipeCardMenuBtn.addEventListener("click", () => {
+      handleElipsisBtnPress(recipeNames[i]);
+    });
+
+    recipeCardMenu.appendChild(recipeCardMenuBtn);
+    recipeCardMenu.appendChild(slideoutMenuMask);
+
     recipeDiv.addEventListener("click", function (event) {
-      if (event.target !== shoppingListCheckBox) {
+      if (event.target === recipeDiv) {
+        //FIXME
+        console.log(event.target);
         displayRecipeModal(recipeNames[i]);
       }
     });
@@ -131,6 +251,9 @@ function displayRecipes(recipeNames) {
     const recipeElements = document.createElement("div");
     recipeElements.classList.add("recipe-elements");
 
+    const topElements = document.createElement("div");
+    topElements.classList.add("top-elements");
+
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("recipe-name");
     recipeNameElement.textContent = recipeNames[i];
@@ -144,9 +267,10 @@ function displayRecipes(recipeNames) {
     imgContainer.appendChild(recipeImg);
     imgContainer.appendChild(gradientOverlay);
     recipeDiv.appendChild(recipeElements);
-    recipeElements.appendChild(recipeNameElement);
+    recipeElements.appendChild(topElements);
+    topElements.appendChild(recipeNameElement);
     recipeElements.appendChild(recipeDescription);
-    recipeElements.appendChild(shoppingListCheckBox);
+    recipeDiv.appendChild(recipeCardMenu);
   }
 }
 
@@ -167,7 +291,7 @@ function narrowSearch(search) {
   const names = Object.keys(recipes);
 
   for (const recipe of names) {
-    if (recipe.includes(search)) {
+    if (recipe.toLowerCase().includes(search)) {
       matches.push(recipe);
     }
   }
@@ -181,7 +305,7 @@ function updateRecipes(recipeNames) {
 }
 
 searchInput.addEventListener("input", function (event) {
-  searchQuery = event.target.value;
+  searchQuery = event.target.value.toLowerCase();
 
   const searchedRecipeNames = narrowSearch(searchQuery);
   updateRecipes(searchedRecipeNames);
@@ -468,17 +592,23 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function handleShoppingCheckbox(checkbox) {
-  const checkedRecipe = checkbox.id.slice(9);
-  if (checkbox.checked) {
-    shoppingList.push(checkedRecipe);
+function handleShoppingCheckbox(recipeName) {
+  if (!checkboxStatus[recipeName]) {
+    shoppingList.push(recipeName);
   } else {
-    const idxToRemove = shoppingList.indexOf(checkedRecipe);
+    const idxToRemove = shoppingList.indexOf(recipeName);
     if (idxToRemove !== -1) {
       shoppingList.splice(idxToRemove, 1);
     }
   }
-  // console.log(shoppingList);
+  document
+    .getElementById(`shop-text-${recipeName}`)
+    .classList.toggle("shop-added");
+  document
+    .getElementById(`shop-icon-${recipeName}`)
+    .classList.toggle("shop-added");
+  checkboxStatus[recipeName] = !checkboxStatus[recipeName];
+  console.log(`shopping list: ${shoppingList}`);
 }
 
 // Values retreived from https://en.wikipedia.org/wiki/Cooking_weights_and_measures
@@ -501,9 +631,6 @@ const volUnitsToMl = {
   "qt.": 946.353,
   "gal.": 3785.41,
 };
-
-// testing
-// document.getElementById("hh").addEventListener("click", combineIngredients);
 
 function combineIngredients() {
   let shoppingIngredientObject = {};
@@ -573,6 +700,7 @@ function updateShoppingListModal() {
   }
 }
 
+
 // BUG Shopping list doesnt reset when you select a recipe after searching it
 // BUG Checkboxes don't data persist when searching recipes
 
@@ -628,3 +756,251 @@ function simplifyFraction(numerator, denominator) {
 function calculateGCD(a, b) {
   return b === 0 ? a : calculateGCD(b, a % b);
 }
+
+function handleElipsisBtnPress(recipeName) {
+  const clickedMenu = document.getElementById(`slideout-menu-${recipeName}`);
+  clickedMenu.classList.toggle("sliding-menu-transition");
+
+  const otherMenus = document.getElementsByClassName("slideout-menu");
+  for (let menu of otherMenus) {
+    if (menu !== clickedMenu) {
+      menu.classList.remove("sliding-menu-transition");
+    }
+  }
+}
+
+function handleDeleteRecipe(recipeName) {
+  // Modify delete modal
+  const deleteModalText = document.getElementById("delete-modal-text");
+  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
+
+  // Display delete modal
+  const modal = document.getElementById("delete-modal");
+  openModal(modal);
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
+
+  const deleteAcountBtn = document.getElementById("delete-recipe-final-btn");
+
+  deleteAcountBtn.addEventListener("click", () => {
+    deleteRecipe(recipeName);
+    closeModal(modal);
+  });
+}
+
+function deleteRecipe(recipe) {
+  const databaseRef = firebase
+    .database()
+    .ref(`${currentUid}/recipes/${recipe}`);
+  databaseRef
+    .remove()
+    .then(function () {
+      console.log("Element removed successfully!");
+      delete recipes[recipe];
+      updateRecipes(narrowSearch(searchQuery));
+    })
+    .catch(function (error) {
+      console.error("Error removing element: " + error.message);
+    });
+
+  const storageRef = firebase.storage().ref();
+  storageRef
+    .child(`${currentUid}/images/${recipe}`)
+    .delete()
+    .then(function () {
+      console.log("File deleted successfully.");
+    })
+    .catch(function (error) {
+      console.error("Error deleting file:", error);
+    });
+}
+
+function deleteAcount(uid) {
+  // Delete all recipes under this uid
+  const realtimeDatabase = firebase.database();
+  const recipesRef = realtimeDatabase.ref(uid);
+  recipesRef
+    .remove()
+    .then(function () {
+      console.log("Element removed successfully!");
+    })
+    .catch(function (error) {
+      console.error("Error removing element: " + error.message);
+    });
+
+  // Delete from users in Firestore
+  const firestore = firebase.firestore();
+  const userDocRef = firestore.collection("users").doc(uid);
+  userDocRef
+    .delete()
+    .then(function () {
+      console.log("Document successfully deleted!");
+    })
+    .catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
+
+  // Delete username from fast data
+  const fastDataDoc = firestore.collection("fastData").doc("usernames");
+  fastDataDoc
+    .get()
+    .then(function (doc) {
+      if (doc.exists) {
+        const dataArray = doc.data().yourArrayFieldName;
+        // Remove the specific element from the array
+        const updatedArray = dataArray.filter((item) => item !== uid);
+
+        // Update the document with the modified array
+        fastDataDoc
+          .update({
+            yourArrayFieldName: updatedArray,
+          })
+          .then(function () {
+            console.log("Element removed from the array successfully!");
+          })
+          .catch(function (error) {
+            console.error("Error removing element from the array: ", error);
+          });
+      } else {
+        console.log("Document not found!");
+      }
+    })
+    .catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+
+  // Delete img dir in storage
+  const storage = firebase.storage();
+  const storageRef = storage.ref();
+  storageRef
+    .child(uid)
+    .listAll.then(function (result) {
+      result.items.forEach(function (item) {
+        // Delete each file in the folder
+        item
+          .delete()
+          .then(function () {
+            console.log("File deleted successfully.");
+          })
+          .catch(function (error) {
+            console.error("Error deleting file:", error);
+          });
+      });
+    })
+    .catch(function (error) {
+      console.error("Error listing files in the folder:", error);
+    });
+
+  // Delete acount in auth
+  if (uid) {
+    uid
+      .delete()
+      .then(function () {
+        // User deleted.
+        console.log("User account deleted successfully.");
+      })
+      .catch(function (error) {
+        // An error happened.
+        console.error("Error deleting user account:", error);
+      });
+  } else {
+    // No user is signed in.
+    console.log("No user is currently signed in.");
+  }
+}
+
+// For testing to auto add new recipes by pressing =
+function writeUserData(
+  recipeName,
+  recipeDesc,
+  cookTimeHrs,
+  cookTimeMins,
+  prepTimeHrs,
+  prepTimeMins,
+  servings,
+  ingredients,
+  steps,
+  image
+) {
+  firebase
+    .database()
+    .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
+    .set({
+      recipeDesc: recipeDesc,
+      cookTimeHrs: cookTimeHrs,
+      cookTimeMins: cookTimeMins,
+      prepTimeHrs: prepTimeHrs,
+      prepTimeMins: prepTimeMins,
+      servings: servings,
+      ingredients: ingredients,
+      steps: steps,
+    });
+  const storageRef = firebase.storage().ref();
+  const imageRef = storageRef.child(
+    `${firebase.auth().currentUser.uid}/images/${recipeName}`
+  );
+
+  if (image) {
+    imageRef.put(image).then((snapshot) => {});
+  } else {
+    const imageUrl = "../../img/food-placeholder-1.jpg";
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a File object from the Blob
+        const fileObject = new File([blob], "image.png", { type: "image/png" });
+        imageRef.put(fileObject);
+      });
+  }
+  console.log("Uploaded");
+}
+
+function generateRandomString(length) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+}
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "=" || event.code === "Add") {
+    const randomName = generateRandomString(5);
+    const image = "";
+    writeUserData(
+      randomName,
+      "Cheesy garlic chicken bites cooked in one pan with broccoli and spinach in under 15 minutes. This quick tasty dish is a great keto option and can be served with zoodles or pasta!",
+      "1",
+      "15",
+      "0",
+      "5",
+      "4",
+      [
+        { name: "chicken breasts", unit: "lbs", value: "2" },
+        { name: "crushed pepper", unit: "tps.", value: "0.25" },
+        { name: "salt and pepper", unit: "tps.", value: "1" },
+        { name: "garlic", unit: "cloves", value: "3" },
+        { name: "broccoli florets", unit: "cup", value: "2" },
+        { name: "tomatoes", unit: "cup", value: "0.5" },
+        { name: "baby spinach", unit: "cup", value: "2" },
+        { name: "shredded cheese", unit: "cup", value: "0.5" },
+        { name: "cream cheese", unit: "oz", value: "4" },
+      ],
+      [
+        "Heat 2 tablespoons olive oil in a large saucepan over medium-high heat. Add the chopped chicken breasts, season with Italian seasoning, crushed red pepper, and salt & pepper",
+        "Sautee for 4-5 minutes or until chicken is golden and cooked through.",
+        "Add the garlic and saute for another minute or until fragrant. Add the tomato, broccoli, spinach, shredded cheese, and cream cheese.",
+        "Cook for another 3-4 minutes or until the broccoli is cooked through.",
+        "Serve with cooked pasta, rice, zucchini noodles or cauliflower rice.",
+      ],
+      image
+    );
+  }
+});

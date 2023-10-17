@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .title {
   color: var(--primary-colour);
   font-size: 80px;
@@ -10,6 +14,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: 20px;
 }
 
 .addRecipeMsg {
@@ -19,6 +24,224 @@
 
 #shopping-list {
   height: 100%;
+}
+
+/* Recipe card menu styles */
+
+.menu {
+  /* position: absolute;
+  top: 10px;
+  right: 10px; */
+  width: 100px;
+  height: 30px;
+  background-color: var(--light-colour);
+  /* transition: left 0.3s ease; */
+  /* padding: 10px; */
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  border-radius: 100px;
+  z-index: 3;
+}
+
+.recipe-card-menu-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  cursor: pointer;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border: solid 2px var(--light-colour);
+  border-radius: 50%;
+  z-index: 5;
+  background-color: var(--grey-one-colour);
+}
+
+.btn-text {
+  user-select: none;
+}
+
+.slideout-menu-mask {
+  position: absolute;
+  border-radius: 100px;
+  height: 30px;
+  width: 220px;
+  top: 20px;
+  right: 20px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.menu-svgs {
+  stroke: var(--light-colour);
+  width: 18px;
+  height: auto;
+}
+
+.slideout-menu {
+  /* position: absolute; */
+  background-color: var(--grey-one-colour);
+  color: var(--light-colour);
+  pointer-events: all;
+  margin-left: 190px;
+  /* top: 20px;
+  right: calc(10px - 140px);
+  right: -160px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* gap: 10px; */
+  height: 30px;
+  width: 220px;
+  border: solid 2px var(--light-colour);
+  border-radius: 100px;
+  padding: 0px 10px;
+  z-index: 3;
+
+  transition: margin-left 0.1s ease-in;
+}
+
+.sliding-menu-transition {
+  margin-left: 0px;
+}
+
+.extra-menu-spacer {
+  width: 40px;
+}
+
+.slideout-menu-btn {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  width: 60px;
+  padding: 0px 5px;
+  border-radius: 6px;
+}
+
+.slideout-menu-btn:hover {
+  background-color: var(--grey-two-colour);
+}
+
+.delete-recipe-btn:hover {
+  color: var(--error-colour);
+}
+
+.delete-recipe-btn:hover svg {
+  stroke: var(--error-colour);
+}
+
+.shop-added {
+  color: var(--primary-colour);
+  stroke: var(--primary-colour);
+}
+
+.recipe-card-menu-button-div {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px;
+  right: 10px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: var(--light-colour);
+  z-index: 4;
+}
+
+.recipe-card-svg {
+  /* position: relative; */
+  stroke: var(--grey-two-colour);
+  stroke-width: 5px;
+  height: 30px;
+  width: 30px;
+}
+
+.ellipsis-x {
+  width: 100%;
+  height: auto;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+
+.ellipsis-x .dot {
+  fill: var(--light-colour);
+  transform-origin: center;
+  transform: scale(1, 1);
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.ellipsis-x.x .dot:nth-child(1) {
+  transform: translateY(7px);
+  opacity: 0;
+}
+
+.ellipsis-x.x .dot:nth-child(2) {
+  transform: translateY(0);
+  opacity: 0;
+}
+
+.ellipsis-x.x .dot:nth-child(3) {
+  transform: translateY(-7px);
+  opacity: 0;
+}
+
+#delete-modal-content {
+  background-color: var(--grey-one-colour);
+  color: var(--light-colour);
+  border-radius: 20px;
+  font-family: Gabarito;
+  height: 15vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 60px 0px;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-recipe-final-btn {
+  padding: 10px;
+  background-color: var(--error-colour);
+  border-radius: 10px;
+  transition: transform 0.2 ease;
+}
+
+.delete-recipe-final-btn:hover {
+  cursor: pointer;
+  transform: scale(102%);
+}
+
+.checkbox-div {
+  content: "";
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  right: 20px;
+  width: 25px;
+  height: 25px;
+  background-color: var(--light-colour);
+  border-radius: 50%;
+  border: solid 2px var(--dark-one-colour);
+}
+
+.check {
+  display: none;
+  width: 14px;
+  height: 14px;
+  background-color: var(--primary-colour);
+  border-radius: 50%;
+}
+
+.show {
+  display: block !important;
 }
 
 /* Search section styles */
@@ -59,9 +282,9 @@
 
 .recipes {
   flex: 1;
-  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2));
-  background-color: var(--grey-one-colour);
-  border-radius: 40px 40px 0 0;
+  /* background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.2)); */
+  /* background-color: var(--grey-one-colour); */
+  /* border-radius: 40px 40px 0 0; */
 }
 
 .recipe-container {
@@ -72,6 +295,7 @@
 }
 
 .recipe-div {
+  position: relative;
   width: 330px;
   height: 330px;
 
@@ -105,10 +329,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  user-select: none;
 }
 
 .gradient-overlay::before {
   content: "";
+  user-select: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -119,22 +345,44 @@
 
 .recipe-div .recipe-elements {
   margin: 10px;
-  height: 100px;
+  height: 125px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: center;
 }
 
-.recipe-div .recipe-elements h2 {
+.recipe-name {
   font-size: 26px;
-  font-family: sans-serif;
+  font-family: inherit;
+  color: var(--primary-colour);
+  text-transform: capitalize;
+  padding: 8px 0;
 }
 
-.recipe-div .desc-div {
+.desc-div {
   font-size: 18px;
+  color: var(--light-colour);
+  min-height: 70%;
+  max-height: 75%;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.top-elements {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 25%;
   overflow-y: hidden;
 }
 
+.recipe-elements div {
+  width: 90%;
+}
 /* Recipe Modal Window Styles */
 
 .modal {
@@ -145,6 +393,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99;
   overflow-y: scroll;
 }
 

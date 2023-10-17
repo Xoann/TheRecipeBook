@@ -178,7 +178,7 @@ form h1 {
   pointer-events: none;
   padding: 0 5px;
   background-color: var(--grey-one-colour);
-  color: var(--error-red);
+  color: var(--error-colour);
 }
 
 .input-field input:focus ~ label {
@@ -343,11 +343,11 @@ button:focus {
 }
 
 .error-input {
-  outline: 2px solid var(--error-red) !important;
+  outline: 2px solid var(--error-colour) !important;
 }
 
 .error-label {
-  color: var(--error-red) !important;
+  color: var(--error-colour) !important;
 }
 
 @keyframes bobbing {

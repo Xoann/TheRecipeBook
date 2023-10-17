@@ -308,6 +308,8 @@
   margin-right: 20px;
   margin-top: 20px;
   font-family: Gabarito;
+
+  cursor: pointer;
 }
 
 .recipe-div:last-child {
@@ -426,8 +428,9 @@
 .details-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 50%;
-  min-width: 500px;
+  min-width: 550px;
   font-size: 18px;
   border: 2px var(--primary-colour) solid;
   border-radius: 10px;
@@ -442,18 +445,28 @@
   width: 80%;
 }
 
-.ingredients-steps-container {
-  width: 90%;
+.servings-container {
   display: flex;
-  flex-direction: row;
+  width: 30%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.ingredients-container {
-  width: 35%;
-  list-style-type: disc;
-  margin-right: 35px;
-  display: flex;
-  flex-direction: column;
+#servings-input {
+  height: 30px;
+  width: 32px;
+  text-align: center;
+  color: var(--light-text-colour);
+  font-size: inherit;
+  border-radius: 8px;
+  border: 2px var(--grey-two-colour) solid;
+  background-color: inherit;
+}
+
+.servings-button {
+  height: 30px;
+  width: auto;
+  cursor: pointer;
 }
 
 .med-label {
@@ -463,10 +476,49 @@
   color: var(--primary-colour);
 }
 
-.ingredient {
-  margin-bottom: 10px;
+.ingredients-container .med-label {
+  margin-left: 10px;
+}
+
+.ingredients-steps-container {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  margin-left: -10px;
+}
+
+.ingredients-container {
+  width: 35%;
+  list-style-type: disc;
+  margin-right: 35px;
+  list-style-position: inside;
+}
+
+.ingredient-element {
   text-align: left;
+}
+
+.ingredient-div {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  top: -22px;
+  left: 10px;
+}
+
+.ingredient {
   font-size: 18px;
+  font-weight: normal;
+}
+
+.ingredient.ingredient-value {
+  margin-right: 5px;
+}
+
+.no-value {
+  margin-left: -5px !important;
 }
 
 .steps-container {

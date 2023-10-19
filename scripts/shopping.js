@@ -1,16 +1,24 @@
-// Load shopping list and recipes
+var currentUid;
 
-document.addEventListener("DOMContentLoaded", function () {
-  const ingredients = JSON.parse(window.localStorage.getItem("ingredients"));
-  console.log(ingredients);
-  const recipes = JSON.parse(localStorage.getItem("recipes"));
-  console.log(recipes);
-  const imgURLs = JSON.parse(localStorage.getItem("recipeImages"));
-  console.log(imgURLs);
-  generateDOMContent(ingredients, recipes, imgURLs);
+// Load shopping list and recipes
+firebase.auth().onAuthStateChanged((user) => {
+  currentUid = firebase.auth().currentUser.uid;
+  getShoppingListData().then((data) => {
+    generateDOMContent(data[0], data[1], data[2]);
+  });
 });
 
-function generateDOMContent(ingredients, recipes, imgUrls) {
+function getShoppingListData() {
+  const docRef = firebase.firestore().collection("users").doc(currentUid);
+  return docRef.get().then((doc) => {
+    const ingredients = JSON.parse(doc.data().shoppingIngredients);
+    const shoppingList = JSON.parse(doc.data().shoppingListRecipes);
+    const imageUrls = JSON.parse(doc.data().shoppingListImages);
+    return [ingredients, shoppingList, imageUrls];
+  });
+}
+
+async function generateDOMContent(ingredients, recipes, imgUrls) {
   const ingredientContainer = document.querySelector(".ingredient-container");
   const recipeContainer = document.querySelector(".recipe-container");
 
@@ -39,10 +47,14 @@ function generateDOMContent(ingredients, recipes, imgUrls) {
     recipeListEntry.classList.add("shopping-list-entry-div");
     recipeContainer.appendChild(recipeListEntry);
 
+    const recipeTitleDiv = document.createElement("div");
+    recipeTitleDiv.classList.add("recipe-title-div");
+    recipeListEntry.appendChild(recipeTitleDiv);
+
     const recipeListEntryText = document.createElement("h3");
     recipeListEntryText.classList.add("recipe-list-entry-text");
     recipeListEntryText.textContent = `${recipe}`;
-    recipeListEntry.appendChild(recipeListEntryText);
+    recipeTitleDiv.appendChild(recipeListEntryText);
 
     const recipeListEntryImage = document.createElement("img");
     recipeListEntryImage.classList.add("recipe-list-entry-image");

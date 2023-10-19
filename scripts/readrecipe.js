@@ -3,6 +3,7 @@ let recipes;
 let searchQuery = "";
 const navbarHoverColor = "#2b2c2e";
 let checkboxStatus = {};
+let shoppingList = [];
 
 firebase.auth().onAuthStateChanged((user) => {
   const signOutButton = document.getElementById("sign-out");
@@ -113,15 +114,14 @@ function displayRecipes(recipeNames) {
     const shoppingDiv = document.createElement("div");
     shoppingDiv.classList.add("slideout-menu-btn");
     const shoppingText = document.createElement("p");
+    shoppingText.id = `shopping-btn-text-${recipeNames[i]}`;
     shoppingText.textContent = "Add";
     shoppingText.classList.add("btn-text");
-    if (shoppingList.includes(recipeNames[i])) {
-      shoppingText.classList.add("shop-added");
-    }
+
     shoppingText.id = `shop-text-${recipeNames[i]}`;
 
     shoppingDiv.addEventListener("click", () => {
-      handleShoppingCheckbox(recipeNames[i]);
+      handleShoppingToggle(recipeNames[i]);
     });
 
     fetch("../svgs/shop.svg")
@@ -131,9 +131,9 @@ function displayRecipes(recipeNames) {
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         svgElement.id = `shop-icon-${recipeNames[i]}`;
-        if (shoppingList.includes(recipeNames[i])) {
-          svgElement.classList.add("shop-added");
-        }
+
+        checkRecipeInDbList(recipeNames[i], svgElement, shoppingText);
+
         shoppingDiv.appendChild(svgElement);
         shoppingDiv.append(shoppingText);
       })
@@ -577,14 +577,23 @@ function closeModal(modal) {
 /// Shopping List Logic ///
 ///////////////////////////
 
-let shoppingList = [];
+async function checkRecipeInDbList(recipe, svgElement, shoppingText) {
+  // returns true if recipe in shopping list in db
+  const doc = await firebase
+    .firestore()
+    .collection("users")
+    .doc(currentUid)
+    .get();
+
+  shoppingList = JSON.parse(doc.data().shoppingListRecipes);
+  if (shoppingList.includes(recipe)) {
+    svgElement.classList.add("shop-added");
+    shoppingText.classList.add("shop-added");
+  }
+}
+
 const shoppingListButton = document.getElementById("shopping-list");
 const shoppingListModal = document.getElementById("shopping-list-modal");
-
-shoppingListButton.addEventListener("click", function () {
-  // storeShoppingList();
-  // window.location.href = "html/shoppinglist.html";
-});
 
 window.addEventListener("click", (event) => {
   if (event.target === shoppingListModal) {
@@ -592,9 +601,10 @@ window.addEventListener("click", (event) => {
   }
 });
 
-async function handleShoppingCheckbox(recipeName) {
+async function handleShoppingToggle(recipeName) {
   const docRef = firebase.firestore().collection("users").doc(currentUid);
-  if (!checkboxStatus[recipeName]) {
+
+  if (!shoppingList.includes(recipeName)) {
     shoppingList.push(recipeName);
   } else {
     const idxToRemove = shoppingList.indexOf(recipeName);

@@ -20,6 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  gap: 40px;
   align-items: center;
   border-radius: 30px;
   margin-top: 15px;
@@ -27,6 +28,7 @@
   min-width: 900px;
   width: 70%;
   background-color: var(--grey-one-colour);
+  padding-bottom: 25px;
 }
 
 .center-overlay {
@@ -41,6 +43,71 @@
 .column-container {
   width: 100%;
   display: flex;
+
   font-family: Gabarito;
   color: var(--light-text-colour);
+}
+
+.column {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.recipe-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.ingredient-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.recipe-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.shopping-list-entry-div {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 250px;
+  border: solid 3px var(--primary-colour);
+}
+
+.recipe-title-div {
+  position: absolute;
+  background-color: var(--dark-two-colour);
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 0 0 20px 0;
+}
+
+.recipe-list-entry-image {
+  height: 100%;
+  width: auto;
+}
+
+.ingredient-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.shopping-list-entry {
+  font-size: 22px;
+}
+
+.column-title h2 {
+  font-size: 32px;
 }

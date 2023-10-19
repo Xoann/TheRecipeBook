@@ -50,13 +50,16 @@
         <div class="overlay">
           <div class="title"><h1>Shopping List</h1></div>
           <div class="column-container">
-            <div class="recipe-column">
-              <div class="column-title"><h2>Recipes</h2></div>
-              <div class="recipe-container"></div>
+            <div class="column">
+              <div class="recipe-column">
+                <div class="column-title"><h2>Recipes</h2></div>
+                <div class="recipe-container"></div>
+              </div>
             </div>
-            <div class="ingredient-column">
-              <div class="column-title"><h2>Ingredients</h2></div>
-              <div>
+            <div class="column">
+              <div class="ingredient-column">
+                <div class="column-title"><h2>Ingredients</h2></div>
+
                 <ul class="ingredient-container"></ul>
               </div>
             </div>
@@ -64,6 +67,8 @@
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../scripts/setup.js"></script>
     <script src="../scripts/shopping.js"></script>
   </body>
 </html>

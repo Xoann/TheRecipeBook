@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
+  min-width: 900px;
 }
 
 .addRecipeMsg {
@@ -407,7 +408,7 @@
   padding: 20px;
   border: 1px solid var(--grey-two-colour);
   width: 75%;
-  min-width: 700px;
+  min-width: 900px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   text-align: center;
   font-family: Gabarito;
@@ -549,4 +550,153 @@
 .image {
   max-height: 300px;
   max-width: auto;
+}
+
+/* Edit Modal Styles */
+.input,
+.textarea {
+  border: 1px solid var(--light-text-colour);
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 6px;
+}
+
+.textarea {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  min-height: 70px;
+  line-height: 20px;
+  /* max-width: 200px; */
+}
+
+.textarea[contenteditable]:empty:before {
+  content: "Add a description";
+  color: gray;
+}
+.resizable-p {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-title-div {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+}
+
+.edit-name-title {
+  color: var(--primary-colour);
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.justify-left {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  margin-left: 4%;
+}
+
+.edit-input {
+  border-radius: 13px;
+  width: 100%;
+  border: solid 1px var(--light-button-hover);
+  padding: 3% 5%;
+  background-color: inherit;
+  font-family: inherit;
+  color: var(--light-text-colour);
+  font-size: inherit;
+}
+
+.edit-description-input.edit-input {
+  width: 80%;
+  padding: 2% 2%;
+}
+
+.edit-small-input-div {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.edit-small-input-div .edit-name-title {
+  font-size: 20px;
+}
+
+.edit-small-input-div .edit-input {
+  width: 70px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.edit-small-input-div .edit-name-title {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+.edit-details-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 80%;
+}
+
+.edit-input + .edit-input {
+  margin-left: 5px;
+}
+
+.edit-small-input-div + .edit-small-input-div {
+  margin-left: 2%;
+}
+
+.custom-file-input {
+  border: 2px solid var(--primary-colour);
+  padding: 6px 10px;
+  border-radius: 15px;
+  background-color: var(--dark-two-colour);
+  color: var(--light-text-colour);
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  font-size: 14px;
+}
+
+.image-input {
+  display: none;
+}
+
+.custom-file-input:hover {
+  background-color: var(--grey-one-colour);
+}
+
+#display-image img {
+  min-width: 100px;
+  min-height: 200px;
+  max-width: 400px;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: var(--light-button-hover);
+  border-style: solid;
+  z-index: 1;
+}
+
+.close {
+  position: absolute;
+  z-index: 2;
+  height: 20px;
+  width: auto;
+  top: 10px;
+  right: 10px;
+  display: none;
+  cursor: pointer;
+}
+
+.image-container {
+  position: relative;
 }

@@ -3,6 +3,7 @@ let recipes;
 let searchQuery = "";
 const navbarHoverColor = "#2b2c2e";
 let checkboxStatus = {};
+let shoppingList = [];
 
 firebase.auth().onAuthStateChanged((user) => {
   const signOutButton = document.getElementById("sign-out");
@@ -115,15 +116,14 @@ function displayRecipes(recipeNames) {
     const shoppingDiv = document.createElement("div");
     shoppingDiv.classList.add("slideout-menu-btn");
     const shoppingText = document.createElement("p");
+    shoppingText.id = `shopping-btn-text-${recipeNames[i]}`;
     shoppingText.textContent = "Add";
     shoppingText.classList.add("btn-text");
-    if (shoppingList.includes(recipeNames[i])) {
-      shoppingText.classList.add("shop-added");
-    }
+
     shoppingText.id = `shop-text-${recipeNames[i]}`;
 
     shoppingDiv.addEventListener("click", () => {
-      handleShoppingCheckbox(recipeNames[i]);
+      handleShoppingToggle(recipeNames[i]);
     });
 
     fetch("../svgs/shop.svg")
@@ -133,9 +133,9 @@ function displayRecipes(recipeNames) {
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         svgElement.id = `shop-icon-${recipeNames[i]}`;
-        if (shoppingList.includes(recipeNames[i])) {
-          svgElement.classList.add("shop-added");
-        }
+
+        checkRecipeInDbList(recipeNames[i], svgElement, shoppingText);
+
         shoppingDiv.appendChild(svgElement);
         shoppingDiv.append(shoppingText);
       })
@@ -603,14 +603,23 @@ function closeModal(modal) {
 /// Shopping List Logic ///
 ///////////////////////////
 
-let shoppingList = [];
+async function checkRecipeInDbList(recipe, svgElement, shoppingText) {
+  // returns true if recipe in shopping list in db
+  const doc = await firebase
+    .firestore()
+    .collection("users")
+    .doc(currentUid)
+    .get();
+
+  shoppingList = JSON.parse(doc.data().shoppingListRecipes);
+  if (shoppingList.includes(recipe)) {
+    svgElement.classList.add("shop-added");
+    shoppingText.classList.add("shop-added");
+  }
+}
+
 const shoppingListButton = document.getElementById("shopping-list");
 const shoppingListModal = document.getElementById("shopping-list-modal");
-
-shoppingListButton.addEventListener("click", function () {
-  updateShoppingListModal();
-  openModal(shoppingListModal);
-});
 
 window.addEventListener("click", (event) => {
   if (event.target === shoppingListModal) {
@@ -618,8 +627,10 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function handleShoppingCheckbox(recipeName) {
-  if (!checkboxStatus[recipeName]) {
+async function handleShoppingToggle(recipeName) {
+  const docRef = firebase.firestore().collection("users").doc(currentUid);
+
+  if (!shoppingList.includes(recipeName)) {
     shoppingList.push(recipeName);
   } else {
     const idxToRemove = shoppingList.indexOf(recipeName);
@@ -627,6 +638,16 @@ function handleShoppingCheckbox(recipeName) {
       shoppingList.splice(idxToRemove, 1);
     }
   }
+  const shoppingIngredients = JSON.stringify(combineIngredients());
+  const imageUrls = await getImageURLs(shoppingList, currentUid);
+  const imageUrlsStr = JSON.stringify(imageUrls);
+
+  docRef.update({
+    shoppingListRecipes: JSON.stringify(shoppingList),
+    shoppingIngredients: shoppingIngredients,
+    shoppingListImages: imageUrlsStr,
+  });
+
   document
     .getElementById(`shop-text-${recipeName}`)
     .classList.toggle("shop-added");
@@ -658,10 +679,15 @@ const volUnitsToMl = {
   "gal.": 3785.41,
 };
 
+const massUnitsToG = {
+  "oz.": 28.3495231,
+  kg: 1000,
+  lbs: 453.59,
+};
+
 function combineIngredients() {
   let shoppingIngredientObject = {};
   let prefferedIngredientUnit = {};
-
   // loop thru recipes
   for (const shoppingRecipeName of shoppingList) {
     const recipeIngredients = recipes[shoppingRecipeName]["ingredients"];
@@ -672,14 +698,40 @@ function combineIngredients() {
       const ingredientUnit = recipeIngredients[i]["unit"];
 
       // Add to shoppingIngredientObject
-      if (!shoppingIngredientObject.hasOwnProperty(ingredient)) {
-        shoppingIngredientObject[ingredient] = convertToMl(
-          recipeIngredients[i]
-        );
+      // console.log(ingredient);
+      // console.log(shoppingIngredientObject);
+
+      if (volUnitsToMl.hasOwnProperty(ingredientUnit)) {
+        if (!shoppingIngredientObject.hasOwnProperty([ingredient, "vol"])) {
+          shoppingIngredientObject[[ingredient, "vol"]] = convertToMl(
+            recipeIngredients[i]
+          );
+        } else {
+          shoppingIngredientObject[[ingredient, "vol"]] += convertToMl(
+            recipeIngredients[i]
+          );
+        }
+      } else if (massUnitsToG.hasOwnProperty(ingredientUnit)) {
+        if (!shoppingIngredientObject.hasOwnProperty([ingredient, "mass"])) {
+          shoppingIngredientObject[[ingredient, "mass"]] = convertToG(
+            recipeIngredients[i]
+          );
+        } else {
+          shoppingIngredientObject[[ingredient, "mass"]] += convertToG(
+            recipeIngredients[i]
+          );
+        }
       } else {
-        shoppingIngredientObject[ingredient] += convertToMl(
-          recipeIngredients[i]
-        );
+        if (
+          !shoppingIngredientObject.hasOwnProperty([ingredient, ingredientUnit])
+        ) {
+          shoppingIngredientObject[[ingredient, ingredientUnit]] = Number(
+            recipeIngredients[i]["value"]
+          );
+        } else {
+          shoppingIngredientObject[[ingredient, ingredientUnit]] +=
+            recipeIngredients[i];
+        }
       }
 
       // Add to prefferedIngredientUnit
@@ -688,9 +740,26 @@ function combineIngredients() {
       }
     }
   }
-  // console.log(prefferedIngredientUnit);
-  // console.log(shoppingIngredientObject);
-  return [shoppingIngredientObject, prefferedIngredientUnit];
+  // Convert back into list of ingridients
+  let returnIngredients = [];
+  const ingAndUnitTypes = Object.keys(shoppingIngredientObject);
+  for (let ingAndUnitType of ingAndUnitTypes) {
+    const temp = ingAndUnitType.split(",");
+    const ing = temp[0];
+    const unitType = temp[1];
+    let value = shoppingIngredientObject[ingAndUnitType];
+    if (unitType === "vol") {
+      value = convertMlToOther(value, prefferedIngredientUnit[ing]);
+    } else if (unitType === "mass") {
+      value = convertGToOther(value, prefferedIngredientUnit[ing]);
+    }
+    returnIngredients.push({
+      ingredient: ing,
+      value: Number(value),
+      unit: prefferedIngredientUnit[ing],
+    });
+  }
+  return returnIngredients;
 }
 
 function convertToMl(ingredient) {
@@ -701,33 +770,33 @@ function convertMlToOther(mlValue, unit) {
   return (mlValue / volUnitsToMl[unit]).toFixed(2);
 }
 
+function convertToG(ingredient) {
+  return ingredient["value"] * massUnitsToG[ingredient["unit"]];
+}
+
+function convertGToOther(gValue, unit) {
+  return (gValue / massUnitsToG[unit]).toFixed(2);
+}
+
 function updateShoppingListModal() {
   const shoppingModalContent = document.getElementById(
     "shopping-list-modal-content"
   );
   shoppingModalContent.innerHTML = "";
 
-  const ingComb = combineIngredients();
-  const ingredientObjects = ingComb[0];
-  const ingredients = Object.keys(ingredientObjects);
-  const prefferedIngredientUnit = ingComb[1];
+  const ingredients = combineIngredients();
 
   for (const ingredient of ingredients) {
-    const unit = prefferedIngredientUnit[ingredient];
-    const ingredientValue = convertMlToOther(
-      ingredientObjects[ingredient],
-      unit
-    );
+    const unit = ingredient["unit"];
+    const ingredientValue = ingredient["value"];
 
     const ingredientNameElement = document.createElement("h3");
-    ingredientNameElement.textContent = `${ingredient} ${ingredientValue} ${unit}`;
+    ingredientNameElement.textContent = `${ingredient["ingredient"]} ${ingredientValue} ${unit}`;
 
     shoppingModalContent.appendChild(ingredientNameElement);
   }
 }
 
-// BUG Shopping list doesnt reset when you select a recipe after searching it
-// BUG Checkboxes don't data persist when searching recipes
 
 function multiplyFractionByNumber(fractionString, numerator, denominator) {
   if (fractionString.length === 0) {

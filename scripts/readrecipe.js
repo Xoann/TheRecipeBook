@@ -582,8 +582,8 @@ const shoppingListButton = document.getElementById("shopping-list");
 const shoppingListModal = document.getElementById("shopping-list-modal");
 
 shoppingListButton.addEventListener("click", function () {
-  updateShoppingListModal();
-  openModal(shoppingListModal);
+  // storeShoppingList();
+  // window.location.href = "html/shoppinglist.html";
 });
 
 window.addEventListener("click", (event) => {
@@ -592,7 +592,8 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function handleShoppingCheckbox(recipeName) {
+async function handleShoppingCheckbox(recipeName) {
+  const docRef = firebase.firestore().collection("users").doc(currentUid);
   if (!checkboxStatus[recipeName]) {
     shoppingList.push(recipeName);
   } else {
@@ -601,6 +602,16 @@ function handleShoppingCheckbox(recipeName) {
       shoppingList.splice(idxToRemove, 1);
     }
   }
+  const shoppingIngredients = JSON.stringify(combineIngredients());
+  const imageUrls = await getImageURLs(shoppingList, currentUid);
+  const imageUrlsStr = JSON.stringify(imageUrls);
+
+  docRef.update({
+    shoppingListRecipes: JSON.stringify(shoppingList),
+    shoppingIngredients: shoppingIngredients,
+    shoppingListImages: imageUrlsStr,
+  });
+
   document
     .getElementById(`shop-text-${recipeName}`)
     .classList.toggle("shop-added");
@@ -651,8 +662,8 @@ function combineIngredients() {
       const ingredientUnit = recipeIngredients[i]["unit"];
 
       // Add to shoppingIngredientObject
-      console.log(ingredient);
-      console.log(shoppingIngredientObject);
+      // console.log(ingredient);
+      // console.log(shoppingIngredientObject);
 
       if (volUnitsToMl.hasOwnProperty(ingredientUnit)) {
         if (!shoppingIngredientObject.hasOwnProperty([ingredient, "vol"])) {

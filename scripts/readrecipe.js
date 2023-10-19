@@ -94,6 +94,7 @@ async function getImageURLs(image_names, uid) {
 
 function displayRecipes(recipeNames) {
   console.log(recipeNames);
+
   const imageURLs = getImageURLs(recipeNames, currentUid);
 
   for (let i = 0; i < recipeNames.length; i++) {
@@ -107,6 +108,7 @@ function displayRecipes(recipeNames) {
     // menuContainer.classList.add("menu-container");
     const recipeDiv = document.createElement("div");
     recipeDiv.classList.add("recipe-div");
+    recipeDiv.id = `${recipeNames[i]}-recipe-div`;
 
     const menu = document.createElement("div");
     menu.classList.add("menu");
@@ -231,9 +233,17 @@ function displayRecipes(recipeNames) {
     recipeCardMenu.appendChild(slideoutMenuMask);
 
     recipeDiv.addEventListener("click", function (event) {
-      if (event.target === recipeDiv) {
-        //FIXME
-        console.log(event.target);
+      const goodList = [
+        document.getElementById(`${recipeNames[i]}-overlay`),
+        document.getElementById(`${recipeNames[i]}-recipe-div`),
+        document.getElementById(`${recipeNames[i]}-desc-div`),
+        document.getElementById(`${recipeNames[i]}-recipe-name`),
+        document.getElementById(`${recipeNames[i]}-recipe-elements`),
+        document.getElementById(`${recipeNames[i]}-top-elements`),
+      ];
+      // console.log(event.target);
+      const isCardClicked = goodList.includes(event.target);
+      if (isCardClicked) {
         displayRecipeModal(recipeNames[i]);
       }
     });
@@ -247,19 +257,24 @@ function displayRecipes(recipeNames) {
 
     const gradientOverlay = document.createElement("div");
     gradientOverlay.classList.add("gradient-overlay");
+    gradientOverlay.id = `${recipeNames[i]}-overlay`;
 
     const recipeElements = document.createElement("div");
     recipeElements.classList.add("recipe-elements");
+    recipeElements.id = `${recipeNames[i]}-recipe-elements`;
 
     const topElements = document.createElement("div");
     topElements.classList.add("top-elements");
+    topElements.id = `${recipeNames[i]}-top-elements`;
 
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("recipe-name");
+    recipeNameElement.id = `${recipeNames[i]}-recipe-name`;
     recipeNameElement.textContent = recipeNames[i];
 
     const recipeDescription = document.createElement("div");
     recipeDescription.classList.add("desc-div");
+    recipeDescription.id = `${recipeNames[i]}-desc-div`;
     recipeDescription.innerHTML = recipes[recipeNames[i]].recipeDesc;
 
     recipeContainer.appendChild(recipeDiv);
@@ -317,8 +332,6 @@ searchInput.addEventListener("input", function (event) {
 
 async function generateRecipeModal(recipeName, imageURLs) {
   const recipe = recipes[recipeName];
-  const numIngredients = recipe.ingredients.length;
-  const numSteps = recipe.steps.length;
 
   const modalElement = document.createElement("div");
   modalElement.classList.add("modal");
@@ -398,7 +411,7 @@ async function generateRecipeModal(recipeName, imageURLs) {
   servingsContainer.appendChild(servingsLabel);
 
   const servingsInput = document.createElement("input");
-  servingsInput.id = "servings-input";
+  servingsInput.classList.add("servings-input");
   servingsInput.value = `${recipe.servings}`;
 
   //Recalculate ingredient amounts
@@ -533,11 +546,22 @@ async function generateRecipeModal(recipeName, imageURLs) {
   ingredientsStepsContainer.appendChild(stepsContainer);
 
   //Close Button
-  const closeModalButton = document.createElement("span");
-  closeModalButton.id = "closeModalButton";
-  closeModalButton.textContent = "Close";
-  closeModalButton.classList.add("close");
-  closeModalButton.addEventListener("click", () => closeModal(modalElement));
+  fetch("../svgs/x.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      svgElement.classList.add("close-button");
+      modalContentElement.appendChild(svgElement);
+
+      svgElement.addEventListener("click", function () {
+        closeModal(modalElement);
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
 
   window.addEventListener("click", (event) => {
     if (event.target === modalElement) {
@@ -549,13 +573,12 @@ async function generateRecipeModal(recipeName, imageURLs) {
 
   documentBody.appendChild(modalElement);
   modalElement.appendChild(modalContentElement);
+
   modalContentElement.appendChild(recipeNameElement);
   modalContentElement.appendChild(image);
   modalContentElement.appendChild(descriptionDiv);
   modalContentElement.appendChild(detailsContainer);
   modalContentElement.appendChild(ingredientsStepsContainer);
-
-  modalContentElement.appendChild(closeModalButton);
 }
 
 // Modal window interactivity
@@ -567,10 +590,13 @@ function displayRecipeModal(modalId) {
 
 function openModal(modal) {
   modal.style.display = "block";
+  document.getElementById("body").classList.add("body-modal-open");
+  modal.scrollTop = "0";
 }
 
 function closeModal(modal) {
   modal.style.display = "none";
+  document.getElementById("body").classList.remove("body-modal-open");
 }
 
 ///////////////////////////
@@ -770,6 +796,7 @@ function updateShoppingListModal() {
     shoppingModalContent.appendChild(ingredientNameElement);
   }
 }
+
 
 function multiplyFractionByNumber(fractionString, numerator, denominator) {
   if (fractionString.length === 0) {
@@ -1071,3 +1098,22 @@ document.addEventListener("keydown", function (event) {
     );
   }
 });
+
+// function adjustFontSize() {
+//   let box = document.getElementsByClassName("top-elements");
+//   let text = document.getElementsByClassName("recipe-name");
+
+//   // Calculate the desired font size based on the box width
+
+//   for (let i = 0; i < document.getElementsByClassName("modal").length; i++) {
+//     console.log(box[0]);
+//     var fontSize = box[0].offsetWidth / 10;
+
+//     // Set the font size
+//     text[i].style.fontSize = fontSize + "px";
+//   }
+// }
+
+// Call the adjustFontSize function on page load and window resize
+//window.addEventListener("DOMContentLoaded", adjustFontSize());
+//window.addEventListener("resize", adjustFontSize());

@@ -1,0 +1,135 @@
+.mainBg {
+  background-color: var(--dark-one-colour);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 950px;
+  font-family: Gabarito;
+}
+
+.account-display {
+  background-color: var(--dark-two-colour);
+  color: var(--light-colour);
+  height: 80vh;
+  width: 80vw;
+}
+
+.friend-div {
+  width: 300px;
+  height: 500px;
+}
+
+.scrollable-friends-div {
+  width: 90%;
+  height: 80%;
+  overflow-y: auto;
+  border: 1px solid var(--light-colour);
+}
+
+.scrollable-friends-div .friend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px;
+  padding: 10px;
+  background-color: var(--grey-one-colour);
+  border: 1px solid var(--grey-two-colour);
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+#pfp {
+  width: 120px;
+  height: auto;
+}
+
+.friend-pfp {
+  width: 32px;
+  height: auto;
+}
+
+.top-section-friend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-friend {
+  position: relative;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+
+  width: 35px;
+  height: 35px;
+  border: 2px solid var(--primary-colour);
+  border-radius: 500px;
+  padding: 5px;
+  cursor: pointer;
+  transition: width 0.2s ease;
+  overflow: hidden;
+}
+
+.add-friend-animation {
+  width: 180px;
+}
+
+.add-friend-input {
+  color: var(--light-colour);
+  position: absolute;
+  right: 44px;
+  top: 6px;
+  width: 55%;
+  height: 70%;
+  border: none;
+  background-color: transparent;
+}
+
+.add-friend-input:focus {
+  border: none;
+  outline: none;
+}
+
+.add-friend-input-animation {
+}
+
+.add-friend-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.add-friend-close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.add-friend-btn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  top: 0px;
+  left: -1px;
+  width: 35px;
+  height: 35px;
+}
+
+.add-friend-close {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  top: 0px;
+  right: 0px;
+  width: 35px;
+  height: 35px;
+  transition: right 0.2s ease;
+}
+
+.hide-close {
+  right: -30px;
+}

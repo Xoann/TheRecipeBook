@@ -228,6 +228,7 @@ async function signUpUser(
             username: username,
             firstName: firstName,
             lastName: lastName,
+            friendsList: "",
           })
           .then(() => {
             // User data saved successfully
@@ -237,6 +238,39 @@ async function signUpUser(
           .catch((error) => {
             // Handle errors while saving additional user information
             console.error("Error saving user data: ", error);
+          });
+
+        // Add username to username uid lookup
+        firebase
+          .firestore()
+          .collection("fastData")
+          .doc("usernameToUid")
+          .update({
+            mapField: {
+              [username]: user.uid,
+            },
+          })
+          .then(() => {
+            console.log("Map field entry added successfully!");
+          })
+          .catch((error) => {
+            console.error("Error adding map field entry:", error);
+          });
+
+        // Give user default pfp
+        imageRef = firebase
+          .storage()
+          .ref()
+          .child(`${user.uid}/pfp/profile-picture`);
+        const imageUrl = "../../img/default-pfp.png";
+        fetch(imageUrl)
+          .then((response) => response.blob())
+          .then((blob) => {
+            // Create a File object from the Blob
+            const fileObject = new File([blob], "image.png", {
+              type: "image/png",
+            });
+            imageRef.put(fileObject);
           });
       })
       .catch((error) => {

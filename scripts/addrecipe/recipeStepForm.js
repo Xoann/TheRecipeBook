@@ -362,6 +362,7 @@ function writeUserData(
       });
   }
   console.log("Uploaded");
+  increaseRecipeCount(firebase.auth().currentUser.uid);
 }
 
 //Sign out / Sign in button
@@ -382,3 +383,14 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById("sign-out").innerText = "Sign In";
   }
 });
+
+function increaseRecipeCount(user) {
+  console.log("hi");
+  const docRef = firebase.firestore().collection("users").doc(user);
+  docRef.get().then((doc) => {
+    const recipeCount = doc.data().recipes;
+    docRef.update({
+      recipes: recipeCount + 1,
+    });
+  });
+}

@@ -797,7 +797,6 @@ function updateShoppingListModal() {
   }
 }
 
-
 function multiplyFractionByNumber(fractionString, numerator, denominator) {
   if (fractionString.length === 0) {
     return fractionString;
@@ -886,7 +885,19 @@ function handleDeleteRecipe(recipeName) {
   });
 }
 
+function decreaseRecipeCount(user) {
+  console.log("hi");
+  const docRef = firebase.firestore().collection("users").doc(user);
+  docRef.get().then((doc) => {
+    const recipeCount = doc.data().recipes;
+    docRef.update({
+      recipes: recipeCount - 1,
+    });
+  });
+}
+
 function deleteRecipe(recipe) {
+  decreaseRecipeCount(currentUid);
   const databaseRef = firebase
     .database()
     .ref(`${currentUid}/recipes/${recipe}`);
@@ -1097,7 +1108,20 @@ document.addEventListener("keydown", function (event) {
       image
     );
   }
+  increaseRecipeCount(firebase.auth().currentUser.uid);
 });
+
+function increaseRecipeCount(user) {
+  console.log("hi");
+  const docRef = firebase.firestore().collection("users").doc(user);
+  docRef.get().then((doc) => {
+    const recipeCount = doc.data().recipes;
+    console.log(recipeCount);
+    docRef.update({
+      recipes: recipeCount + 1,
+    });
+  });
+}
 
 // function adjustFontSize() {
 //   let box = document.getElementsByClassName("top-elements");

@@ -224,7 +224,13 @@ async function signUpUser(
           });
 
         promises.push(usernameListUpdate);
-
+        const date = new Date();
+        const formattedDate = date.toLocaleString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
         const userFileUpdate = firebase
           .firestore()
           .collection("users")
@@ -234,7 +240,10 @@ async function signUpUser(
             username: username,
             firstName: firstName,
             lastName: lastName,
-            friendsList: "",
+            friendsList: "[]",
+            recipes: 0,
+            forks: 0,
+            dateJoined: formattedDate,
           })
           .then(() => {
             // User data saved successfully

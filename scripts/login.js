@@ -14,7 +14,8 @@ signInButton.addEventListener("click", () =>
 const signUpAccountButton = document.getElementById("signUpAccount");
 const signInAccountButton = document.getElementById("signInAccount");
 
-signUpAccountButton.addEventListener("click", function () {
+signUpAccountButton.addEventListener("click", function (event) {
+  event.preventDefault();
   const signUpEmail = document.getElementById("sign-up-email").value;
   const passwordOne = document.getElementById("sign-up-password-one").value;
   const passwordTwo = document.getElementById("sign-up-password-two").value;
@@ -29,7 +30,9 @@ signUpAccountButton.addEventListener("click", function () {
     username,
     firstName,
     lastName
-  );
+  ).then(() => {
+    window.location.href = "../index.html";
+  });
 });
 
 signInAccountButton.addEventListener("click", function (event) {
@@ -195,13 +198,14 @@ async function signUpUser(
   }
 
   if (!isError) {
-    firebase
+    const promises = [];
+    return firebase
       .auth()
       .createUserWithEmailAndPassword(email, passwordOne)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user;
-        firebase
+        const usernameListUpdate = firebase
           .firestore()
           .collection("fastData")
           .doc("usernames")
@@ -219,7 +223,9 @@ async function signUpUser(
               });
           });
 
-        firebase
+        promises.push(usernameListUpdate);
+
+        const userFileUpdate = firebase
           .firestore()
           .collection("users")
           .doc(user.uid)
@@ -233,29 +239,22 @@ async function signUpUser(
           .then(() => {
             // User data saved successfully
             console.log("User signed up successfully!");
-            window.location.href = "../index.html";
-          })
-          .catch((error) => {
-            // Handle errors while saving additional user information
-            console.error("Error saving user data: ", error);
           });
-
+        promises.push(userFileUpdate);
         // Add username to username uid lookup
-        firebase
+        const mapRef = firebase
           .firestore()
           .collection("fastData")
-          .doc("usernameToUid")
-          .update({
-            mapField: {
-              [username]: user.uid,
-            },
-          })
-          .then(() => {
-            console.log("Map field entry added successfully!");
-          })
-          .catch((error) => {
-            console.error("Error adding map field entry:", error);
+          .doc("usernameToUid");
+        const mapAccess = mapRef.get().then((doc) => {
+          const existingMap = doc.data().usernameToUid;
+          existingMap[username] = user.uid;
+          const mapUpdate = mapRef.update({
+            usernameToUid: existingMap,
           });
+          promises.push(mapUpdate);
+        });
+        promises.push(mapAccess);
 
         // Give user default pfp
         imageRef = firebase
@@ -263,19 +262,19 @@ async function signUpUser(
           .ref()
           .child(`${user.uid}/pfp/profile-picture`);
         const imageUrl = "../../img/default-pfp.png";
-        fetch(imageUrl)
+        const imageAccess = fetch(imageUrl)
           .then((response) => response.blob())
           .then((blob) => {
             // Create a File object from the Blob
             const fileObject = new File([blob], "image.png", {
               type: "image/png",
             });
-            imageRef.put(fileObject);
+            const imageUpdate = imageRef.put(fileObject);
+            promises.push(imageUpdate);
           });
-      })
-      .catch((error) => {
-        // Handle errors during user registration
-        console.error("Error signing up: ", error);
+        promises.push(imageAccess);
+        await Promise.all(promises);
+        console.log("all updates done");
       });
   }
 }

@@ -563,6 +563,7 @@
 
 .textarea {
   width: 100%;
+  min-width: 600px;
   display: inline-block;
   overflow: hidden;
   min-height: 70px;
@@ -699,4 +700,18 @@
 
 .image-container {
   position: relative;
+}
+
+.edit-ingredients-steps-div {
+  width: 90%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.edit-ingredients-container {
+  width: 50%;
+}
+
+.edit-steps-container {
+  width: 50%;
 }

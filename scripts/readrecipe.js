@@ -1,3 +1,6 @@
+import { addIngredient } from "./addingredientbutton.js";
+import { addStep } from "./addstepbutton.js";
+
 var currentUid;
 let recipes;
 let searchQuery = "";
@@ -165,6 +168,7 @@ function displayRecipes(recipeNames) {
 
     editDiv.addEventListener("click", function () {
       displayRecipeModal(`${recipeNames[i]}-edit`);
+      fillEditInputs(recipeNames[i]);
     });
 
     const deleteDiv = document.createElement("div");
@@ -639,6 +643,7 @@ async function generateEditModal(recipeName, imageURLs) {
   const editNameInput = document.createElement("input");
   editNameInput.classList.add("edit-input");
   editNameInput.value = recipeName;
+  editNameInput.id = `edit-title_${recipeName.replace(/ /g, "-")}`;
 
   editTitleContainer.appendChild(editNameInput);
 
@@ -672,7 +677,7 @@ async function generateEditModal(recipeName, imageURLs) {
   modalContentElement.appendChild(editImageContainer);
 
   const editDisplayImage = document.createElement("div");
-  editDisplayImage.id = "display-image";
+  editDisplayImage.id = `display-image_${recipeName.replace(/ /g, "-")}`;
 
   editImageContainer.appendChild(editDisplayImage);
 
@@ -694,6 +699,10 @@ async function generateEditModal(recipeName, imageURLs) {
   editDescriptionInput.role = "textbox";
   editDescriptionInput.contentEditable = true;
   editDescriptionInput.innerHTML = recipe.recipeDesc;
+  editDescriptionInput.id = `edit-description-input_${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
 
   editDescriptionContainer.appendChild(editDescriptionInput);
 
@@ -715,12 +724,20 @@ async function generateEditModal(recipeName, imageURLs) {
   const editPrepTimeHrsInput = document.createElement("input");
   editPrepTimeHrsInput.classList.add("edit-input");
   editPrepTimeHrsInput.value = recipe.prepTimeHrs;
+  editPrepTimeHrsInput.id = `edit-preptime-hrs-input_${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
 
   editPrepTimeContainer.appendChild(editPrepTimeHrsInput);
 
   const editPrepTimeMinsInput = document.createElement("input");
   editPrepTimeMinsInput.classList.add("edit-input");
   editPrepTimeMinsInput.value = recipe.prepTimeMins;
+  editPrepTimeMinsInput.id = `edit-preptime-mins-input_${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
 
   editPrepTimeContainer.appendChild(editPrepTimeMinsInput);
 
@@ -738,12 +755,20 @@ async function generateEditModal(recipeName, imageURLs) {
   const editCookTimeHrsInput = document.createElement("input");
   editCookTimeHrsInput.classList.add("edit-input");
   editCookTimeHrsInput.value = recipe.cookTimeHrs;
+  editCookTimeHrsInput.id = `edit-cooktime-hrs-input_${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
 
   editCookTimeContainer.appendChild(editCookTimeHrsInput);
 
   const editCookTimeMinsInput = document.createElement("input");
   editCookTimeMinsInput.classList.add("edit-input");
   editCookTimeMinsInput.value = recipe.cookTimeMins;
+  editCookTimeMinsInput.id = `edit-cooktime-mins-input_${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
 
   editCookTimeContainer.appendChild(editCookTimeMinsInput);
 
@@ -761,18 +786,73 @@ async function generateEditModal(recipeName, imageURLs) {
   const editServingsInput = document.createElement("input");
   editServingsInput.classList.add("edit-input");
   editServingsInput.value = recipe.servings;
+  editServingsInput.id = `edit-servings-input_${recipeName.replace(/ /g, "-")}`;
 
   editServingsContainer.appendChild(editServingsInput);
 
-  //edit ingredients
+  //ingredients and steps div
+  const editIngredientsStepsContainer = document.createElement("div");
+  editIngredientsStepsContainer.classList.add("edit-ingredients-steps-div");
+  modalContentElement.appendChild(editIngredientsStepsContainer);
 
-  //edit servings
+  //edit ingredients
+  const editIngredientsContainer = document.createElement("div");
+  editIngredientsContainer.classList.add("edit-ingredients-container");
+
+  editIngredientsStepsContainer.appendChild(editIngredientsContainer);
+
+  const editIngredientsTitle = document.createElement("h2");
+  editIngredientsTitle.classList.add("edit-name-title");
+  editIngredientsTitle.textContent = "Ingredients:";
+
+  editIngredientsContainer.appendChild(editIngredientsTitle);
+
+  let editIngredientRow = `edit-ingredient-row-${recipeName.replace(
+    / /g,
+    "-"
+  )}`;
+
+  for (let j = 0; j < recipe.ingredients.length; j++) {
+    addIngredient(editIngredientsContainer, editIngredientRow);
+    //document.getElementById(`ingredient_`)
+  }
+
+  //edit steps
+  const editStepsContainer = document.createElement("div");
+  editStepsContainer.classList.add("edit-steps-container");
+
+  editIngredientsStepsContainer.appendChild(editStepsContainer);
+
+  const editStepsTitle = document.createElement("h2");
+  editStepsTitle.classList.add("edit-name-title");
+  editStepsTitle.textContent = "Steps: ";
+
+  editStepsContainer.appendChild(editStepsTitle);
 
   window.addEventListener("click", function (event) {
     if (event.target === modalElement) {
       closeModal(modalElement);
     }
   });
+}
+
+function fillEditInputs(recipeName) {
+  const recipe = recipes[recipeName];
+  //fill title
+
+  //fill image
+
+  //fill description
+
+  //fill prep time
+
+  //fill cook time
+
+  //fill servings
+
+  //fill ingredients
+
+  //fill steps
 }
 
 ///////////////////////////

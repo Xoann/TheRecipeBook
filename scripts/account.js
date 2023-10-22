@@ -1,3 +1,16 @@
+import {
+  unfriend,
+  getPfp,
+  getFriends,
+  getName,
+  addFriend,
+  updatePfp,
+  getUsername,
+  getDateJoined,
+  getForkCount,
+  getRecipeCount,
+} from "./functions.js";
+
 let currentUid;
 
 firebase.auth().onAuthStateChanged((user) => {
@@ -121,101 +134,6 @@ document.body.addEventListener("click", (event) => {
   }
 });
 
-function unfriend(user, friend) {
-  console.log(`${user} no longer likes ${friend}`);
-  getFriends(user).then((friends) => {
-    friends = friends.filter((item) => item !== friend);
-
-    const docRef = firebase.firestore().collection("users").doc(user);
-    docRef
-      .update({
-        friendsList: JSON.stringify(friends),
-      })
-      .then(() => {
-        console.log("friend removed");
-      });
-  });
-}
-
-function getPfp(user) {
-  const imageRef = firebase
-    .storage()
-    .ref()
-    .child(user)
-    .child("pfp")
-    .child("profile-picture");
-  return imageRef.getDownloadURL().then((url) => {
-    return url;
-  });
-}
-
-function getFriends(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    const stringData = doc.data().friendsList;
-    return JSON.parse(stringData);
-  });
-}
-
-function getName(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    const firstName = doc.data().firstName;
-    const lastName = doc.data().lastName;
-    return `${capitalize(firstName)} ${capitalize(lastName)}`;
-  });
-}
-
-function capitalize(word) {
-  if (!word) {
-    return "";
-  }
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
-
-function getUsername(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    return doc.data().username;
-  });
-}
-
-function uidLookup(username) {
-  const docRef = firebase
-    .firestore()
-    .collection("fastData")
-    .doc("usernameToUid");
-  return docRef.get().then((doc) => {
-    const usernameMap = doc.data().usernameToUid;
-    // console.log(typeof usernameMap);
-    if (usernameMap.hasOwnProperty(username)) {
-      return usernameMap[username];
-    }
-    throw new Error("User does not exist");
-  });
-}
-
-function addFriend(user, friendUsername) {
-  try {
-    uidLookup(friendUsername).then((uid) => {
-      getFriends(user).then((friends) => {
-        friends.push(uid);
-
-        const docRef = firebase.firestore().collection("users").doc(user);
-        docRef
-          .update({
-            friendsList: JSON.stringify(friends),
-          })
-          .then(() => {
-            console.log("friend added");
-          });
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 // Friend searching
 const searchInput = document.getElementById("searchFriends");
 const scrollableDiv = document.getElementById("scrollable-friends-div");
@@ -278,18 +196,6 @@ pfpInput.addEventListener("change", (event) => {
   }
 });
 
-function updatePfp(user, file) {
-  const pfpRef = firebase.storage().ref().child(`${user}/pfp/profile-picture`);
-  const renamedFile = new File([file], "profile-picture.png", {
-    type: file.type,
-  });
-  pfpRef.put(renamedFile).then(() => {
-    getPfp(user).then((pfp) => {
-      document.getElementById("pfp").src = pfp;
-    });
-  });
-}
-
 const userMenu = document.getElementsByClassName("user-menu")[0];
 const usernameButtonOut = document.getElementById("username-button");
 const usernameButtonIn = document.getElementById("username");
@@ -326,24 +232,3 @@ window.addEventListener("click", function (event) {
     }, 20);
   }
 });
-
-function getDateJoined(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    return doc.data().dateJoined;
-  });
-}
-
-function getForkCount(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    return doc.data().forks;
-  });
-}
-
-function getRecipeCount(user) {
-  const docRef = firebase.firestore().collection("users").doc(user);
-  return docRef.get().then((doc) => {
-    return doc.data().recipes;
-  });
-}

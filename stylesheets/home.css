@@ -293,7 +293,11 @@
 
 .recipe-container {
   text-align: center;
-
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
   /* min-height: 49vh; */
   height: 100%;
 }
@@ -309,8 +313,7 @@
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
-  margin-right: 20px;
-  margin-top: 20px;
+  /* margin: 10px; */
   font-family: Gabarito;
 
   cursor: pointer;

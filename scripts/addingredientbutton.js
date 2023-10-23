@@ -47,7 +47,7 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   const unitInput = document.createElement("input");
   unitInput.classList.add("ingredient-input");
   unitInput.classList.add("unit-input");
-  unitInput.classList.add(`unit-input_${ingredientIdentifier}`);
+  unitInput.classList.add(`ingredient-unit_${ingredientIdentifier}`);
   unitInput.classList.add("input-transition");
   unitInput.autocomplete = "off";
   unitInput.role = "combobox";
@@ -112,7 +112,7 @@ export function addIngredient(listContainer, ingredientIdentifier) {
         `ingredient-amount_${ingredientIdentifier}`
       );
       let unitList = document.getElementsByClassName(
-        `unit-input_${ingredientIdentifier}`
+        `ingredient-unit_${ingredientIdentifier}`
       );
       itemCount = document.getElementsByClassName(
         `ingredient-row-container_${ingredientIdentifier}`

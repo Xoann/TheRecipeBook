@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-.title {
+.main-title {
   color: var(--primary-colour);
   font-size: 80px;
   font-family: Gabarito;
@@ -197,13 +197,16 @@
   color: var(--light-colour);
   border-radius: 20px;
   font-family: Gabarito;
-  height: 15vh;
+  height: 180px;
+  width: 500px;
+  min-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 60px 0px;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  padding: 30px 50px;
+  margin-top: 28vh;
 }
 
 .delete-recipe-final-btn {
@@ -470,7 +473,7 @@
 }
 
 .servings-button {
-  height: 30px;
+  height: 20px;
   width: auto;
   cursor: pointer;
 }
@@ -687,7 +690,7 @@
   z-index: 1;
 }
 
-.close {
+/* .close {
   position: absolute;
   z-index: 2;
   height: 20px;
@@ -696,7 +699,7 @@
   right: 10px;
   display: none;
   cursor: pointer;
-}
+} */
 
 .image-container {
   position: relative;
@@ -713,5 +716,33 @@
 }
 
 .edit-steps-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   width: 50%;
+}
+
+.edit-steps-row-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.edit-plus-button {
+  opacity: 1;
+  color: var(--light-text-colour);
+  height: 28px;
+  width: auto;
+  border: 2px var(--primary-colour) solid;
+  border-radius: 8px;
+}
+
+.edit-steps-row-container .step-item {
+  width: 100%;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: center;
 }

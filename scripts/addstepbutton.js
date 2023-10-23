@@ -1,7 +1,8 @@
-export function addStep(listContainer) {
+export function addStep(listContainer, stepIdentifier) {
   let itemCount = document.getElementsByClassName("step-item").length;
   const listItem = document.createElement("div");
   listItem.classList.add("step-item");
+  listItem.classList.add(`step-item_${stepIdentifier}`);
 
   //Create number label
   const number = document.createElement("label");
@@ -20,6 +21,7 @@ export function addStep(listContainer) {
   stepInput.classList.add("details-input");
   stepInput.classList.add("textarea");
   stepInput.classList.add("step-input");
+  stepInput.classList.add(`step-input_${stepIdentifier}`);
 
   stepInput.id = `recipe-step_${itemCount}`;
 

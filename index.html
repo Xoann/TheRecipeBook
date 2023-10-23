@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheets/home.css" />
+    <link rel="stylesheet" href ="stylesheets/addrecipe.css"/>
     <link rel="stylesheet" href="stylesheets/colours.css" />
     <link rel="stylesheet" href="stylesheets/default.css" />
     <link rel="stylesheet" href="stylesheets/sizes.css" />
@@ -40,7 +41,7 @@
       
       <section class="search">
         <div class="search-bar-div">
-          <h1 class="title">Recipe Book</h1>
+          <h1 class="main-title">Recipe Book</h1>
           <input
           class="search-input"
             id="search-input"
@@ -55,14 +56,16 @@
             
           </div>
         </section>
-      
-
       </div>
 
       <div class="modal" id="delete-modal">
         <div class="modal-content" id="delete-modal-content">
           <p class="delete-modal-text" id="delete-modal-text"></p>
           <div id="delete-recipe-final-btn" class="delete-recipe-final-btn">Delete</div>
+          <svg id="close-delete-modal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 close">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          
         </div>
       </div>
 

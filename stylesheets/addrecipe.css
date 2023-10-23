@@ -10,6 +10,7 @@
 
 #add-recipe-button {
   border-bottom: 2px var(--primary-colour) solid;
+  background-color: var(--grey-one-colour);
 }
 
 .mainBg {
@@ -44,6 +45,7 @@
 
 .center-overlay {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,6 +75,10 @@
 
 #left-recipe-form {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 #right-recipe-form {
@@ -116,17 +122,14 @@
   min-width: 300px;
   width: 90%;
   border-width: 1px;
-  border-color: var(--plusButtonHover);
   padding: 2% 5%;
   font-family: inherit;
   font-size: inherit;
   border-style: solid;
   background-color: inherit;
-  color: var(--navTextColor);
 }
 
 .details {
-  color: var(--navTextColor);
   font-size: 35px;
   font-family: Gabarito;
   margin-top: -4%;
@@ -331,11 +334,17 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
+#temp-img {
+  width: 1px;
+  height: auto;
+  display: none;
+}
+
 .custom-file-input:hover {
   background-color: var(--grey-one-colour);
 }
 
-#display-image img {
+.display-image img {
   min-width: 100px;
   min-height: 200px;
   max-width: 400px;
@@ -355,7 +364,6 @@ input::-webkit-inner-spin-button {
   width: auto;
   top: 10px;
   right: 10px;
-  display: none;
   cursor: pointer;
 }
 
@@ -543,10 +551,66 @@ option:hover,
 }
 
 .input-error {
-  border-color: var(--error-red) !important;
+  border-color: var(--error-colour) !important;
 }
 
 .input-error.plus-button {
   border-width: 2px;
   border-style: solid;
+}
+
+/* Successful Upload */
+.addrecipe-modal {
+  display: none;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99;
+  overflow-y: auto;
+  /* overflow: visible !important; */
+}
+
+.addrecipe-modal-content {
+  background-color: var(--grey-one-colour);
+  margin: 6% auto;
+  padding: 20px;
+  border: 1px solid var(--grey-two-colour);
+  margin-top: 30%;
+  width: 300px;
+  height: 150px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-family: Gabarito;
+  color: var(--light-text-colour);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 35px;
+  border-radius: 25px;
+  position: relative;
+}
+
+.addrecipe-modal-content .submit-button {
+  min-height: 40px;
+}
+
+.show-done-button {
+  display: flex !important;
+}
+
+/* sign in modal */
+
+#signin-content {
+  height: 250px;
+  width: 500px;
+}
+
+#signin-button {
+  height: 70px;
+  width: 150px;
 }

@@ -1,136 +1,38 @@
+import { addIngredient } from "../addingredientbutton.js";
+import { displayImage } from "../addimage.js";
+import { deleteImage } from "../addimage.js";
+import { handleFileChange } from "../addimage.js";
+import { checkErrors } from "../submitrecipe.js";
+import { addStep } from "../addstepbutton.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("addRecipeForm");
-  const listContainer = document.getElementById("list-container-ingredients");
-  const addItemButton = document.getElementById("add-ingredient");
+  const ingredientContainer = document.getElementById(
+    "list-container-ingredients"
+  );
+  const addIngredientButton = document.getElementById("add-ingredient");
+  let ingredientIdentifier = "add";
 
-  let itemCount = 0;
-  const units = [
-    "Grams",
-    "Ounces",
-    "lbs",
-    "kg",
-    "Liters",
-    "drop",
-    "tsp.",
-    "tbsp.",
-    "pt.",
-    "qt.",
-    // "gal.",
-  ];
+  addIngredient(ingredientContainer, ingredientIdentifier);
 
-  addItemButton.addEventListener("click", function () {
-    const listItem = document.createElement("div");
-    listItem.classList.add("ingredient-row-container");
+  addIngredientButton.addEventListener("click", function () {
+    addIngredient(ingredientContainer, ingredientIdentifier);
+  });
 
-    const input_name = document.createElement("input");
-    input_name.type = "text";
-    input_name.id = `ingredient_${itemCount}`;
-    input_name.className = `ingredient_${itemCount}`;
-    input_name.classList.add("ingredient-name");
-    input_name.classList.add("ingredient-input");
-    input_name.classList.add("input-transition");
-    input_name.placeholder = "Add an ingredient";
-    input_name.setAttribute("oninput", "limitInputLength(this, 20)");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+  });
 
-    const input_value = document.createElement("input");
-    input_value.type = "text";
-    input_value.classList.add("ingredient-amount");
-    input_value.id = `ingredient_value_${itemCount}`;
-    input_value.placeholder = "Amount";
-    input_value.classList.add("ingredient-input");
-    input_value.classList.add("input-transition");
-    input_value.setAttribute("oninput", "restrictInput(event, this, 14)");
+  const stepContainer = document.getElementById("list-container-steps");
+  const addStepButton = document.getElementById("add-step");
 
-    const unitDiv = document.createElement("fieldset");
+  let stepIdentifier = "add";
 
-    const unitInput = document.createElement("input");
-    unitInput.classList.add("ingredient-input");
-    unitInput.classList.add("unit-input");
-    unitInput.classList.add("input-transition");
-    unitInput.autocomplete = "off";
-    unitInput.role = "combobox";
-    unitInput.list = "";
-    unitInput.id = `ingredient_unit_${itemCount}`;
-    unitInput.name = "unitslist";
-    unitInput.placeholder = "Unit";
-    unitInput.type = "text";
-    unitInput.setAttribute("oninput", "limitInputLength(this, 8)");
+  addStep(stepContainer, stepIdentifier);
 
-    const unitDatalist = document.createElement("datalist");
-    unitDatalist.id = "units";
-    unitDatalist.classList.add("data-list");
-    unitDiv.appendChild(unitInput);
-    unitDiv.appendChild(unitDatalist);
-
-    for (const unit of units) {
-      const option = document.createElement("option");
-      option.innerHTML = unit;
-      option.value = unit;
-      unitDatalist.appendChild(option);
-    }
-
-    unitInput.onfocus = function () {
-      unitDatalist.style.display = "block";
-    };
-    for (let option of unitDatalist.options) {
-      option.onclick = function () {
-        unitInput.value = option.value;
-        unitDatalist.style.display = "none";
-        unitInput.style.borderRadius = "5px";
-      };
-    }
-
-    var currentFocus = -1;
-    unitInput.oninput = function () {
-      currentFocus = -1;
-      var text = unitInput.value.toUpperCase();
-      for (let option of unitDatalist.options) {
-        if (option.value.toUpperCase().indexOf(text) > -1) {
-          option.style.display = "block";
-        } else {
-          option.style.display = "none";
-        }
-      }
-    };
-
-    const removeButton = document.createElement("button");
-    removeButton.classList.add("remove-item");
-    removeButton.classList.add("plus-button");
-    removeButton.innerText = "-";
-    removeButton.addEventListener("click", function () {
-      input_name.classList.remove("ingredient-animation");
-      input_value.classList.remove("ingredient-animation");
-      unitInput.classList.remove("ingredient-animation");
-
-      setTimeout(function () {
-        listContainer.removeChild(listItem);
-        let nameList = document.getElementsByClassName("ingredient-name");
-        let amountList = document.getElementsByClassName("ingredient-amount");
-        let unitList = document.getElementsByClassName("unit-input");
-        itemCount--;
-        console.log(itemCount);
-        for (let i = 0; i < itemCount; i++) {
-          console.log("changing");
-          nameList[i].id = `ingredient_${i}`;
-          amountList[i].id = `ingredient_value_${i}`;
-          unitList[i].id = `ingredient_unit_${i}`;
-        }
-      }, 50);
-    });
-
-    listItem.appendChild(input_name);
-    listItem.appendChild(input_value);
-    listItem.appendChild(unitDiv);
-    listItem.appendChild(removeButton);
-    listContainer.appendChild(listItem);
-
-    setTimeout(function () {
-      input_name.classList.add("ingredient-animation");
-      input_value.classList.add("ingredient-animation");
-      unitInput.classList.add("ingredient-animation");
-    }, 10);
-
-    itemCount++;
+  //Add Step Row when Plus button is clicked
+  addStepButton.addEventListener("click", function () {
+    addStep(stepContainer, stepIdentifier);
   });
 
   form.addEventListener("submit", function (event) {
@@ -190,63 +92,75 @@ window.addEventListener("click", function (event) {
   }
 });
 
-function limitInputLength(element, maxLength) {
-  let inputValue = element.value.toString();
-
-  if (inputValue.length > maxLength) {
-    element.value = inputValue.slice(0, maxLength);
-  }
-}
-
-function displayImage() {
-  console.log("displaying");
-  var fileInput = document.getElementById("recipeImg");
-  var imageContainer = document.getElementById("display-image");
-
-  // Check if a file is selected
-  if (fileInput.files.length > 0) {
-    var selectedFile = fileInput.files[0];
-    var reader = new FileReader();
-
-    // Read the content of the file as a data URL
-    reader.onload = function (e) {
-      // Display the image on the page
-      var imageElement = document.createElement("img");
-      imageElement.src = e.target.result;
-      imageElement.alt = "Selected Image";
-      imageElement.id = "image";
-
-      // Clear previous content and append the image
-      imageContainer.innerHTML = "";
-      imageContainer.appendChild(imageElement);
-    };
-
-    // Read the file as a data URL
-    reader.readAsDataURL(selectedFile);
-
-    document.getElementsByClassName("close")[0].style.display = "block";
-  }
-}
-
-const closeButton = document.getElementsByClassName("close")[0];
-closeButton.addEventListener("click", function () {
-  this.style.display = "none";
-  document
-    .getElementById("display-image")
-    .removeChild(document.getElementById("image"));
+document.getElementById("done-button").addEventListener("click", function () {
+  window.location.href = "../../index.html";
 });
 
-function restrictInput(event, element, maxLength) {
-  var allowedCharacters = /^[0-9\/]*$/; // Regex for numbers and /
-  var inputField = event.target;
-  //var errorMessage = document.getElementById("error-message");
+let input = document.getElementById("recipeImg");
+let imagesArray = [];
+let imageContainer = document.getElementsByClassName("image-container")[0];
+let imageForm = document.getElementById("image-form");
+let imageIdentifier = "add";
 
-  // Check if the entered character is allowed
-  if (!allowedCharacters.test(inputField.value)) {
-    // Prevent the character from being entered
-    inputField.value = inputField.value.slice(0, -1);
+input.addEventListener("change", () => {
+  handleFileChange(
+    input,
+    imagesArray,
+    imageContainer,
+    imageForm,
+    imageIdentifier
+  );
+});
 
-    //errorMessage.textContent = "Please enter only numbers and /.";
+document.getElementById("submit").addEventListener("click", function (e) {
+  let recipeIdentifier = "add";
+  let recipeName = document.getElementById("recipeName");
+  let recipeDesc = document.getElementById("description");
+  let prepTimeHrs = document.getElementById("prepTimeHrs");
+  let prepTimeMins = document.getElementById("prepTimeMins");
+  let cookTimeHrs = document.getElementById("cookTimeHrs");
+  let cookTimeMins = document.getElementById("cookTimeMins");
+  let servings = document.getElementById("servings");
+  let addIngredient = document.getElementById("add-ingredient");
+  let addStep = document.getElementById("add-step");
+  checkErrors(
+    e,
+    recipeIdentifier,
+    imagesArray,
+    recipeName,
+    recipeDesc,
+    prepTimeHrs,
+    prepTimeMins,
+    cookTimeHrs,
+    cookTimeMins,
+    servings,
+    addIngredient,
+    addStep
+  );
+  document.getElementById("upload-modal").classList.add("show-done-button");
+});
+
+document.getElementById("signin-button").addEventListener("click", function () {
+  window.location.href = "../../html/login.html";
+});
+
+//Sign out / Sign in button
+
+firebase.auth().onAuthStateChanged((user) => {
+  const signOutButton = document.getElementById("sign-out");
+  signOutButton.addEventListener("click", function () {
+    if (user) {
+      firebase.auth().signOut();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+  if (user) {
+    document.getElementById("sign-out").innerText = "Sign Out";
+    document.getElementById("signin-modal").style.display = "none";
+  } else {
+    console.log("uid not found");
+    document.getElementById("sign-out").innerText = "Sign In";
+    document.getElementById("signin-modal").style.display = "flex";
   }
-  limitInputLength(element, maxLength);
-}
+});

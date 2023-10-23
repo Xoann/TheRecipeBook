@@ -1,25 +1,18 @@
-export function capitalize(word) {
-  if (!word) {
-    return "";
-  }
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
-
-function createMenu(recipeDiv) {
+function createMenu(database, recipeDiv, recipeName) {
   const menu = document.createElement("div");
   menu.classList.add("menu");
 
   const shoppingDiv = document.createElement("div");
   shoppingDiv.classList.add("slideout-menu-btn");
   const shoppingText = document.createElement("p");
-  shoppingText.id = `shopping-btn-text-${recipeNames[i]}`;
+  shoppingText.id = `shopping-btn-text-${recipeName}`;
   shoppingText.textContent = "Add";
   shoppingText.classList.add("btn-text");
 
-  shoppingText.id = `shop-text-${recipeNames[i]}`;
+  shoppingText.id = `shop-text-${recipeName}`;
 
   shoppingDiv.addEventListener("click", () => {
-    handleShoppingToggle(recipeNames[i]);
+    handleShoppingToggle(database, recipeName);
   });
 
   fetch("../svgs/shop.svg")
@@ -28,9 +21,9 @@ function createMenu(recipeDiv) {
       const parser = new DOMParser();
       const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
       const svgElement = svgDOM.querySelector("svg");
-      svgElement.id = `shop-icon-${recipeNames[i]}`;
+      svgElement.id = `shop-icon-${recipeName}`;
 
-      checkRecipeInDbList(recipeNames[i], svgElement, shoppingText);
+      checkRecipeInDbList(database, recipeName, svgElement, shoppingText);
 
       shoppingDiv.appendChild(svgElement);
       shoppingDiv.append(shoppingText);
@@ -66,7 +59,7 @@ function createMenu(recipeDiv) {
   deleteText.classList.add("btn-text");
 
   deleteDiv.addEventListener("click", () => {
-    handleDeleteRecipe(recipeNames[i]);
+    handleDeleteRecipe(database, recipeName);
   });
 
   fetch("../svgs/trash.svg")
@@ -91,7 +84,7 @@ function createMenu(recipeDiv) {
 
   const slideoutMenu = document.createElement("div");
   slideoutMenu.classList.add("slideout-menu");
-  slideoutMenu.id = `slideout-menu-${recipeNames[i]}`;
+  slideoutMenu.id = `slideout-menu-${recipeName}`;
   slideoutMenu.appendChild(shoppingDiv);
   slideoutMenu.appendChild(editDiv);
   slideoutMenu.appendChild(deleteDiv);
@@ -121,7 +114,7 @@ function createMenu(recipeDiv) {
       console.error("Error loading SVG:", error);
     });
   recipeCardMenuBtn.addEventListener("click", () => {
-    handleElipsisBtnPress(recipeNames[i]);
+    handleElipsisBtnPress(recipeName);
   });
 
   recipeCardMenu.appendChild(recipeCardMenuBtn);
@@ -129,83 +122,160 @@ function createMenu(recipeDiv) {
   recipeDiv.appendChild(recipeCardMenu);
 }
 
-export function displayRecipes(database, recipeNames, type) {
-  // Displays recipes as card in the recipe-container DOM element (class)
+function handleElipsisBtnPress(recipeName) {
+  const clickedMenu = document.getElementById(`slideout-menu-${recipeName}`);
+  clickedMenu.classList.toggle("sliding-menu-transition");
 
-  for (let i = 0; i < recipeNames.length; i++) {
-    const recipeName = recipeNames[i];
-
-    const recipeContainer =
-      document.getElementsByClassName("recipe-container")[0];
-
-    const recipeDiv = document.createElement("div");
-    recipeDiv.classList.add("recipe-div");
-    recipeDiv.id = `${recipeNames}-recipe-div`;
-
-    recipeDiv.addEventListener("click", function (event) {
-      const goodList = [
-        document.getElementById(`${recipeNames}-overlay`),
-        document.getElementById(`${recipeNames}-recipe-div`),
-        document.getElementById(`${recipeNames}-desc-div`),
-        document.getElementById(`${recipeNames}-recipe-name`),
-        document.getElementById(`${recipeNames}-recipe-elements`),
-        document.getElementById(`${recipeNames}-top-elements`),
-      ];
-      const isCardClicked = goodList.includes(event.target);
-      if (isCardClicked) {
-        displayRecipeModal(recipeNames);
-      }
-    });
-
-    const imgContainer = document.createElement("div");
-    imgContainer.classList.add("img-container");
-
-    const recipeImg = document.createElement("img");
-    recipeImg.classList.add("recipe-img");
-    database.getRecipeImage(recipeNames).then((url) => {
-      recipeImg.src = url;
-    });
-
-    const gradientOverlay = document.createElement("div");
-    gradientOverlay.classList.add("gradient-overlay");
-    gradientOverlay.id = `${recipeNames}-overlay`;
-
-    const recipeElements = document.createElement("div");
-    recipeElements.classList.add("recipe-elements");
-    recipeElements.id = `${recipeNames}-recipe-elements`;
-
-    const topElements = document.createElement("div");
-    topElements.classList.add("top-elements");
-    topElements.id = `${recipeNames}-top-elements`;
-
-    const recipeNameElement = document.createElement("h2");
-    recipeNameElement.classList.add("recipe-name");
-    recipeNameElement.id = `${recipeNames}-recipe-name`;
-
-    const recipeDescription = document.createElement("div");
-    recipeDescription.classList.add("desc-div");
-    recipeDescription.id = `${recipeNames}-desc-div`;
-
-    database.getRecipe(recipeName).then((recipe) => {
-      recipeNameElement.textContent = recipe.name;
-      recipeDescription.innerHTML = recipe.desc;
-    });
-
-    recipeContainer.appendChild(recipeDiv);
-    recipeDiv.appendChild(imgContainer);
-    imgContainer.appendChild(recipeImg);
-    imgContainer.appendChild(gradientOverlay);
-    recipeDiv.appendChild(recipeElements);
-    recipeElements.appendChild(topElements);
-    topElements.appendChild(recipeNameElement);
-    recipeElements.appendChild(recipeDescription);
-    //
-    if (type === "home") {
-      createMenu(recipeDiv);
-    } else if (type === "profile") {
-      //
+  const otherMenus = document.getElementsByClassName("slideout-menu");
+  for (let menu of otherMenus) {
+    if (menu !== clickedMenu) {
+      menu.classList.remove("sliding-menu-transition");
     }
   }
+}
+
+function updateShoppingListModal() {
+  const shoppingModalContent = document.getElementById(
+    "shopping-list-modal-content"
+  );
+  shoppingModalContent.innerHTML = "";
+
+  const ingredients = combineIngredients();
+
+  for (const ingredient of ingredients) {
+    const unit = ingredient["unit"];
+    const ingredientValue = ingredient["value"];
+
+    const ingredientNameElement = document.createElement("h3");
+    ingredientNameElement.textContent = `${ingredient["ingredient"]} ${ingredientValue} ${unit}`;
+
+    shoppingModalContent.appendChild(ingredientNameElement);
+  }
+}
+
+function handleDeleteRecipe(database, recipeName) {
+  // Modify delete modal
+  const deleteModalText = document.getElementById("delete-modal-text");
+  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
+
+  // Display delete modal
+  const modal = document.getElementById("delete-modal");
+  openModal(modal);
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
+
+  const deleteAcountBtn = document.getElementById("delete-recipe-final-btn");
+
+  deleteAcountBtn.addEventListener("click", () => {
+    database.deleteRecipe(recipeName);
+    document.getElementById(`${recipeName}-recipe-div`).style.display = "none";
+    closeModal(modal);
+  });
+}
+
+export function displayRecipes(database, type) {
+  // Displays recipes as card in the recipe-container DOM element (class)
+  database.getAllRecipeNames().then((recipeNames) => {
+    for (let i = 0; i < recipeNames.length; i++) {
+      const recipeName = recipeNames[i];
+
+      const recipeContainer =
+        document.getElementsByClassName("recipe-container")[0];
+
+      const recipeDiv = document.createElement("div");
+      recipeDiv.classList.add("recipe-div");
+      recipeDiv.id = `${recipeName}-recipe-div`;
+
+      recipeDiv.addEventListener("click", function (event) {
+        const goodList = [
+          document.getElementById(`${recipeName}-overlay`),
+          document.getElementById(`${recipeName}-recipe-div`),
+          document.getElementById(`${recipeName}-desc-div`),
+          document.getElementById(`${recipeName}-recipe-name`),
+          document.getElementById(`${recipeName}-recipe-elements`),
+          document.getElementById(`${recipeName}-top-elements`),
+        ];
+        const isCardClicked = goodList.includes(event.target);
+        if (isCardClicked) {
+          displayRecipeModal(recipeName);
+        }
+      });
+
+      const imgContainer = document.createElement("div");
+      imgContainer.classList.add("img-container");
+
+      const recipeImg = document.createElement("img");
+      recipeImg.classList.add("recipe-img");
+      database.getRecipeImage(recipeName).then((url) => {
+        recipeImg.src = url;
+      });
+
+      const gradientOverlay = document.createElement("div");
+      gradientOverlay.classList.add("gradient-overlay");
+      gradientOverlay.id = `${recipeName}-overlay`;
+
+      const recipeElements = document.createElement("div");
+      recipeElements.classList.add("recipe-elements");
+      recipeElements.id = `${recipeName}-recipe-elements`;
+
+      const topElements = document.createElement("div");
+      topElements.classList.add("top-elements");
+      topElements.id = `${recipeName}-top-elements`;
+
+      const recipeNameElement = document.createElement("h2");
+      recipeNameElement.classList.add("recipe-name");
+      recipeNameElement.id = `${recipeName}-recipe-name`;
+
+      const recipeDescription = document.createElement("div");
+      recipeDescription.classList.add("desc-div");
+      recipeDescription.id = `${recipeName}-desc-div`;
+
+      database.getRecipe(recipeName).then((recipe) => {
+        recipeNameElement.textContent = recipeName;
+        recipeDescription.innerHTML = recipe.desc;
+      });
+
+      recipeContainer.appendChild(recipeDiv);
+      recipeDiv.appendChild(imgContainer);
+      imgContainer.appendChild(recipeImg);
+      imgContainer.appendChild(gradientOverlay);
+      recipeDiv.appendChild(recipeElements);
+      recipeElements.appendChild(topElements);
+      topElements.appendChild(recipeNameElement);
+      recipeElements.appendChild(recipeDescription);
+      //
+      if (type === "home") {
+        createMenu(database, recipeDiv, recipeName);
+      } else if (type === "profile") {
+        //
+      }
+    }
+  });
+}
+
+async function handleShoppingToggle(database, recipeName) {
+  database.updateShoppingList(recipeName);
+
+  document
+    .getElementById(`shop-text-${recipeName}`)
+    .classList.toggle("shop-added");
+  document
+    .getElementById(`shop-icon-${recipeName}`)
+    .classList.toggle("shop-added");
+}
+
+async function checkRecipeInDbList(database, recipe, svgElement, shoppingText) {
+  // returns true if recipe in shopping list in db
+  database.recipeInShoppingList(recipe).then((inList) => {
+    if (inList) {
+      svgElement.classList.add("shop-added");
+      shoppingText.classList.add("shop-added");
+    }
+  });
 }
 
 export function generateRecipeModal(database, recipeName) {
@@ -478,4 +548,57 @@ export function openModal(modal) {
 export function closeModal(modal) {
   modal.style.display = "none";
   document.getElementById("body").classList.remove("body-modal-open");
+}
+
+function multiplyFractionByNumber(fractionString, numerator, denominator) {
+  if (fractionString.length === 0) {
+    return fractionString;
+  }
+
+  if (fractionString.indexOf("/") === -1) {
+    fractionString = fractionString + "/1";
+  }
+
+  // Extract numerator and denominator from the fraction string
+  const [fractionNumerator, fractionDenominator] = fractionString.split("/");
+
+  // Convert the extracted parts to numbers
+  const parsedNumerator = parseFloat(fractionNumerator);
+  const parsedDenominator = parseFloat(fractionDenominator);
+
+  // Check if parsing was successful
+  if (isNaN(parsedNumerator) || isNaN(parsedDenominator)) {
+    console.log("Invalid fraction format");
+    return NaN;
+  }
+
+  // Multiply the fraction by the given numerator and denominator
+  const resultNumerator = parsedNumerator * numerator;
+  const resultDenominator = parsedDenominator * denominator;
+
+  // Return the result as a simplified fraction
+  return simplifyFraction(resultNumerator, resultDenominator);
+}
+
+// Function to simplify a fraction
+function simplifyFraction(numerator, denominator) {
+  const gcd = calculateGCD(numerator, denominator);
+  const simplifiedNumerator = numerator / gcd;
+  const simplifiedDenominator = denominator / gcd;
+  if (simplifiedDenominator === 1) {
+    return `${simplifiedNumerator}`;
+  } else if (simplifiedNumerator > simplifiedDenominator) {
+    let whole =
+      (simplifiedNumerator - (simplifiedNumerator % simplifiedDenominator)) /
+      simplifiedDenominator;
+    let fractionNumerator = simplifiedNumerator % simplifiedDenominator;
+    return `${whole} ${fractionNumerator}/${simplifiedDenominator}`;
+  } else {
+    return `${simplifiedNumerator}/${simplifiedDenominator}`;
+  }
+}
+
+// Function to calculate the Greatest Common Divisor (GCD)
+function calculateGCD(a, b) {
+  return b === 0 ? a : calculateGCD(b, a % b);
 }

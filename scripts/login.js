@@ -1,3 +1,9 @@
+import { Database, UserlessDatabase } from "./classes.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+  firebase.auth().signOut();
+});
+
 // Sign in/up interactivity
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
@@ -23,7 +29,9 @@ signUpAccountButton.addEventListener("click", function (event) {
   const firstName = document.getElementById("sign-up-first-name").value;
   const lastName = document.getElementById("sign-up-last-name").value;
 
+  const voidDatabase = new UserlessDatabase();
   signUpUser(
+    voidDatabase,
     signUpEmail,
     passwordOne,
     passwordTwo,
@@ -44,6 +52,7 @@ signInAccountButton.addEventListener("click", function (event) {
 });
 
 async function signUpUser(
+  database,
   email,
   passwordOne,
   passwordTwo,
@@ -109,7 +118,7 @@ async function signUpUser(
     const errorInput = document.getElementById("sign-up-username");
     const errorLabel = document.getElementById("sign-up-username-label");
     handleInputError(errorElement, errorInput, errorLabel);
-  } else if (await isUsernameTaken(username)) {
+  } else if (await database.isUsernameTaken(username)) {
     isError = true;
 
     const otherErrorElement = document.getElementById("errorMissingUser");
@@ -198,92 +207,13 @@ async function signUpUser(
   }
 
   if (!isError) {
-    const promises = [];
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, passwordOne)
-      .then(async (userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        const usernameListUpdate = firebase
-          .firestore()
-          .collection("fastData")
-          .doc("usernames")
-          .get()
-          .then(function (doc) {
-            let currUsernames = doc.data().usernames || [];
-            currUsernames.push(username);
+      .then((userCredential) => {
+        const userDatabase = new Database(userCredential.user.uid);
 
-            firebase
-              .firestore()
-              .collection("fastData")
-              .doc("usernames")
-              .update({
-                usernames: currUsernames,
-              });
-          });
-
-        promises.push(usernameListUpdate);
-        const date = new Date();
-        const formattedDate = date.toLocaleString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-        const userFileUpdate = firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .set({
-            email: email,
-            username: username,
-            firstName: firstName,
-            lastName: lastName,
-            friendsList: "[]",
-            recipes: 0,
-            forks: 0,
-            dateJoined: formattedDate,
-          })
-          .then(() => {
-            // User data saved successfully
-            console.log("User signed up successfully!");
-          });
-        promises.push(userFileUpdate);
-        // Add username to username uid lookup
-        const mapRef = firebase
-          .firestore()
-          .collection("fastData")
-          .doc("usernameToUid");
-        const mapAccess = mapRef.get().then((doc) => {
-          const existingMap = doc.data().usernameToUid;
-          existingMap[username] = user.uid;
-          const mapUpdate = mapRef.update({
-            usernameToUid: existingMap,
-          });
-          promises.push(mapUpdate);
-        });
-        promises.push(mapAccess);
-
-        // Give user default pfp
-        imageRef = firebase
-          .storage()
-          .ref()
-          .child(`${user.uid}/pfp/profile-picture`);
-        const imageUrl = "../../img/default-pfp.png";
-        const imageAccess = fetch(imageUrl)
-          .then((response) => response.blob())
-          .then((blob) => {
-            // Create a File object from the Blob
-            const fileObject = new File([blob], "image.png", {
-              type: "image/png",
-            });
-            const imageUpdate = imageRef.put(fileObject);
-            promises.push(imageUpdate);
-          });
-        promises.push(imageAccess);
-        await Promise.all(promises);
-        console.log("all updates done");
+        return userDatabase.signUpUser(email, username, firstName, lastName);
       });
   }
 }
@@ -302,17 +232,15 @@ function makeSuggestionError() {
   }
 }
 
-async function signInUser(email, password) {
+function signInUser(email, password) {
   try {
-    let userCredential = await firebase
+    firebase
       .auth()
-      .signInWithEmailAndPassword(email, password);
-    let user = userCredential.user;
-    console.log(user);
-    window.location.href = "../index.html";
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        window.location.href = "../index.html";
+      });
   } catch (error) {
-    console.log(error.code);
-
     if (error.code === "auth/invalid-email") {
       const errorElement = document.getElementById("errorInvalidEmail");
       const errorInput = document.getElementById("sign-in-email");
@@ -360,19 +288,6 @@ function removeErrorEffect(errorElement, errorInput, errorLabel) {
   errorElement.classList.add("hide");
   errorInput.classList.remove("error-input");
   errorLabel.classList.remove("error-label");
-}
-
-function isUsernameTaken(username) {
-  const taken = firebase
-    .firestore()
-    .collection("fastData")
-    .doc("usernames")
-    .get()
-    .then(function (doc) {
-      let currUsernames = doc.data().usernames;
-      return currUsernames.includes(username);
-    });
-  return taken;
 }
 
 function passwordIsNotComplex(password) {

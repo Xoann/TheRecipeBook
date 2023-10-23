@@ -1,3 +1,7 @@
+import { Database, Recipe, Ingredient } from "../classes.js";
+
+let database;
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("addRecipeForm");
   const listContainer = document.getElementById("list-container-steps");
@@ -301,7 +305,15 @@ function submitForm(e) {
   const recipeImage = document.getElementById("recipeImg");
   const image = recipeImage.files[0];
 
-  writeUserData(
+  const recipeIngredients = [];
+
+  for (const ing of ingredients) {
+    recipeIngredients.push(
+      new Ingredient(ing["name"], ing["value"], ing["unit"])
+    );
+  }
+
+  const recipe = new Recipe(
     recipeName,
     recipeDesc,
     cookTimeHrs,
@@ -309,65 +321,20 @@ function submitForm(e) {
     prepTimeHrs,
     prepTimeMins,
     servings,
-    ingredients,
-    steps,
-    image
+    recipeIngredients,
+    steps
   );
+  database.addRecipe(recipe, image);
 }
 
 const getElementVal = (id) => {
   return document.getElementById(id).value;
 };
 
-function writeUserData(
-  recipeName,
-  recipeDesc,
-  cookTimeHrs,
-  cookTimeMins,
-  prepTimeHrs,
-  prepTimeMins,
-  servings,
-  ingredients,
-  steps,
-  image
-) {
-  firebase
-    .database()
-    .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
-    .set({
-      recipeDesc: recipeDesc,
-      cookTimeHrs: cookTimeHrs,
-      cookTimeMins: cookTimeMins,
-      prepTimeHrs: prepTimeHrs,
-      prepTimeMins: prepTimeMins,
-      servings: servings,
-      ingredients: ingredients,
-      steps: steps,
-    });
-  const storageRef = firebase.storage().ref();
-  const imageRef = storageRef.child(
-    `${firebase.auth().currentUser.uid}/images/${recipeName}`
-  );
-
-  if (image) {
-    imageRef.put(image).then((snapshot) => {});
-  } else {
-    const imageUrl = "../../img/food-placeholder-1.jpg";
-    fetch(imageUrl)
-      .then((response) => response.blob())
-      .then((blob) => {
-        // Create a File object from the Blob
-        const fileObject = new File([blob], "image.png", { type: "image/png" });
-        imageRef.put(fileObject);
-      });
-  }
-  console.log("Uploaded");
-  increaseRecipeCount(firebase.auth().currentUser.uid);
-}
-
 //Sign out / Sign in button
 
 firebase.auth().onAuthStateChanged((user) => {
+  database = new Database(user.uid);
   const signOutButton = document.getElementById("sign-out");
   signOutButton.addEventListener("click", function () {
     if (user) {
@@ -383,14 +350,3 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById("sign-out").innerText = "Sign In";
   }
 });
-
-function increaseRecipeCount(user) {
-  console.log("hi");
-  const docRef = firebase.firestore().collection("users").doc(user);
-  docRef.get().then((doc) => {
-    const recipeCount = doc.data().recipes;
-    docRef.update({
-      recipes: recipeCount + 1,
-    });
-  });
-}

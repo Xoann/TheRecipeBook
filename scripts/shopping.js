@@ -1,40 +1,33 @@
-var currentUid;
+import { Database } from "./classes.js";
 
 // Load shopping list and recipes
 firebase.auth().onAuthStateChanged((user) => {
-  currentUid = firebase.auth().currentUser.uid;
-  getShoppingListData().then((data) => {
-    generateDOMContent(data[0], data[1], data[2]);
+  const database = new Database(firebase.auth().currentUser.uid);
+  getShoppingListData(database).then((data) => {
+    generateDOMContent(database, data[0], data[1]);
   });
 });
 
-function getShoppingListData() {
-  const docRef = firebase.firestore().collection("users").doc(currentUid);
-  return docRef.get().then((doc) => {
-    const ingredients = JSON.parse(doc.data().shoppingIngredients);
-    const shoppingList = JSON.parse(doc.data().shoppingListRecipes);
-    const imageUrls = JSON.parse(doc.data().shoppingListImages);
-    return [ingredients, shoppingList, imageUrls];
+function getShoppingListData(database) {
+  return database.getShoppingList().then((shoppingList) => {
+    return database.getShoppingListIngredients().then((ingredients) => {
+      return [ingredients, shoppingList];
+    });
   });
 }
 
-async function generateDOMContent(ingredients, recipes, imgUrls) {
+function generateDOMContent(database, ingredients, recipes) {
   const ingredientContainer = document.querySelector(".ingredient-container");
   const recipeContainer = document.querySelector(".recipe-container");
 
   // Display Ingredients
-  for (let i = 0; i < ingredients.length; i++) {
-    const ingredientObj = ingredients[i];
-    const ingredient = ingredientObj["ingredient"];
-    const unit = ingredientObj["unit"];
-    const value = ingredientObj["value"];
-
+  for (const ingredient of ingredients) {
     const shoppingListEntry = document.createElement("li");
     shoppingListEntry.classList.add("shopping-list-entry");
-    if (unit) {
-      shoppingListEntry.textContent = `${value} ${unit} of ${ingredient}`;
+    if (ingredient.unit) {
+      shoppingListEntry.textContent = `${ingredient.value} ${ingredient.unit} of ${ingredient.name}`;
     } else {
-      shoppingListEntry.textContent = `${value} ${ingredient}`;
+      shoppingListEntry.textContent = `${ingredient.value} ${ingredient.name}`;
     }
 
     ingredientContainer.appendChild(shoppingListEntry);
@@ -58,7 +51,10 @@ async function generateDOMContent(ingredients, recipes, imgUrls) {
 
     const recipeListEntryImage = document.createElement("img");
     recipeListEntryImage.classList.add("recipe-list-entry-image");
-    recipeListEntryImage.src = imgUrls[recipe];
+    database.getRecipeImage(recipe).then((url) => {
+      recipeListEntryImage.src = url;
+    });
+
     recipeListEntry.appendChild(recipeListEntryImage);
   }
 }

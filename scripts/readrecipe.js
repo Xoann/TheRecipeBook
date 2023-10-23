@@ -1,43 +1,24 @@
-import { displayRecipes, getImageURLs } from "./functions.js";
-import { Database } from "./classes.js";
+import { displayRecipes } from "./functions.js";
+import { Database, Recipe, Ingredient } from "./classes.js";
 
-var currentUid;
-let recipes;
 let searchQuery = "";
-let checkboxStatus = {};
-let shoppingList = [];
+let database;
 
 firebase.auth().onAuthStateChanged((user) => {
-  const signOutButton = document.getElementById("sign-out");
-  signOutButton.addEventListener("click", function () {
-    if (user) {
-      firebase.auth().signOut();
-    } else {
-      window.location.href = "html/login.html";
-    }
-  });
-  if (user) {
-    currentUid = firebase.auth().currentUser.uid;
-    console.log(firebase.auth().currentUser.uid);
-
-    const dbr = firebase.database().ref(`${currentUid}/recipes/`);
-
-    dbr.once("value").then((snapshot) => {
-      recipes = snapshot.val();
-      const imageNames = [];
-
-      for (const key in recipes) {
-        if (recipes.hasOwnProperty(key)) {
-          imageNames.push(key);
-        }
-      }
-      displayRecipes(imageNames, currentUid);
-    });
-
-    document.getElementById("sign-out").innerText = "Sign Out";
+  database = new Database(user.uid);
+  if (database.user) {
+    displayRecipes(database, "home");
   } else {
     console.log("uid not found");
-    document.getElementById("sign-out").innerText = "Sign In";
+  }
+});
+
+const signOutButton = document.getElementById("sign-out");
+signOutButton.addEventListener("click", function () {
+  if (user) {
+    database.signOut();
+  } else {
+    window.location.href = "html/login.html";
   }
 });
 
@@ -86,7 +67,7 @@ const searchInput = document.getElementById("search-input");
 
 function narrowSearch(search) {
   const matches = [];
-  const names = Object.keys(recipes);
+  const names = database.recipes;
 
   for (const recipe of names) {
     if (recipe.toLowerCase().includes(search)) {
@@ -99,7 +80,7 @@ function narrowSearch(search) {
 function updateRecipes(recipeNames) {
   const recipeContainer = document.getElementById("recipe-container");
   recipeContainer.innerHTML = "";
-  displayRecipes(recipeNames, currentUid);
+  displayRecipes(recipeNames, database.user);
 }
 
 searchInput.addEventListener("input", function (event) {
@@ -117,21 +98,6 @@ searchInput.addEventListener("input", function (event) {
 /// Shopping List Logic ///
 ///////////////////////////
 
-async function checkRecipeInDbList(recipe, svgElement, shoppingText) {
-  // returns true if recipe in shopping list in db
-  const doc = await firebase
-    .firestore()
-    .collection("users")
-    .doc(currentUid)
-    .get();
-
-  shoppingList = JSON.parse(doc.data().shoppingListRecipes);
-  if (shoppingList.includes(recipe)) {
-    svgElement.classList.add("shop-added");
-    shoppingText.classList.add("shop-added");
-  }
-}
-
 const shoppingListButton = document.getElementById("shopping-list");
 const shoppingListModal = document.getElementById("shopping-list-modal");
 
@@ -141,396 +107,46 @@ window.addEventListener("click", (event) => {
   }
 });
 
-async function handleShoppingToggle(recipeName) {
-  const docRef = firebase.firestore().collection("users").doc(currentUid);
-
-  if (!shoppingList.includes(recipeName)) {
-    shoppingList.push(recipeName);
-  } else {
-    const idxToRemove = shoppingList.indexOf(recipeName);
-    if (idxToRemove !== -1) {
-      shoppingList.splice(idxToRemove, 1);
-    }
-  }
-  const shoppingIngredients = JSON.stringify(combineIngredients());
-  const imageUrls = await getImageURLs(shoppingList, currentUid);
-  const imageUrlsStr = JSON.stringify(imageUrls);
-
-  docRef.update({
-    shoppingListRecipes: JSON.stringify(shoppingList),
-    shoppingIngredients: shoppingIngredients,
-    shoppingListImages: imageUrlsStr,
-  });
-
-  document
-    .getElementById(`shop-text-${recipeName}`)
-    .classList.toggle("shop-added");
-  document
-    .getElementById(`shop-icon-${recipeName}`)
-    .classList.toggle("shop-added");
-  checkboxStatus[recipeName] = !checkboxStatus[recipeName];
-  console.log(`shopping list: ${shoppingList}`);
-}
-
 // Values retreived from https://en.wikipedia.org/wiki/Cooking_weights_and_measures
-const volUnitsToMl = {
-  "dr.": 0.0513429,
-  "smdg.": 0.115522,
-  "pn.": 0.231043,
-  "ds.": 0.462086,
-  "ssp.": 0.924173,
-  "csp.": 1.84835,
-  "fl.dr.": 3.69669,
-  "tsp.": 4.92892,
-  "dsp.": 9.85784,
-  "tbsp.": 14.7868,
-  "oz.": 29.5735,
-  "wgf.": 59.1471,
-  "tcf.": 118.294,
-  C: 236.588,
-  "pt.": 473.176,
-  "qt.": 946.353,
-  "gal.": 3785.41,
-};
 
-const massUnitsToG = {
-  "oz.": 28.3495231,
-  kg: 1000,
-  lbs: 453.59,
-};
+// function decreaseRecipeCount(user) {
+//   console.log("hi");
+//   const docRef = firebase.firestore().collection("users").doc(user);
+//   docRef.get().then((doc) => {
+//     const recipeCount = doc.data().recipes;
+//     docRef.update({
+//       recipes: recipeCount - 1,
+//     });
+//   });
+// }
 
-function combineIngredients() {
-  let shoppingIngredientObject = {};
-  let prefferedIngredientUnit = {};
-  // loop thru recipes
-  for (const shoppingRecipeName of shoppingList) {
-    const recipeIngredients = recipes[shoppingRecipeName]["ingredients"];
-    // console.log(recipeIngredients);
-    // loop thru ingredients
-    for (let i = 0; i < recipeIngredients.length; i++) {
-      const ingredient = recipeIngredients[i]["name"];
-      const ingredientUnit = recipeIngredients[i]["unit"];
+// function deleteRecipe(recipe) {
+//   decreaseRecipeCount(database.user);
+//   const databaseRef = firebase
+//     .database()
+//     .ref(`${database.user}/recipes/${recipe}`);
+//   databaseRef
+//     .remove()
+//     .then(function () {
+//       console.log("Element removed successfully!");
+//       delete recipes[recipe];
+//       updateRecipes(narrowSearch(searchQuery));
+//     })
+//     .catch(function (error) {
+//       console.error("Error removing element: " + error.message);
+//     });
 
-      // Add to shoppingIngredientObject
-      // console.log(ingredient);
-      // console.log(shoppingIngredientObject);
-
-      if (volUnitsToMl.hasOwnProperty(ingredientUnit)) {
-        if (!shoppingIngredientObject.hasOwnProperty([ingredient, "vol"])) {
-          shoppingIngredientObject[[ingredient, "vol"]] = convertToMl(
-            recipeIngredients[i]
-          );
-        } else {
-          shoppingIngredientObject[[ingredient, "vol"]] += convertToMl(
-            recipeIngredients[i]
-          );
-        }
-      } else if (massUnitsToG.hasOwnProperty(ingredientUnit)) {
-        if (!shoppingIngredientObject.hasOwnProperty([ingredient, "mass"])) {
-          shoppingIngredientObject[[ingredient, "mass"]] = convertToG(
-            recipeIngredients[i]
-          );
-        } else {
-          shoppingIngredientObject[[ingredient, "mass"]] += convertToG(
-            recipeIngredients[i]
-          );
-        }
-      } else {
-        if (
-          !shoppingIngredientObject.hasOwnProperty([ingredient, ingredientUnit])
-        ) {
-          shoppingIngredientObject[[ingredient, ingredientUnit]] = Number(
-            recipeIngredients[i]["value"]
-          );
-        } else {
-          shoppingIngredientObject[[ingredient, ingredientUnit]] +=
-            recipeIngredients[i];
-        }
-      }
-
-      // Add to prefferedIngredientUnit
-      if (!prefferedIngredientUnit.hasOwnProperty(ingredientUnit)) {
-        prefferedIngredientUnit[ingredient] = ingredientUnit;
-      }
-    }
-  }
-  // Convert back into list of ingridients
-  let returnIngredients = [];
-  const ingAndUnitTypes = Object.keys(shoppingIngredientObject);
-  for (let ingAndUnitType of ingAndUnitTypes) {
-    const temp = ingAndUnitType.split(",");
-    const ing = temp[0];
-    const unitType = temp[1];
-    let value = shoppingIngredientObject[ingAndUnitType];
-    if (unitType === "vol") {
-      value = convertMlToOther(value, prefferedIngredientUnit[ing]);
-    } else if (unitType === "mass") {
-      value = convertGToOther(value, prefferedIngredientUnit[ing]);
-    }
-    returnIngredients.push({
-      ingredient: ing,
-      value: Number(value),
-      unit: prefferedIngredientUnit[ing],
-    });
-  }
-  return returnIngredients;
-}
-
-function convertToMl(ingredient) {
-  return ingredient["value"] * volUnitsToMl[ingredient["unit"]];
-}
-
-function convertMlToOther(mlValue, unit) {
-  return (mlValue / volUnitsToMl[unit]).toFixed(2);
-}
-
-function convertToG(ingredient) {
-  return ingredient["value"] * massUnitsToG[ingredient["unit"]];
-}
-
-function convertGToOther(gValue, unit) {
-  return (gValue / massUnitsToG[unit]).toFixed(2);
-}
-
-function updateShoppingListModal() {
-  const shoppingModalContent = document.getElementById(
-    "shopping-list-modal-content"
-  );
-  shoppingModalContent.innerHTML = "";
-
-  const ingredients = combineIngredients();
-
-  for (const ingredient of ingredients) {
-    const unit = ingredient["unit"];
-    const ingredientValue = ingredient["value"];
-
-    const ingredientNameElement = document.createElement("h3");
-    ingredientNameElement.textContent = `${ingredient["ingredient"]} ${ingredientValue} ${unit}`;
-
-    shoppingModalContent.appendChild(ingredientNameElement);
-  }
-}
-
-function multiplyFractionByNumber(fractionString, numerator, denominator) {
-  if (fractionString.length === 0) {
-    return fractionString;
-  }
-
-  if (fractionString.indexOf("/") === -1) {
-    fractionString = fractionString + "/1";
-  }
-
-  // Extract numerator and denominator from the fraction string
-  const [fractionNumerator, fractionDenominator] = fractionString.split("/");
-
-  // Convert the extracted parts to numbers
-  const parsedNumerator = parseFloat(fractionNumerator);
-  const parsedDenominator = parseFloat(fractionDenominator);
-
-  // Check if parsing was successful
-  if (isNaN(parsedNumerator) || isNaN(parsedDenominator)) {
-    console.log("Invalid fraction format");
-    return NaN;
-  }
-
-  // Multiply the fraction by the given numerator and denominator
-  const resultNumerator = parsedNumerator * numerator;
-  const resultDenominator = parsedDenominator * denominator;
-
-  // Return the result as a simplified fraction
-  return simplifyFraction(resultNumerator, resultDenominator);
-}
-
-// Function to simplify a fraction
-function simplifyFraction(numerator, denominator) {
-  const gcd = calculateGCD(numerator, denominator);
-  const simplifiedNumerator = numerator / gcd;
-  const simplifiedDenominator = denominator / gcd;
-  if (simplifiedDenominator === 1) {
-    return `${simplifiedNumerator}`;
-  } else if (simplifiedNumerator > simplifiedDenominator) {
-    let whole =
-      (simplifiedNumerator - (simplifiedNumerator % simplifiedDenominator)) /
-      simplifiedDenominator;
-    let fractionNumerator = simplifiedNumerator % simplifiedDenominator;
-    return `${whole} ${fractionNumerator}/${simplifiedDenominator}`;
-  } else {
-    return `${simplifiedNumerator}/${simplifiedDenominator}`;
-  }
-}
-
-// Function to calculate the Greatest Common Divisor (GCD)
-function calculateGCD(a, b) {
-  return b === 0 ? a : calculateGCD(b, a % b);
-}
-
-function handleElipsisBtnPress(recipeName) {
-  const clickedMenu = document.getElementById(`slideout-menu-${recipeName}`);
-  clickedMenu.classList.toggle("sliding-menu-transition");
-
-  const otherMenus = document.getElementsByClassName("slideout-menu");
-  for (let menu of otherMenus) {
-    if (menu !== clickedMenu) {
-      menu.classList.remove("sliding-menu-transition");
-    }
-  }
-}
-
-function handleDeleteRecipe(recipeName) {
-  // Modify delete modal
-  const deleteModalText = document.getElementById("delete-modal-text");
-  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
-
-  // Display delete modal
-  const modal = document.getElementById("delete-modal");
-  openModal(modal);
-
-  window.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal(modal);
-    }
-  });
-
-  const deleteAcountBtn = document.getElementById("delete-recipe-final-btn");
-
-  deleteAcountBtn.addEventListener("click", () => {
-    deleteRecipe(recipeName);
-    closeModal(modal);
-  });
-}
-
-function decreaseRecipeCount(user) {
-  console.log("hi");
-  const docRef = firebase.firestore().collection("users").doc(user);
-  docRef.get().then((doc) => {
-    const recipeCount = doc.data().recipes;
-    docRef.update({
-      recipes: recipeCount - 1,
-    });
-  });
-}
-
-function deleteRecipe(recipe) {
-  decreaseRecipeCount(currentUid);
-  const databaseRef = firebase
-    .database()
-    .ref(`${currentUid}/recipes/${recipe}`);
-  databaseRef
-    .remove()
-    .then(function () {
-      console.log("Element removed successfully!");
-      delete recipes[recipe];
-      updateRecipes(narrowSearch(searchQuery));
-    })
-    .catch(function (error) {
-      console.error("Error removing element: " + error.message);
-    });
-
-  const storageRef = firebase.storage().ref();
-  storageRef
-    .child(`${currentUid}/images/${recipe}`)
-    .delete()
-    .then(function () {
-      console.log("File deleted successfully.");
-    })
-    .catch(function (error) {
-      console.error("Error deleting file:", error);
-    });
-}
-
-function deleteAcount(uid) {
-  // Delete all recipes under this uid
-  const realtimeDatabase = firebase.database();
-  const recipesRef = realtimeDatabase.ref(uid);
-  recipesRef
-    .remove()
-    .then(function () {
-      console.log("Element removed successfully!");
-    })
-    .catch(function (error) {
-      console.error("Error removing element: " + error.message);
-    });
-
-  // Delete from users in Firestore
-  const firestore = firebase.firestore();
-  const userDocRef = firestore.collection("users").doc(uid);
-  userDocRef
-    .delete()
-    .then(function () {
-      console.log("Document successfully deleted!");
-    })
-    .catch(function (error) {
-      console.error("Error removing document: ", error);
-    });
-
-  // Delete username from fast data
-  const fastDataDoc = firestore.collection("fastData").doc("usernames");
-  fastDataDoc
-    .get()
-    .then(function (doc) {
-      if (doc.exists) {
-        const dataArray = doc.data().yourArrayFieldName;
-        // Remove the specific element from the array
-        const updatedArray = dataArray.filter((item) => item !== uid);
-
-        // Update the document with the modified array
-        fastDataDoc
-          .update({
-            yourArrayFieldName: updatedArray,
-          })
-          .then(function () {
-            console.log("Element removed from the array successfully!");
-          })
-          .catch(function (error) {
-            console.error("Error removing element from the array: ", error);
-          });
-      } else {
-        console.log("Document not found!");
-      }
-    })
-    .catch(function (error) {
-      console.log("Error getting document:", error);
-    });
-
-  // Delete img dir in storage
-  const storage = firebase.storage();
-  const storageRef = storage.ref();
-  storageRef
-    .child(uid)
-    .listAll.then(function (result) {
-      result.items.forEach(function (item) {
-        // Delete each file in the folder
-        item
-          .delete()
-          .then(function () {
-            console.log("File deleted successfully.");
-          })
-          .catch(function (error) {
-            console.error("Error deleting file:", error);
-          });
-      });
-    })
-    .catch(function (error) {
-      console.error("Error listing files in the folder:", error);
-    });
-
-  // Delete acount in auth
-  if (uid) {
-    uid
-      .delete()
-      .then(function () {
-        // User deleted.
-        console.log("User account deleted successfully.");
-      })
-      .catch(function (error) {
-        // An error happened.
-        console.error("Error deleting user account:", error);
-      });
-  } else {
-    // No user is signed in.
-    console.log("No user is currently signed in.");
-  }
-}
+//   const storageRef = firebase.storage().ref();
+//   storageRef
+//     .child(`${database.user}/images/${recipe}`)
+//     .delete()
+//     .then(function () {
+//       console.log("File deleted successfully.");
+//     })
+//     .catch(function (error) {
+//       console.error("Error deleting file:", error);
+//     });
+// }
 
 // For testing to auto add new recipes by pressing =
 function writeUserData(

@@ -19,8 +19,11 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--dark-two-colour);
+  background-color: var(--dark-one-colour);
+  border-bottom: 0px var(--light-button-hover) solid;
+  box-shadow: 0 4px 13px -7px var(--light-button-hover); /*remove this shit if it looks dumb*/
   height: 7vh;
+  max-height: 60px;
   width: 100vw;
   z-index: 10;
 }
@@ -74,11 +77,11 @@ svg {
   display: block;
   position: fixed;
   height: 0;
-  width: 12%;
+  width: auto;
   margin-top: 6px;
-  margin-left: 87%;
+  margin-left: 89%;
   background: var(--dark-two-colour);
-  border-radius: 15px;
+  border-radius: 8px;
   transition: height 0.06s ease-in;
 }
 
@@ -93,6 +96,7 @@ svg {
   flex-direction: column;
   list-style-type: none;
   font-size: 17px;
+  border-radius: inherit;
 }
 
 .user-menu-list-item {
@@ -101,21 +105,21 @@ svg {
   padding: 12px 15px;
   color: var(--light-text-colour);
   font-family: Gabarito;
-  border-radius: 7px;
+  border-radius: inherit;
   transition: background-color 0.15s, opacity 0.1s ease-in-out;
   opacity: 0;
 }
 
 .user-menu-list-item:hover {
-  background-color: var(--grey-one-colour);
+  background-color: var(--grey-two-colour);
 }
 
 .user-menu-button-maintain-hover {
-  background-color: var(--grey-one-colour) !important;
+  background-color: var(--grey-two-colour) !important;
 }
 
 .user-menu-appear {
-  height: 20%;
+  height: auto;
 }
 
 .user-menu-item-appear {

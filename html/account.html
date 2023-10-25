@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../stylesheets/colours.css" />
+    <link rel="stylesheet" href="../stylesheets/default.css" />
+    <link rel="stylesheet" href="../stylesheets/account.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Recipe Book</title>
+  </head>
+  <body>
+    <header>
+      <nav class="main-nav">
+        <a href="../">
+          <img class="logo" id="h" src="../img/logo.png" />
+        </a>
+        <!-- <button id="hh">test</button> -->
+        <ul class="nav-list">
+          <a
+            class="nav-list-link"
+            id="shopping-list"
+            href="html/shoppinglist.html"
+            ><li class="nav-list-item">Shopping List</li></a
+          >
+          <a class="nav-list-link" href="addrecipe.html"
+            ><li class="nav-list-item">Add Recipe</li></a
+          >
+          <a id="username" class="nav-list-link"
+            ><li class="nav-list-item" id="username-button">Account</li></a
+          >
+        </ul>
+      </nav>
+    </header>
+    <div id="none" class="friend-menu">
+      <div id="friend-profile-btn" class="friend-menu-btn">
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 friend-menu-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </div>
+        <span class="friend-menu-text">Profile</span>
+      </div>
+      <div id="remove-friend-btn" class="friend-menu-btn">
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 friend-menu-icon remove-friend-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+            />
+          </svg>
+        </div>
+        <span class="friend-menu-text remove-friend-text">Unfriend</span>
+      </div>
+    </div>
+    <div class="mainBg">
+      <div class="user-menu">
+        <ul class="user-menu-list">
+          <a href="#"><li class="user-menu-list-item">Profile</li></a>
+          <a href="login.html"
+            ><li class="user-menu-list-item" id="sign-out">Sign In</li></a
+          >
+          <a href="login.html"
+            ><li class="user-menu-list-item" id="sign-out">
+              Switch Account
+            </li></a
+          >
+        </ul>
+      </div>
+      <div class="account-display">
+      <div class="profile-col">
+          <div class="pfp-div">
+            <img id="pfp" src="" alt="" />
+            <label for="pfp-upload" class="pfp-label"></label>
+            <input type="file" id="pfp-upload" accept="image/*" />
+            <div class="change-pfp"><span>Upload</span></div>
+          </div>
+          <h2 id="user"></h2>
+          <h2 id="name"></h2>
+          <div class="stats">
+            <div class="stat">
+              <span>Recipes: </span>
+              <span class="stat-value" id="recipe-count"></span>
+            </div>
+            <div class="stat">
+              <span>Forks: </span>
+              <span class="stat-value" id="fork-count"></span>
+            </div>
+            <div class="stat">
+              <span>Date joined: </span>
+              <span class="stat-value" id="date-joined"></span>
+            </div>
+            
+          </div>
+        </div>
+        
+
+        <div class="profile-col">
+          <div class="friend-div">
+            <div class="top-section-friend">
+              <h3>Friends</h3>
+              <div class="add-friend" id="add-friend">
+                <input
+                  type="text"
+                  id="add-friend-input"
+                  class="add-friend-input"
+                  placeholder="Name"
+                />
+                <div id="add-friend-btn" class="add-friend-btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6 add-friend-icon"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                    />
+                  </svg>
+                </div>
+                <div id="add-friend-close" class="add-friend-close hide-close">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6 add-friend-close-icon"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <input type="text" id="searchFriends" placeholder="" />
+            <div
+              class="scrollable-friends-div"
+              id="scrollable-friends-div"
+            ></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../scripts/setup.js"></script>
+    <script type="module" src="../scripts/account.js"></script>
+  </body>
+</html>

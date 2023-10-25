@@ -1,9 +1,9 @@
+import { Database, Recipe, Ingredient } from "./classes.js";
+import { createImageFileObject } from "./functions.js";
+
 export function checkErrors(
-  e,
   recipeIdentifier,
-  imagesArray,
   recipeName,
-  recipeDesc,
   prepTimeHrs,
   prepTimeMins,
   cookTimeHrs,
@@ -129,18 +129,9 @@ export function checkErrors(
   console.log("done checks");
   if (error === 0) {
     console.log("no errors");
-    submitForm(
-      e,
-      recipeIdentifier,
-      imagesArray,
-      recipeName,
-      recipeDesc,
-      prepTimeHrs,
-      prepTimeMins,
-      cookTimeHrs,
-      cookTimeMins,
-      servings
-    );
+    return true;
+  } else {
+    return false;
   }
 }
 //Remove red border when something is typed in text box
@@ -179,7 +170,8 @@ function ifEmptyTime(element) {
 }
 
 //Submit data after checks
-function submitForm(
+export function submitForm(
+  database,
   e,
   recipeIdentifier,
   imagesArray,
@@ -208,11 +200,19 @@ function submitForm(
   ).length;
   console.log(num_ingredients);
   for (let i = 0; i < num_ingredients; i++) {
-    ingredients.push({
-      name: getElementVal(`ingredient_${i}`),
-      value: getElementVal(`ingredient_value_${i}`),
-      unit: getElementVal(`ingredient_unit_${i}`),
-    });
+    ingredients.push(
+      //   {
+      //   name: getElementVal(`ingredient_${i}`),
+      //   value: getElementVal(`ingredient_value_${i}`),
+      //   unit: getElementVal(`ingredient_unit_${i}`),
+
+      // }
+      new Ingredient(
+        getElementVal(`ingredient_${i}`),
+        getElementVal(`ingredient_value_${i}`),
+        getElementVal(`ingredient_unit_${i}`)
+      )
+    );
   }
 
   const num_steps = document.getElementsByClassName(
@@ -222,29 +222,7 @@ function submitForm(
     steps.push(document.getElementById(`recipe-step_${i}`).textContent);
   }
 
-  //const image = imagesArray[0];
-  const image = document.getElementsByClassName(
-    `recipeImg_${recipeIdentifier}`
-  )[0];
-  console.log(`recipeImg_${recipeIdentifier}`);
-  console.log(image.src);
-  console.log(imagesArray[0]);
-
-  let imageFile;
-  fetch(image.src)
-    .then((response) => response.blob())
-    .then((blob) => {
-      // Create a File object from the Blob
-      imageFile = new File([blob], `${recipeNameVal}.png`, {
-        type: "image/png",
-      });
-
-      // Log the created File object
-      console.log(imageFile);
-    })
-    .catch((error) => console.error("Error fetching image:", error));
-
-  writeUserData(
+  const recipe = new Recipe(
     recipeNameVal,
     recipeDescVal,
     cookTimeHrsVal,
@@ -253,58 +231,88 @@ function submitForm(
     prepTimeMinsVal,
     servingsVal,
     ingredients,
-    steps,
-    //imageFile
-    imagesArray[0]
+    steps
   );
-}
 
+  //const image = imagesArray[0];
+  const image = document.getElementsByClassName(
+    `recipeImg_${recipeIdentifier}`
+  )[0];
+  //console.log(image.src);
+  console.log(imagesArray[0]);
+
+  createImageFileObject(image).then((result) => {
+    database.addRecipe(recipe, result);
+  });
+}
+// function writeUserData(
+//   recipeName,
+//   recipeDesc,
+//   cookTimeHrs,
+//   cookTimeMins,
+//   prepTimeHrs,
+//   prepTimeMins,
+//   servings,
+//   ingredients,
+//   steps,
+//   image
+// ) {
+//   firebase
+//     .database()
+//     .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
+//     .set({
+//       recipeDesc: recipeDesc,
+//       cookTimeHrs: cookTimeHrs,
+//       cookTimeMins: cookTimeMins,
+//       prepTimeHrs: prepTimeHrs,
+//       prepTimeMins: prepTimeMins,
+//       servings: servings,
+//       ingredients: ingredients,
+//       steps: steps,
+//     });
+//   const storageRef = firebase.storage().ref();
+//   const imageRef = storageRef.child(
+//     `${firebase.auth().currentUser.uid}/images/${recipeName}`
+//   );
+//   console.log(image);
+//   if (image) {
+//     imageRef.put(image).then((snapshot) => {});
+//   } else {
+//     const imageUrl = "../../img/food-placeholder-1.jpg";
+//     fetch(imageUrl)
+//       .then((response) => response.blob())
+//       .then((blob) => {
+//         // Create a File object from the Blob
+//         const fileObject = new File([blob], "image.png", { type: "image/png" });
+//         imageRef.put(fileObject);
+//       });
+//   }
+//   console.log("Uploaded");
+// }
+
+// async function createImageFileObject(imageUrl) {
+//   try {
+//     // Fetch the image data
+//     const response = await fetch(imageUrl);
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch image");
+//     }
+
+//     // Convert response data to a Blob
+//     const blob = await response.blob();
+
+//     // Create a File object from the Blob
+//     const fileObject = new File([blob], "image.jpg", { type: "image/jpeg" });
+
+//     // Log the created File object
+//     console.log("Created File object:", fileObject);
+//     return fileObject;
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     return { error: error.message };
+//   }
+// }
 const getElementVal = (id) => {
   return document.getElementById(id).value;
 };
-
-function writeUserData(
-  recipeName,
-  recipeDesc,
-  cookTimeHrs,
-  cookTimeMins,
-  prepTimeHrs,
-  prepTimeMins,
-  servings,
-  ingredients,
-  steps,
-  image
-) {
-  firebase
-    .database()
-    .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
-    .set({
-      recipeDesc: recipeDesc,
-      cookTimeHrs: cookTimeHrs,
-      cookTimeMins: cookTimeMins,
-      prepTimeHrs: prepTimeHrs,
-      prepTimeMins: prepTimeMins,
-      servings: servings,
-      ingredients: ingredients,
-      steps: steps,
-    });
-  const storageRef = firebase.storage().ref();
-  const imageRef = storageRef.child(
-    `${firebase.auth().currentUser.uid}/images/${recipeName}`
-  );
-  console.log(image);
-  if (image) {
-    imageRef.put(image).then((snapshot) => {});
-  } else {
-    const imageUrl = "../../img/food-placeholder-1.jpg";
-    fetch(imageUrl)
-      .then((response) => response.blob())
-      .then((blob) => {
-        // Create a File object from the Blob
-        const fileObject = new File([blob], "image.png", { type: "image/png" });
-        imageRef.put(fileObject);
-      });
-  }
-
-  console.log("Uploaded");
-}

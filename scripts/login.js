@@ -1,3 +1,9 @@
+import { Database, UserlessDatabase } from "./classes.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+  firebase.auth().signOut();
+});
+
 // Sign in/up interactivity
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
@@ -14,7 +20,8 @@ signInButton.addEventListener("click", () =>
 const signUpAccountButton = document.getElementById("signUpAccount");
 const signInAccountButton = document.getElementById("signInAccount");
 
-signUpAccountButton.addEventListener("click", function () {
+signUpAccountButton.addEventListener("click", function (event) {
+  event.preventDefault();
   const signUpEmail = document.getElementById("sign-up-email").value;
   const passwordOne = document.getElementById("sign-up-password-one").value;
   const passwordTwo = document.getElementById("sign-up-password-two").value;
@@ -22,14 +29,18 @@ signUpAccountButton.addEventListener("click", function () {
   const firstName = document.getElementById("sign-up-first-name").value;
   const lastName = document.getElementById("sign-up-last-name").value;
 
+  const voidDatabase = new UserlessDatabase();
   signUpUser(
+    voidDatabase,
     signUpEmail,
     passwordOne,
     passwordTwo,
     username,
     firstName,
     lastName
-  );
+  ).then(() => {
+    window.location.href = "../index.html";
+  });
 });
 
 signInAccountButton.addEventListener("click", function (event) {
@@ -41,6 +52,7 @@ signInAccountButton.addEventListener("click", function (event) {
 });
 
 async function signUpUser(
+  database,
   email,
   passwordOne,
   passwordTwo,
@@ -106,7 +118,7 @@ async function signUpUser(
     const errorInput = document.getElementById("sign-up-username");
     const errorLabel = document.getElementById("sign-up-username-label");
     handleInputError(errorElement, errorInput, errorLabel);
-  } else if (await isUsernameTaken(username)) {
+  } else if (await database.isUsernameTaken(username)) {
     isError = true;
 
     const otherErrorElement = document.getElementById("errorMissingUser");
@@ -195,53 +207,13 @@ async function signUpUser(
   }
 
   if (!isError) {
-    firebase
+    return firebase
       .auth()
       .createUserWithEmailAndPassword(email, passwordOne)
       .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        firebase
-          .firestore()
-          .collection("fastData")
-          .doc("usernames")
-          .get()
-          .then(function (doc) {
-            let currUsernames = doc.data().usernames || [];
-            currUsernames.push(username);
+        const userDatabase = new Database(userCredential.user.uid);
 
-            firebase
-              .firestore()
-              .collection("fastData")
-              .doc("usernames")
-              .update({
-                usernames: currUsernames,
-              });
-          });
-
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .set({
-            email: email,
-            username: username,
-            firstName: firstName,
-            lastName: lastName,
-          })
-          .then(() => {
-            // User data saved successfully
-            console.log("User signed up successfully!");
-            window.location.href = "../index.html";
-          })
-          .catch((error) => {
-            // Handle errors while saving additional user information
-            console.error("Error saving user data: ", error);
-          });
-      })
-      .catch((error) => {
-        // Handle errors during user registration
-        console.error("Error signing up: ", error);
+        return userDatabase.signUpUser(email, username, firstName, lastName);
       });
   }
 }
@@ -260,17 +232,15 @@ function makeSuggestionError() {
   }
 }
 
-async function signInUser(email, password) {
+function signInUser(email, password) {
   try {
-    let userCredential = await firebase
+    firebase
       .auth()
-      .signInWithEmailAndPassword(email, password);
-    let user = userCredential.user;
-    console.log(user);
-    window.location.href = "../index.html";
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        window.location.href = "../index.html";
+      });
   } catch (error) {
-    console.log(error.code);
-
     if (error.code === "auth/invalid-email") {
       const errorElement = document.getElementById("errorInvalidEmail");
       const errorInput = document.getElementById("sign-in-email");
@@ -318,19 +288,6 @@ function removeErrorEffect(errorElement, errorInput, errorLabel) {
   errorElement.classList.add("hide");
   errorInput.classList.remove("error-input");
   errorLabel.classList.remove("error-label");
-}
-
-function isUsernameTaken(username) {
-  const taken = firebase
-    .firestore()
-    .collection("fastData")
-    .doc("usernames")
-    .get()
-    .then(function (doc) {
-      let currUsernames = doc.data().usernames;
-      return currUsernames.includes(username);
-    });
-  return taken;
 }
 
 function passwordIsNotComplex(password) {

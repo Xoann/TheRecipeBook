@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../stylesheets/colours.css" />
+    <link rel="stylesheet" href="../stylesheets/default.css" />
+    <link rel="stylesheet" href="../stylesheets/profile.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Recipe Book</title>
+  </head>
+  <body>
+    <header>
+      <nav class="main-nav">
+        <a href="../">
+          <img class="logo" id="h" src="../img/logo.png" />
+        </a>
+        <!-- <button id="hh">test</button> -->
+        <ul class="nav-list">
+          <a
+            class="nav-list-link"
+            id="shopping-list"
+            href="html/shoppinglist.html"
+            ><li class="nav-list-item">Shopping List</li></a
+          >
+          <a class="nav-list-link" href="addrecipe.html"
+            ><li class="nav-list-item">Add Recipe</li></a
+          >
+          <a id="username" class="nav-list-link"
+            ><li class="nav-list-item" id="username-button">Account</li></a
+          >
+        </ul>
+      </nav>
+    </header>
+    <div class="mainBg">
+      <div class="profile-display">
+        <div class="profile-details">
+          <div class="profile-pfp">
+            <img id="pfp" src="" alt="" />
+          </div>
+          <div class="profile-info">
+            <span class="username" id="profile-username"></span>
+            <span class="name" id="name"></span>
+          </div>
+          <div class="profile-stats">
+            <div class="stat">
+              <span>Recipes: </span>
+              <span class="stat-value" id="recipe-count"></span>
+            </div>
+            <div class="stat">
+              <span>Forks: </span>
+              <span class="stat-value" id="fork-count"></span>
+            </div>
+            <div class="stat">
+              <span>Date joined: </span>
+              <span class="stat-value" id="date-joined"></span>
+            </div>
+          </div>
+        </div>
+        <div class="profile-recipe-container"></div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../scripts/setup.js"></script>
+    <script type="module" src="../scripts/profile.js"></script>
+  </body>
+</html>

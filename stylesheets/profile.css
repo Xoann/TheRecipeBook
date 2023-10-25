@@ -1,0 +1,40 @@
+.mainBg {
+  background-color: var(--dark-one-colour);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 950px;
+  font-family: Gabarito;
+}
+
+.profile-display {
+  background-color: var(--grey-one-colour);
+  color: var(--light-colour);
+  height: 80vh;
+  width: 80vw;
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  width: 90%;
+  padding: 30px;
+  /* align-items: center; */
+}
+
+#pfp {
+  width: 150px;
+  height: 150px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

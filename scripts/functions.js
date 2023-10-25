@@ -1,3 +1,5 @@
+import { generateEditModal, fillEditInputs } from "./editrecipe.js";
+
 function createMenu(database, recipeDiv, recipeName) {
   const menu = document.createElement("div");
   menu.classList.add("menu");
@@ -50,6 +52,11 @@ function createMenu(database, recipeDiv, recipeName) {
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
+
+  editDiv.addEventListener("click", function () {
+    displayRecipeModal(`${recipeName}-edit`);
+    fillEditInputs(database, recipeName);
+  });
 
   const deleteDiv = document.createElement("div");
   deleteDiv.classList.add("slideout-menu-btn");
@@ -177,11 +184,41 @@ function handleDeleteRecipe(database, recipeName) {
   });
 }
 
+function deleteRecipe(recipe) {
+  const databaseRef = firebase
+    .database()
+    .ref(`${currentUid}/recipes/${recipe}`);
+  databaseRef
+    .remove()
+    .then(function () {
+      console.log("Element removed successfully!");
+      delete recipes[recipe];
+      updateRecipes(narrowSearch(searchQuery));
+    })
+    .catch(function (error) {
+      console.error("Error removing element: " + error.message);
+    });
+
+  const storageRef = firebase.storage().ref();
+  storageRef
+    .child(`${currentUid}/images/${recipe}`)
+    .delete()
+    .then(function () {
+      console.log("File deleted successfully.");
+    })
+    .catch(function (error) {
+      console.error("Error deleting file:", error);
+    });
+}
+
 export function displayRecipes(database, type) {
   // Displays recipes as card in the recipe-container DOM element (class)
   database.getAllRecipeNames().then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
+
+      generateRecipeModal(database, recipeName);
+      generateEditModal(database, recipeName);
 
       const recipeContainer =
         document.getElementsByClassName("recipe-container")[0];
@@ -601,4 +638,32 @@ function simplifyFraction(numerator, denominator) {
 // Function to calculate the Greatest Common Divisor (GCD)
 function calculateGCD(a, b) {
   return b === 0 ? a : calculateGCD(b, a % b);
+}
+
+export async function createImageFileObject(image) {
+  if (image) {
+    try {
+      // Fetch the image data
+      const response = await fetch(image.src);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      // Convert response data to a Blob
+      const blob = await response.blob();
+
+      // Create a File object from the Blob
+      const fileObject = new File([blob], "image.jpg", { type: "image/jpeg" });
+
+      // Log the created File object
+      console.log("Created File object:", fileObject);
+      return fileObject;
+    } catch (error) {
+      console.error("Error:", error.message);
+      return { error: error.message };
+    }
+  } else {
+    return null;
+  }
 }

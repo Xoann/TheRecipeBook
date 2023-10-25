@@ -2,7 +2,7 @@ import { addIngredient } from "../addingredientbutton.js";
 import { displayImage } from "../addimage.js";
 import { deleteImage } from "../addimage.js";
 import { handleFileChange } from "../addimage.js";
-import { checkErrors } from "../submitrecipe.js";
+import { checkErrors, submitForm } from "../submitrecipe.js";
 import { addStep } from "../addstepbutton.js";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -123,21 +123,35 @@ document.getElementById("submit").addEventListener("click", function (e) {
   let servings = document.getElementById("servings");
   let addIngredient = document.getElementById("add-ingredient");
   let addStep = document.getElementById("add-step");
-  checkErrors(
-    e,
-    recipeIdentifier,
-    imagesArray,
-    recipeName,
-    recipeDesc,
-    prepTimeHrs,
-    prepTimeMins,
-    cookTimeHrs,
-    cookTimeMins,
-    servings,
-    addIngredient,
-    addStep
-  );
-  document.getElementById("upload-modal").classList.add("show-done-button");
+
+  if (
+    checkErrors(
+      recipeIdentifier,
+      recipeName,
+      prepTimeHrs,
+      prepTimeMins,
+      cookTimeHrs,
+      cookTimeMins,
+      servings,
+      addIngredient,
+      addStep
+    )
+  ) {
+    submitForm(
+      firebase.auth().currentUser.uid,
+      e,
+      recipeIdentifier,
+      imagesArray,
+      recipeName,
+      recipeDesc,
+      prepTimeHrs,
+      prepTimeMins,
+      cookTimeHrs,
+      cookTimeMins,
+      servings
+    );
+    document.getElementById("upload-modal").classList.add("show-done-button");
+  }
 });
 
 document.getElementById("signin-button").addEventListener("click", function () {

@@ -366,7 +366,7 @@ export class Database {
     const promises = [];
     promises.push(
       this.singleRecipeRef(recipe.name).set({
-        recipeDesc: recipe.recipeDesc,
+        recipeDesc: recipe.desc,
         cookTimeHrs: recipe.cookTimeHrs,
         cookTimeMins: recipe.cookTimeMins,
         prepTimeHrs: recipe.prepTimeHrs,

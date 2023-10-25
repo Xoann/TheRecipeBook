@@ -30,3 +30,19 @@
 /* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
 </svg> */
+
+.lightMode {
+  --primary-colour: #ff7700;
+
+  --dark-one-colour: #f9f3e8;
+
+  /* --grey-one-colour: #f9b49c;#fcf9ea */
+  --grey-one-colour: #fcf9ea;
+  --grey-two-colour: #e3e0d3;
+
+  --light-text-colour: #140a00;
+
+  --dark-two-colour: #cac7bb;
+
+  /* --light-colour: #140a00; */
+}

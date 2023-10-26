@@ -139,6 +139,7 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeHrsInput = document.createElement("input");
   editPrepTimeHrsInput.classList.add("edit-input");
   editPrepTimeHrsInput.classList.add("input-transition");
+  editPrepTimeHrsInput.onclick = "limitInputLength(this, 4)";
   editPrepTimeHrsInput.id = `edit-preptime-hrs-input_${recipeName.replace(
     / /g,
     "-"

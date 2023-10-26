@@ -285,8 +285,8 @@
 .peepee {
   height: 30px;
   width: auto;
-  top: 10px;
   color: var(--light-text-colour);
+  left: 100px;
 }
 
 .searchbar-div {
@@ -298,7 +298,8 @@
   min-height: 40px;
   width: 100%;
   gap: 10px;
-  padding-left: 15px;
+  padding-left: 10px;
+  left: -20px;
 }
 
 .search-input:hover {
@@ -593,6 +594,7 @@
 .textarea {
   width: 100%;
   min-width: 600px;
+  max-width: 600px;
   display: inline-block;
   overflow: hidden;
   min-height: 70px;
@@ -604,6 +606,13 @@
   content: "Add a description";
   color: gray;
 }
+
+.step-item .textarea {
+  width: 80%;
+  min-width: 350px;
+  max-width: 400px;
+}
+
 .resizable-p {
   width: 100%;
   display: flex;

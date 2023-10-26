@@ -1,17 +1,11 @@
-import {
-  unfriend,
-  getPfp,
-  getName,
-  getUsername,
-  addFriend,
-  getDateJoined,
-  getForkCount,
-  getRecipeCount,
-} from "./functions.js";
+import { displayRecipes } from "./functions.js";
+import { Database } from "./classes.js";
 
 let currentUid;
+let database;
 
 firebase.auth().onAuthStateChanged((user) => {
+  database = new Database(firebase.auth().currentUser.uid);
   if (user) {
     currentUid = firebase.auth().currentUser.uid;
   }
@@ -22,27 +16,29 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 function loadProfilePage(profile, loggedUser) {
-  getPfp(profile).then((url) => {
+  database.getFriendPfp(profile).then((url) => {
     document.getElementById("pfp").src = url;
   });
 
-  getUsername(profile).then((username) => {
+  database.getFriendUsername(profile).then((username) => {
     document.getElementById("profile-username").textContent = username;
   });
 
-  getName(profile).then((name) => {
+  database.getFriendName(profile).then((name) => {
     document.getElementById("name").textContent = name;
   });
 
-  getRecipeCount(profile).then((count) => {
+  database.getFriendRecipeCount(profile).then((count) => {
     document.getElementById("recipe-count").textContent = count;
   });
 
-  getForkCount(profile).then((count) => {
+  database.getFriendForkCount(profile).then((count) => {
     document.getElementById("fork-count").textContent = count;
   });
 
-  getDateJoined(profile).then((date) => {
+  database.getFriendDateJoined(profile).then((date) => {
     document.getElementById("date-joined").textContent = date;
   });
+
+  displayRecipes(database, "profile", profile);
 }

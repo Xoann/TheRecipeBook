@@ -211,8 +211,9 @@ function deleteRecipe(recipe) {
     });
 }
 
-export function displayRecipes(database, type) {
+export function displayRecipes(database, type, profile = database.user) {
   // Displays recipes as card in the recipe-container DOM element (class)
+
   let noRecipes = 0;
   database.getRecipeCount().then((count) => {
     if (count === 0) {
@@ -227,8 +228,10 @@ export function displayRecipes(database, type) {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 
-      generateRecipeModal(database, recipeName);
-      generateEditModal(database, recipeName);
+      generateRecipeModal(database, recipeName, profile);
+      if (profile === database.user) {
+        generateEditModal(database, recipeName);
+      }
 
       const recipeContainer =
         document.getElementsByClassName("recipe-container")[0];
@@ -257,9 +260,15 @@ export function displayRecipes(database, type) {
 
       const recipeImg = document.createElement("img");
       recipeImg.classList.add("recipe-img");
-      database.getRecipeImage(recipeName).then((url) => {
-        recipeImg.src = url;
-      });
+
+      const forkPromises = [];
+      let imageUrl;
+      forkPromises.push(
+        database.getRecipeImage(recipeName, profile).then((url) => {
+          recipeImg.src = url;
+          imageUrl = url;
+        })
+      );
 
       const gradientOverlay = document.createElement("div");
       gradientOverlay.classList.add("gradient-overlay");
@@ -281,10 +290,15 @@ export function displayRecipes(database, type) {
       recipeDescription.classList.add("desc-div");
       recipeDescription.id = `${recipeName}-desc-div`;
 
-      database.getRecipe(recipeName).then((recipe) => {
-        recipeNameElement.textContent = recipeName;
-        recipeDescription.innerHTML = recipe.desc;
-      });
+      let forkRecipe;
+      forkPromises.push(
+        database.getRecipe(recipeName, profile).then((recipe) => {
+          recipeNameElement.textContent = recipeName;
+          recipeDescription.innerHTML = recipe.desc;
+          forkRecipe = recipe;
+          forkRecipe.name = recipeName;
+        })
+      );
 
       recipeContainer.appendChild(recipeDiv);
       recipeDiv.appendChild(imgContainer);
@@ -298,9 +312,28 @@ export function displayRecipes(database, type) {
       if (type === "home") {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
-        //
+        Promise.all(forkPromises).then(() => {
+          createForkBtn(database, recipeDiv, forkRecipe, imageUrl, profile);
+        });
       }
     }
+  });
+}
+
+function createForkBtn(database, recipeDiv, recipe, imageUrl, profile) {
+  const forkBtn = document.createElement("div");
+  forkBtn.classList.add("fork-btn");
+  forkBtn.innerHTML = "fork";
+  recipeDiv.appendChild(forkBtn);
+
+  forkBtn.addEventListener("click", () => {
+    fetch(imageUrl, { mode: "no-cors" })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const image = new File([blob], "image.png", { type: "image/png" });
+        console.log(image);
+        database.addRecipe(recipe, blob);
+      });
   });
 }
 
@@ -325,8 +358,12 @@ async function checkRecipeInDbList(database, recipe, svgElement, shoppingText) {
   });
 }
 
-export function generateRecipeModal(database, recipeName) {
-  database.getRecipe(recipeName).then((recipe) => {
+export function generateRecipeModal(
+  database,
+  recipeName,
+  profile = database.user
+) {
+  database.getRecipe(recipeName, profile).then((recipe) => {
     const modalElement = document.createElement("div");
     modalElement.classList.add("modal");
     modalElement.id = recipeName;
@@ -342,7 +379,7 @@ export function generateRecipeModal(database, recipeName) {
     //Image
     const image = document.createElement("img");
     image.classList.add("image");
-    database.getRecipeImage(recipeName).then((url) => {
+    database.getRecipeImage(recipeName, profile).then((url) => {
       image.src = url;
     });
 

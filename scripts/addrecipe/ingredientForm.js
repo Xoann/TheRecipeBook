@@ -4,6 +4,7 @@ import { deleteImage } from "../addimage.js";
 import { handleFileChange } from "../addimage.js";
 import { checkErrors, submitForm } from "../submitrecipe.js";
 import { addStep } from "../addstepbutton.js";
+import { Database } from "../classes.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("addRecipeForm");
@@ -113,6 +114,7 @@ input.addEventListener("change", () => {
 });
 
 document.getElementById("submit").addEventListener("click", function (e) {
+  const database = new Database(firebase.auth().currentUser.uid);
   let recipeIdentifier = "add";
   let recipeName = document.getElementById("recipeName");
   let recipeDesc = document.getElementById("description");
@@ -138,7 +140,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
     )
   ) {
     submitForm(
-      firebase.auth().currentUser.uid,
+      database,
       e,
       recipeIdentifier,
       imagesArray,

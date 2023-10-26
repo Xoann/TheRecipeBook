@@ -1,99 +1,51 @@
-import {
-  unfriend,
-  getPfp,
-  getFriends,
-  getName,
-  addFriend,
-  updatePfp,
-  getUsername,
-  getDateJoined,
-  getForkCount,
-  getRecipeCount,
-} from "./functions.js";
+// import {
+//   unfriend,
+//   getPfp,
+//   getFriends,
+//   getName,
+//   addFriend,
+//   updatePfp,
+//   getUsername,
+//   getDateJoined,
+//   getForkCount,
+//   getRecipeCount,
+// } from "./functions.js";
+import { Database } from "./classes.js";
 
 let currentUid;
+let database;
 
 firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    currentUid = firebase.auth().currentUser.uid;
-  }
-
-  loadProfilePage(currentUid);
+  database = new Database(firebase.auth().currentUser.uid);
+  loadProfilePage(database);
 });
 
-function loadProfilePage(user) {
-  getUsername(user).then((username) => {
+function loadProfilePage(database, user) {
+  database.getUsername().then((username) => {
     document.getElementById("user").textContent = username;
   });
 
-  getName(user).then((name) => {
+  database.getName().then((name) => {
     document.getElementById("name").textContent = name;
   });
 
-  getPfp(user).then((pfp) => {
+  database.getPfp().then((pfp) => {
     document.getElementById("pfp").src = pfp;
   });
 
-  getDateJoined(user).then((date) => {
+  database.getDateJoined().then((date) => {
     document.getElementById("date-joined").textContent = date;
   });
-  getForkCount(user).then((forks) => {
+  database.getForkCount().then((forks) => {
     document.getElementById("fork-count").textContent = forks;
   });
-  getRecipeCount(user).then((recipes) => {
+  database.getRecipeCount().then((recipes) => {
     document.getElementById("recipe-count").textContent = recipes;
   });
 
-  getFriends(user).then((friends) => {
-    const friendsDiv = document.getElementById("scrollable-friends-div");
+  database.getFriends().then((friends) => {
     for (const friend of friends) {
-      const friendElement = document.createElement("div");
-      friendElement.classList.add("friend");
-      friendElement.id = `friend_${friend}`;
-
-      const friendPfpElement = document.createElement("img");
-      const friendUsernameElement = document.createElement("span");
-      const friendMenuBtn = document.createElement("div");
-      friendMenuBtn.classList.add("friend-menu-btn-open");
-      friendMenuBtn.id = `friend-menu-btn-open-${friend}`;
-      friendMenuBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        handleOpenFriendMenu(event, user, friend);
-      });
-
-      const rightSide = document.createElement("div");
-      rightSide.classList.add("friend-side");
-      const leftSide = document.createElement("div");
-      leftSide.classList.add("friend-side");
-
-      fetch("../svgs/vertical-elipses.svg")
-        .then((response) => response.text())
-        .then((svgData) => {
-          const parser = new DOMParser();
-          const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
-          const svgElement = svgDOM.querySelector("svg");
-          // svgElement.id = `shop-icon-${recipeNames[i]}`;
-          friendMenuBtn.appendChild(svgElement);
-        })
-        .catch((error) => {
-          console.error("Error loading SVG:", error);
-        });
-
-      friendsDiv.appendChild(friendElement);
-      friendElement.appendChild(rightSide);
-      friendElement.appendChild(leftSide);
-      rightSide.appendChild(friendPfpElement);
-      rightSide.appendChild(friendUsernameElement);
-      leftSide.appendChild(friendMenuBtn);
-
-      getPfp(friend).then((friendPfp) => {
-        friendPfpElement.classList.add("friend-pfp");
-        friendPfpElement.src = friendPfp;
-      });
-      getUsername(friend).then((friendUsername) => {
-        friendUsernameElement.classList.add("friend-username");
-        friendUsernameElement.textContent = friendUsername;
-      });
+      createNewFriendElement(friend);
     }
   });
 }
@@ -117,7 +69,7 @@ function handleOpenFriendMenu(event, user, friend) {
 
   const unfriendBtn = document.getElementById("remove-friend-btn");
   unfriendBtn.addEventListener("click", () => {
-    unfriend(user, friend);
+    database.unfriend(friend);
     document.getElementById(`friend_${friend}`).style.display = "none";
   });
   friendMenuIsOpen = !friendMenuIsOpen;
@@ -163,7 +115,9 @@ const addFriendInput = document.getElementById("add-friend-input");
 addFriendBtn.addEventListener("click", () => {
   if (addFriendOpen) {
     const inputValue = addFriendInput.value;
-    addFriend(currentUid, inputValue);
+    database.addFriend(inputValue).then((friend) => {
+      createNewFriendElement(friend);
+    });
   } else {
     addFriendDiv.classList.add("add-friend-animation");
     addFriendClose.classList.remove("hide-close");
@@ -175,9 +129,61 @@ addFriendBtn.addEventListener("click", () => {
 addFriendInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     const inputValue = addFriendInput.value;
-    addFriend(currentUid, inputValue);
+    database.addFriend(inputValue).then((friend) => {
+      createNewFriendElement(friend);
+    });
   }
 });
+
+function createNewFriendElement(friend) {
+  const friendsDiv = document.getElementById("scrollable-friends-div");
+  const friendElement = document.createElement("div");
+  friendElement.classList.add("friend");
+  friendElement.id = `friend_${friend}`;
+
+  const friendPfpElement = document.createElement("img");
+  const friendUsernameElement = document.createElement("span");
+  const friendMenuBtn = document.createElement("div");
+  friendMenuBtn.classList.add("friend-menu-btn-open");
+  friendMenuBtn.id = `friend-menu-btn-open-${friend}`;
+  friendMenuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    handleOpenFriendMenu(event, user, friend);
+  });
+
+  const rightSide = document.createElement("div");
+  rightSide.classList.add("friend-side");
+  const leftSide = document.createElement("div");
+  leftSide.classList.add("friend-side");
+
+  fetch("../svgs/vertical-elipses.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      // svgElement.id = `shop-icon-${recipeNames[i]}`;
+      friendMenuBtn.appendChild(svgElement);
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
+  friendsDiv.appendChild(friendElement);
+  friendElement.appendChild(rightSide);
+  friendElement.appendChild(leftSide);
+  rightSide.appendChild(friendPfpElement);
+  rightSide.appendChild(friendUsernameElement);
+  leftSide.appendChild(friendMenuBtn);
+
+  database.getPfp(friend).then((friendPfp) => {
+    friendPfpElement.classList.add("friend-pfp");
+    friendPfpElement.src = friendPfp;
+  });
+  database.getFriendUsername(friend).then((friendUsername) => {
+    friendUsernameElement.classList.add("friend-username");
+    friendUsernameElement.textContent = friendUsername;
+  });
+}
 
 addFriendClose.addEventListener("click", () => {
   if (addFriendOpen) {
@@ -192,7 +198,7 @@ const pfpInput = document.getElementById("pfp-upload");
 pfpInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    updatePfp(currentUid, file);
+    database.updatePfp(file);
   }
 });
 

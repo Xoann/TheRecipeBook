@@ -76,18 +76,20 @@ export class Database {
       .firestore()
       .collection("fastData")
       .doc("usernameToUid");
-
+    this.friendRef = (friend) =>
+      firebase.firestore().collection("users").doc(friend);
     this.userRef = firebase.firestore().collection("users").doc(user);
     this.profilePictureRef = firebase
       .storage()
       .ref(`${user}/pfp/profile-picture`);
-    this.recipeImageRef = (imageName) =>
+    this.recipeImageRef = (imageName, user) =>
       firebase.storage().ref(`${user}/images/${imageName}`);
     this.recipeImagesRef = firebase.storage().ref(user);
-    this.recipeRef = firebase.database().ref(`${user}/recipes`);
-    this.singleRecipeRef = (recipe) =>
+    this.recipeRef = (user) => firebase.database().ref(`${user}/recipes`);
+    this.singleRecipeRef = (recipe, user) =>
       firebase.database().ref(`${user}/recipes/${recipe}`);
-
+    this.friendProfilePictureRef = (friend) =>
+      firebase.storage().ref(`${friend}/pfp/profile-picture`);
     this.user = user;
     this.userAuth = () => firebase.auth().currentUser;
   }
@@ -116,10 +118,11 @@ export class Database {
         firstName: firstName,
         lastName: lastName,
         friendsList: "[]",
-        recipes: 0,
+        recipeCount: 0,
         forks: 0,
         dateJoined: formattedDate,
         shoppingListRecipes: [],
+        recipes: {},
       })
     );
     promises.push(
@@ -188,37 +191,45 @@ export class Database {
   }
 
   // Getters
-  getRecipe(name) {
-    return this.recipeRef.once("value").then((snapshot) => {
-      const recipeObj = snapshot.val()[name];
-      const ingredients = [];
-      for (const ingredient of recipeObj["ingredients"]) {
-        ingredients.push(
-          new Ingredient(
-            ingredient["name"],
-            ingredient["value"],
-            ingredient["unit"]
-          )
+  getRecipe(name, user = this.user) {
+    return this.singleRecipeRef(name, user)
+      .once("value")
+      .then((snapshot) => {
+        const recipe = snapshot.val();
+        const ingredients = [];
+        for (const ingredient of recipe["ingredients"]) {
+          ingredients.push(
+            new Ingredient(
+              ingredient["name"],
+              ingredient["value"],
+              ingredient["unit"]
+            )
+          );
+        }
+        return new Recipe(
+          recipe["name"],
+          recipe["recipeDesc"],
+          recipe["cookTimeHrs"],
+          recipe["cookTimeMins"],
+          recipe["prepTimeHrs"],
+          recipe["prepTimeMins"],
+          recipe["servings"],
+          ingredients,
+          recipe["steps"]
         );
-      }
-      return new Recipe(
-        recipeObj["name"],
-        recipeObj["recipeDesc"],
-        recipeObj["cookTimeHrs"],
-        recipeObj["cookTimeMins"],
-        recipeObj["prepTimeHrs"],
-        recipeObj["prepTimeMins"],
-        recipeObj["servings"],
-        ingredients,
-        recipeObj["steps"]
-      );
-    });
+      });
   }
 
-  getAllRecipeNames() {
-    return this.recipeRef.once("value").then((snapshot) => {
-      return Object.keys(snapshot.val());
-    });
+  getAllRecipeNames(user = this.user) {
+    console.log(`profil recipe user: ${user}`);
+    return this.recipeRef(user)
+      .once("value")
+      .then((snapshot) => {
+        if (!snapshot.val()) {
+          throw new Error("You have no recipes");
+        }
+        return Object.keys(snapshot.val());
+      });
   }
 
   getUid(username) {
@@ -237,12 +248,30 @@ export class Database {
     });
   }
 
+  getFriendUsername(friend) {
+    return this.friendRef(friend)
+      .get()
+      .then((doc) => {
+        return doc.data().username;
+      });
+  }
+
   getName() {
     return this.userRef.get().then((doc) => {
       return `${capitalize(doc.data().firstName)} ${capitalize(
         doc.data().lastName
       )}`;
     });
+  }
+
+  getFriendName(friend) {
+    return this.friendRef(friend)
+      .get()
+      .then((doc) => {
+        return `${capitalize(doc.data().firstName)} ${capitalize(
+          doc.data().lastName
+        )}`;
+      });
   }
 
   getFriends() {
@@ -255,6 +284,14 @@ export class Database {
     return this.profilePictureRef.getDownloadURL().then((url) => {
       return url;
     });
+  }
+
+  getFriendPfp(friend) {
+    return this.friendProfilePictureRef(friend)
+      .getDownloadURL()
+      .then((url) => {
+        return url;
+      });
   }
 
   getDateJoined() {
@@ -271,12 +308,36 @@ export class Database {
 
   getRecipeCount() {
     return this.userRef.get().then((doc) => {
-      return doc.data().recipes;
+      return doc.data().recipeCount;
     });
   }
 
-  getRecipeImage(imageName) {
-    return this.recipeImageRef(imageName)
+  getFriendDateJoined(friend) {
+    return this.friendRef(friend)
+      .get()
+      .then((doc) => {
+        return doc.data().dateJoined;
+      });
+  }
+
+  getFriendForkCount(friend) {
+    return this.friendRef(friend)
+      .get()
+      .then((doc) => {
+        return doc.data().forks;
+      });
+  }
+
+  getFriendRecipeCount(friend) {
+    return this.friendRef(friend)
+      .get()
+      .then((doc) => {
+        return doc.data().recipeCount;
+      });
+  }
+
+  getRecipeImage(imageName, user = this.user) {
+    return this.recipeImageRef(imageName, user)
       .getDownloadURL()
       .then((url) => {
         return url;
@@ -298,6 +359,7 @@ export class Database {
   }
 
   updatePfp(file) {
+    console.log(file);
     const renamedFile = new File([file], "profile-picture.png", {
       type: file.type,
     });
@@ -306,7 +368,7 @@ export class Database {
 
   // Other
   unfriend(friend) {
-    getFriends(this.user).then((friends) => {
+    this.getFriends(this.user).then((friends) => {
       friends = friends.filter((item) => item !== friend);
       this.userRef
         .update({
@@ -318,22 +380,35 @@ export class Database {
     });
   }
 
+  uidLookup(username) {
+    return this.usernameToUidRef.get().then((doc) => {
+      return doc.data().usernameToUid[username];
+    });
+  }
+
   addFriend(friendUsername) {
     try {
-      uidLookup(friendUsername).then((uid) => {
-        getFriends(this.user).then((friends) => {
+      return this.uidLookup(friendUsername).then((uid) => {
+        if (uid === this.user) {
+          throw new Error("Can't friend yourself");
+        }
+        return this.getFriends(this.user).then((friends) => {
+          if (friends.includes(uid)) {
+            throw new Error("They're already your friend");
+          }
           friends.push(uid);
-          this.userRef
+          return this.userRef
             .update({
               friendsList: JSON.stringify(friends),
             })
             .then(() => {
               console.log("friend added");
+              return uid;
             });
         });
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -356,16 +431,17 @@ export class Database {
   deleteRecipe(recipe) {
     this.decreaseRecipeCount();
     const promises = [];
-    promises.push(this.singleRecipeRef(recipe).remove());
-    promises.push(this.recipeImageRef(recipe).delete());
+    promises.push(this.singleRecipeRef(recipe, this.user).remove());
+    promises.push(this.recipeImageRef(recipe, this.user).delete());
     return Promise.all(promises);
   }
 
   addRecipe(recipe, image) {
     this.increaseRecipeCount();
     const promises = [];
+
     promises.push(
-      this.singleRecipeRef(recipe.name).set({
+      this.singleRecipeRef(recipe.name, this.user).set({
         recipeDesc: recipe.desc,
         cookTimeHrs: recipe.cookTimeHrs,
         cookTimeMins: recipe.cookTimeMins,
@@ -378,13 +454,13 @@ export class Database {
     );
 
     if (image) {
-      promises.push(this.recipeImageRef(recipe.name).put(image));
+      promises.push(this.recipeImageRef(recipe.name, this.user).put(image));
     } else {
       promises.push(
         fetch("../../img/food-placeholder-1.jpg")
           .then((response) => response.blob())
           .then((blob) => {
-            this.recipeImageRef(recipe.name).put(
+            this.recipeImageRef(recipe.name, this.user).put(
               new File([blob], "image.png", { type: "image/png" })
             );
           })

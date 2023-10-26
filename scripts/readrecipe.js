@@ -15,8 +15,8 @@ let searchQuery = "";
 let database;
 
 firebase.auth().onAuthStateChanged((user) => {
-  database = new Database(user.uid);
-  if (database.user) {
+  if (user) {
+    database = new Database(user.uid);
     displayRecipes(database, "home");
   } else {
     console.log("uid not found");

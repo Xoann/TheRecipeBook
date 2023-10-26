@@ -201,12 +201,6 @@ export function submitForm(
   console.log(num_ingredients);
   for (let i = 0; i < num_ingredients; i++) {
     ingredients.push(
-      //   {
-      //   name: getElementVal(`ingredient_${i}`),
-      //   value: getElementVal(`ingredient_value_${i}`),
-      //   unit: getElementVal(`ingredient_unit_${i}`),
-
-      // }
       new Ingredient(
         getElementVal(`ingredient_${i}`),
         getElementVal(`ingredient_value_${i}`),

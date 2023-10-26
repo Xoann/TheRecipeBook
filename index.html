@@ -89,5 +89,29 @@
     <script src="scripts/setup.js"></script>
     <script type="module" src="scripts/readrecipe.js"></script>
     <script src="scripts/darkmode.js"></script>
+    <script>
+      function limitInputLength(element, maxLength) {
+        let inputValue = element.value.toString();
+
+        if (inputValue.length > maxLength) {
+          element.value = inputValue.slice(0, maxLength);
+        }
+      }
+
+      function restrictInput(event, element, maxLength) {
+        var allowedCharacters = /^[0-9\/]*$/; // Regex for numbers and /
+        var inputField = event.target;
+        //var errorMessage = document.getElementById("error-message");
+
+        // Check if the entered character is allowed
+        if (!allowedCharacters.test(inputField.value)) {
+          // Prevent the character from being entered
+          inputField.value = inputField.value.slice(0, -1);
+
+          //errorMessage.textContent = "Please enter only numbers and /.";
+        }
+        limitInputLength(element, maxLength);
+      }
+    </script>
   </body>
 </html>

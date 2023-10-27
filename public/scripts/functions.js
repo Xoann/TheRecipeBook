@@ -214,17 +214,17 @@ function deleteRecipe(recipe) {
 export function displayRecipes(database, type, profile = database.user) {
   // Displays recipes as card in the recipe-container DOM element (class)
 
-  let noRecipes = 0;
-  database.getRecipeCount().then((count) => {
-    if (count === 0) {
-      noRecipes = 1;
-      return;
-    }
-  });
-  if (noRecipes === 0) {
-    return;
-  }
-  database.getAllRecipeNames().then((recipeNames) => {
+  // let noRecipes = 0;
+  // database.getRecipeCount().then((count) => {
+  //   if (count === 0) {
+  //     noRecipes = 1;
+  //     return;
+  //   }
+  // });
+  // if (noRecipes === 0) {
+  //   return;
+  // }
+  database.getAllRecipeNames(profile).then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 
@@ -313,27 +313,34 @@ export function displayRecipes(database, type, profile = database.user) {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-          createForkBtn(database, recipeDiv, forkRecipe, imageUrl, profile);
+          createForkBtn(database, recipeDiv, forkRecipe, profile);
         });
       }
     }
   });
 }
 
-function createForkBtn(database, recipeDiv, recipe, imageUrl, profile) {
+function createForkBtn(database, recipeDiv, recipe, profile) {
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "fork";
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {
-    fetch(imageUrl, { mode: "no-cors" })
-      .then((response) => response.blob())
-      .then((blob) => {
-        const image = new File([blob], "image.png", { type: "image/png" });
-        console.log(image);
-        database.addRecipe(recipe, blob);
+    database.user.getIdToken().then((token) => {
+      database.getRecipeImage(recipe.name, profile).then((url) => {
+        fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.blob())
+          .then((blob) => {
+            const image = new File([blob], "image.png", { type: "image/png" });
+            database.addRecipe(recipe, image);
+          });
       });
+    });
   });
 }
 

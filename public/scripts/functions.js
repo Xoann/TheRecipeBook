@@ -327,7 +327,8 @@ function createForkBtn(database, recipeDiv, recipe, profile) {
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {
-    database.user.getIdToken().then((token) => {
+    const user = firebase.auth().currentUser;
+    user.getIdToken().then((token) => {
       database.getRecipeImage(recipe.name, profile).then((url) => {
         fetch(url, {
           headers: {

@@ -691,15 +691,12 @@ function calculateGCD(a, b) {
   return b === 0 ? a : calculateGCD(b, a % b);
 }
 
-export async function createImageFileObject(image, type) {
-  if (type !== "src") {
-    image = image.src;
-  }
+export async function createImageFileObject(image) {
   if (image) {
     try {
       console.log(image);
       // Fetch the image data
-      const response = await fetch(image, { mode: "no-cors" });
+      const response = await fetch(image.src, { mode: "no-cors" });
 
       if (!response.ok) {
         throw new Error("Failed to fetch image");

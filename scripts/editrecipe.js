@@ -431,27 +431,32 @@ export function fillEditInputs(database, recipeName) {
     const image = document.createElement("img");
     image.classList.add("image");
     image.classList.add(`recipeImg_${recipeIdentifier}`);
+
     database.getRecipeImage(recipeName).then((url) => {
-      createImageFileObject(url, "src").then((imageFile) => {
-        let imageContainer = document.getElementById(
-          `edit-image-container_${recipeIdentifier}`
-        );
-        let imageForm = document.getElementById(
-          `image-form_${recipeIdentifier}`
-        );
-        console.log(imageFile);
-        imagesArray.push(imageFile);
-        displayImage(imageContainer, imagesArray, imageForm, recipeIdentifier);
-      });
+      image.src = url;
     });
 
-    // let imgDiv = document.getElementById(
-    //   `edit-image-container_${recipeIdentifier}`
-    // );
+    // database.getRecipeImage(recipeName).then((url) => {
+    //   createImageFileObject(url).then((imageFile) => {
+    //     let imageContainer = document.getElementById(
+    //       `edit-image-container_${recipeIdentifier}`
+    //     );
+    //     let imageForm = document.getElementById(
+    //       `image-form_${recipeIdentifier}`
+    //     );
+    //     console.log(imageFile);
+    //     imagesArray.push(imageFile);
+    //     displayImage(imageContainer, imagesArray, imageForm, recipeIdentifier);
+    //   });
+    // });
 
-    // document
-    //   .getElementById(`edit-image-container_${recipeIdentifier}`)
-    //   .appendChild(image);
+    let imgDiv = document.getElementById(
+      `edit-image-container_${recipeIdentifier}`
+    );
+
+    document
+      .getElementById(`edit-image-container_${recipeIdentifier}`)
+      .appendChild(image);
 
     //fill description
     document.getElementById(

@@ -1,4 +1,4 @@
-import { displayRecipes } from "./functions.js";
+import { displayRecipes, closeModal } from "./functions.js";
 import { Database, Recipe, Ingredient } from "./classes.js";
 
 import { addIngredient } from "./addingredientbutton.js";

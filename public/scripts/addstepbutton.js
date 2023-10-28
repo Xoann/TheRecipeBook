@@ -1,5 +1,7 @@
 export function addStep(listContainer, stepIdentifier) {
-  let itemCount = document.getElementsByClassName("step-item").length;
+  let itemCount = document.getElementsByClassName(
+    `step-item_${stepIdentifier}`
+  ).length;
   const listItem = document.createElement("div");
   listItem.classList.add("step-item");
   listItem.classList.add(`step-item_${stepIdentifier}`);

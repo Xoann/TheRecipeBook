@@ -781,3 +781,30 @@
   display: flex;
   justify-content: center;
 }
+
+.discard-modal-element .discard-modal-content {
+  margin-top: 30%;
+  width: 40% !important;
+  max-width: 500px !important;
+  min-width: 100px;
+}
+
+.discard-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.discard-cancel-button {
+  background-color: transparent;
+  border: 2px var(--grey-two-colour) solid;
+}
+
+.discard-modal-element .delete-modal-text {
+  margin-top: 20px;
+}
+
+.delete-recipe-final-btn + .delete-recipe-final-btn {
+  margin-left: 30px;
+}

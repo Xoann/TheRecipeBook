@@ -16,6 +16,10 @@
           {
             "key": "Access-Control-Allow-Origin",
             "value": "https://recipebook2-a9e9a.web.app"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Origin, X-Requested-With, Content-Type, Accept"
           }
         ]
       }

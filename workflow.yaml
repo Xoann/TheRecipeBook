@@ -1,0 +1,25 @@
+main:
+  steps:
+    - copyImage:
+        try:
+          call: http.request
+          args:
+            method: GET
+            url: "${params.sourceUrl}" # Get the image from the source URL
+        next:
+          - uploadImage
+
+    - uploadImage:
+        try:
+          call: http.request
+          args:
+            method: PUT
+            url: "https://firebasestorage.googleapis.com/v0/b/recipebook2-a9e9a.appspot.com/o/${params.destinationPath}"
+            headers:
+              Content-Type: "image/jpeg" # Adjust the content type based on your image format
+            body: "${copyImage.body}" # Use the body of the fetched image as the body for the PUT request
+        next:
+          - done
+
+    - done:
+        return: "File copied successfully!"

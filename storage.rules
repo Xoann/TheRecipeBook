@@ -5,11 +5,9 @@ rules_version = '2';
 //    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-  	match /{allPaths=**} {
-    	allow read;
-    }
-    match /users/{userId}/{allPaths=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId  && request.auth.uid == request.path[1];
+    match /{allPaths=**} {
+      allow read: if request.auth != null || request.auth == null && request.headers.origin == "https://recipebook2-a9e9a.web.app";
+      allow write;
     }
   }
 }

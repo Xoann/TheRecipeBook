@@ -313,37 +313,64 @@ export function displayRecipes(database, type, profile = database.user) {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-          createForkBtn(database, recipeDiv, forkRecipe, profile);
+          createForkBtn(database, recipeDiv, forkRecipe, recipeImg);
         });
       }
     }
   });
 }
 
-function createForkBtn(database, recipeDiv, recipe, profile) {
+function createForkBtn(database, recipeDiv, recipe, recipeImg) {
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "fork";
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {
-    const user = firebase.auth().currentUser;
-    user.getIdToken().then((token) => {
-      database.getRecipeImage(recipe.name, profile).then((url) => {
-        fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.blob())
-          .then((blob) => {
-            const image = new File([blob], "image.png", { type: "image/png" });
-            database.addRecipe(recipe, image);
-          });
+    fetch(recipeImg.src).then((response) => {
+      response.blob().then((blob) => {
+        const fileObject = new File([blob], "image.jpg", {
+          type: "image/jpeg",
+        });
+        database.addRecipe(recipe, fileObject);
       });
     });
+    // match /users/{userId}/{allPaths=**} {
+    //   allow read, write: if request.auth != null && request.auth.uid == userId  && request.auth.uid == request.path[1];
+    // }
+
+    //   const sourceRef = firebase
+    //     .storage()
+    //     .ref(`${profile}/images/${recipe.name}`);
+    //   sourceRef.getDownloadURL().then((sourceUrl) => {
+    //     const destRef = firebase
+    //       .storage()
+    //       .ref(`${database.user}/images/${recipe.name}`);
+    //     destRef.getDownloadURL().then((destUrl) => {
+    //       copyImage(sourceUrl, destUrl);
+    //     });
+    //   });
+    // });
   });
 }
+// async function copyImage(sourceUrl, destinationPath) {
+//   try {
+//     const response = await fetch("/.workflows/workflow-name", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         sourceUrl: sourceUrl,
+//         destinationPath: destinationPath,
+//       }),
+//     });
+//     const result = await response.text();
+//     console.log(result);
+//   } catch (error) {
+//     console.error("Error copying image:", error);
+//   }
+// }
 
 async function handleShoppingToggle(database, recipeName) {
   database.updateShoppingList(recipeName);

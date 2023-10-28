@@ -1,10 +1,16 @@
 import { checkErrors, submitForm } from "./submitrecipe.js";
-import { closeModal, openModal } from "./functions.js";
+import {
+  closeModal,
+  openModal,
+  displayRecipes,
+  createImageFileObject,
+} from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
-import { handleFileChange } from "./addimage.js";
+import { handleFileChange, displayImage } from "./addimage.js";
 
 export function generateEditModal(database, recipeName) {
+  let changes = 0;
   const recipeIdentifier = recipeName.replace(/ /g, "-");
 
   const modalElement = document.createElement("div");
@@ -82,6 +88,8 @@ export function generateEditModal(database, recipeName) {
   //    let imageForm = document.getElementsByClassName("image-container")[0];
 
   editImageInput.addEventListener("change", () => {
+    imagesArray = [];
+    console.log(imageIdentifier);
     handleFileChange(
       editImageInput,
       imagesArray,
@@ -139,7 +147,11 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeHrsInput = document.createElement("input");
   editPrepTimeHrsInput.classList.add("edit-input");
   editPrepTimeHrsInput.classList.add("input-transition");
-  editPrepTimeHrsInput.onclick = "limitInputLength(this, 4)";
+  editPrepTimeHrsInput.classList.add("discard-input");
+  editPrepTimeHrsInput.type = "number";
+  editPrepTimeHrsInput.addEventListener("input", function () {
+    limitInputLength(this, 4);
+  });
   editPrepTimeHrsInput.id = `edit-preptime-hrs-input_${recipeName.replace(
     / /g,
     "-"
@@ -150,6 +162,10 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeMinsInput = document.createElement("input");
   editPrepTimeMinsInput.classList.add("edit-input");
   editPrepTimeMinsInput.classList.add("input-transition");
+  editPrepTimeMinsInput.classList.add("discard-input");
+  editPrepTimeMinsInput.addEventListener("input", function () {
+    limitInputLength(this, 2);
+  });
   editPrepTimeMinsInput.id = `edit-preptime-mins-input_${recipeName.replace(
     / /g,
     "-"
@@ -171,6 +187,9 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeHrsInput = document.createElement("input");
   editCookTimeHrsInput.classList.add("edit-input");
   editCookTimeHrsInput.classList.add("input-transition");
+  editCookTimeHrsInput.addEventListener("input", function () {
+    limitInputLength(this, 4);
+  });
   editCookTimeHrsInput.id = `edit-cooktime-hrs-input_${recipeName.replace(
     / /g,
     "-"
@@ -181,6 +200,9 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeMinsInput = document.createElement("input");
   editCookTimeMinsInput.classList.add("edit-input");
   editCookTimeMinsInput.classList.add("input-transition");
+  editCookTimeMinsInput.addEventListener("input", function () {
+    limitInputLength(this, 2);
+  });
   editCookTimeMinsInput.id = `edit-cooktime-mins-input_${recipeName.replace(
     / /g,
     "-"
@@ -202,6 +224,9 @@ export function generateEditModal(database, recipeName) {
   const editServingsInput = document.createElement("input");
   editServingsInput.classList.add("edit-input");
   editServingsInput.classList.add("input-transition");
+  editServingsInput.addEventListener("input", function () {
+    limitInputLength(this, 4);
+  });
   editServingsInput.id = `edit-servings-input_${recipeIdentifier}`;
 
   editServingsContainer.appendChild(editServingsInput);
@@ -306,6 +331,7 @@ export function generateEditModal(database, recipeName) {
         addStepButton
       )
     ) {
+      // database.deleteRecipe(recipeName);
       submitForm(
         database,
         e,
@@ -320,6 +346,8 @@ export function generateEditModal(database, recipeName) {
         editServingsInput
       );
       console.log("Recipe Edited");
+      closeModal(modalElement);
+      displayRecipes(database, "home");
     }
   });
 
@@ -336,12 +364,54 @@ export function generateEditModal(database, recipeName) {
       modalContentElement.appendChild(svgElement);
 
       svgElement.addEventListener("click", function () {
-        closeModal(modalElement);
+        handleDiscard(modalElement, changes);
       });
     })
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
+
+  //discard button
+  const discardModal = document.createElement("div");
+  discardModal.classList.add("modal");
+  discardModal.id = `discard-modal-${recipeIdentifier}`;
+  discardModal.innerHTML = `
+    <div class="modal-content" id="discard-modal-content">
+      <p class="discard-modal-text" id="discard-modal-text"></p>
+      <div id="discard-button" class="discard-button">Discard</div>
+      <div id="cancel-button" class="cancel-button">Cancel</div>
+      <svg id="close-delete-modal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 close">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </div>
+  `;
+  document.body.appendChild(discardModal);
+
+  const modalContent = discardModal.querySelector(".modal-content");
+
+  const discardButton = modalContent.querySelector("#discard-button");
+  discardButton.addEventListener("click", function () {
+    closeModal(modalElement);
+  });
+
+  const cancelButton = modalContent.querySelector("#cancel-button");
+  cancelButton.addEventListener("click", function () {
+    closeModal(discardModal);
+  });
+
+  for (let input of document.getElementsByClassName("discard-input")) {
+    input.addEventListener("input", function () {
+      changes = 1;
+    });
+  }
+}
+
+function handleDiscard(modalElement, changes) {
+  if (changes === 1) {
+    openModal(document.querySelector("discard-modal"));
+  } else {
+    closeModal(modalElement);
+  }
 }
 
 export function fillEditInputs(database, recipeName) {
@@ -357,19 +427,33 @@ export function fillEditInputs(database, recipeName) {
       `edit-image-container_${recipeIdentifier}`
     ).innerHTML = "";
 
+    let imagesArray = [];
     const image = document.createElement("img");
     image.classList.add("image");
     image.classList.add(`recipeImg_${recipeIdentifier}`);
     database.getRecipeImage(recipeName).then((url) => {
-      image.src = url;
+      createImageFileObject(url, "src").then((imageFile) => {
+        let imageContainer = document.getElementById(
+          `edit-image-container_${recipeIdentifier}`
+        );
+        let imageForm = document.getElementById(
+          `image-form_${recipeIdentifier}`
+        );
+        console.log(imageFile);
+        imagesArray.push(imageFile);
+        displayImage(imageContainer, imagesArray, imageForm, recipeIdentifier);
+      });
     });
 
-    document
-      .getElementById(`edit-image-container_${recipeIdentifier}`)
-      .appendChild(image);
+    // let imgDiv = document.getElementById(
+    //   `edit-image-container_${recipeIdentifier}`
+    // );
+
+    // document
+    //   .getElementById(`edit-image-container_${recipeIdentifier}`)
+    //   .appendChild(image);
 
     //fill description
-    console.log(recipe.desc);
     document.getElementById(
       `edit-description-input_${recipeIdentifier}`
     ).innerHTML = recipe.desc;

@@ -27,6 +27,7 @@ export function displayImage(
   imageIdentifier
 ) {
   imageContainer.innerHTML = "";
+  console.log(imagesArray);
   imagesArray.forEach((image, index) => {
     let imgDiv = document.createElement("div");
     imgDiv.classList.add("display-image");

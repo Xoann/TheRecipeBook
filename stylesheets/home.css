@@ -456,11 +456,6 @@
   color: var(--primary-colour);
 }
 
-.image {
-  border-radius: 10px;
-  border: 2px var(--primary-colour) solid;
-}
-
 .details-container {
   display: flex;
   justify-content: space-between;
@@ -575,11 +570,6 @@
   top: 14px;
   right: 14px;
   cursor: pointer;
-}
-
-.image {
-  max-height: 300px;
-  max-width: auto;
 }
 
 /* Edit Modal Styles */
@@ -697,11 +687,16 @@
   border: 2px solid var(--primary-colour);
   padding: 6px 10px;
   border-radius: 15px;
-  background-color: var(--dark-two-colour);
+  background-color: transparent;
   color: var(--light-text-colour);
   cursor: pointer;
   transition: background-color 0.1s ease;
   font-size: 14px;
+}
+
+.inputbox {
+  margin-top: -5px;
+  margin-bottom: -10px;
 }
 
 .image-input {
@@ -712,12 +707,10 @@
   background-color: var(--grey-one-colour);
 }
 
-#display-image img {
+.display-image img {
   min-width: 100px;
   min-height: 200px;
-  max-width: 400px;
-  max-height: 300px;
-  object-fit: cover;
+  height: 250px;
   border-radius: 10px;
   border-width: 2px;
   border-color: var(--light-button-hover);
@@ -737,13 +730,41 @@
 } */
 
 .image-container {
+  border-radius: 10px;
+  border: 2px var(--primary-colour) solid;
+  height: 250px;
+  max-width: 80%;
   position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#recipeImg {
+  border: 0;
 }
 
 .edit-ingredients-steps-div {
   width: 90%;
   display: flex;
   align-items: flex-start;
+}
+
+.image {
+  height: 250px;
+}
+
+.view-image-container {
+  border-radius: 10px;
+  border: 2px var(--primary-colour) solid;
+  height: 250px;
+  max-width: 80%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .edit-ingredients-container {

@@ -1,5 +1,6 @@
 import { displayRecipes } from "./functions.js";
 import { Database, Recipe, Ingredient } from "./classes.js";
+import { closeModal } from "./functions.js";
 
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";

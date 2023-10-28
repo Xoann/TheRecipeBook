@@ -184,35 +184,35 @@ function handleDeleteRecipe(database, recipeName) {
   });
 }
 
-function deleteRecipe(recipe) {
-  const databaseRef = firebase
-    .database()
-    .ref(`${currentUid}/recipes/${recipe}`);
-  databaseRef
-    .remove()
-    .then(function () {
-      console.log("Element removed successfully!");
-      delete recipes[recipe];
-      updateRecipes(narrowSearch(searchQuery));
-    })
-    .catch(function (error) {
-      console.error("Error removing element: " + error.message);
-    });
+// export function deleteRecipe(recipe) {
+//   const databaseRef = firebase
+//     .database()
+//     .ref(`${currentUid}/recipes/${recipe}`);
+//   databaseRef
+//     .remove()
+//     .then(function () {
+//       console.log("Element removed successfully!");
+//       delete recipes[recipe];
+//       updateRecipes(narrowSearch(searchQuery));
+//     })
+//     .catch(function (error) {
+//       console.error("Error removing element: " + error.message);
+//     });
 
-  const storageRef = firebase.storage().ref();
-  storageRef
-    .child(`${currentUid}/images/${recipe}`)
-    .delete()
-    .then(function () {
-      console.log("File deleted successfully.");
-    })
-    .catch(function (error) {
-      console.error("Error deleting file:", error);
-    });
-}
+//   const storageRef = firebase.storage().ref();
+//   storageRef
+//     .child(`${currentUid}/images/${recipe}`)
+//     .delete()
+//     .then(function () {
+//       console.log("File deleted successfully.");
+//     })
+//     .catch(function (error) {
+//       console.error("Error deleting file:", error);
+//     });
+// }
 
 export function displayRecipes(database, type, profile = database.user) {
-  // Displays recipes as card in the recipe-container DOM element (class)
+  // Displays recipes as card dlefilechangein the recipe-container DOM element (class)
 
   let noRecipes = 0;
   database.getRecipeCount().then((count) => {
@@ -221,8 +221,11 @@ export function displayRecipes(database, type, profile = database.user) {
       return;
     }
   });
-  if (noRecipes === 0) {
+  if (noRecipes === 1) {
     return;
+  }
+  if (type === "home") {
+    document.querySelector(".recipe-container").innerHTML = "";
   }
   database.getAllRecipeNames().then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
@@ -379,6 +382,7 @@ export function generateRecipeModal(
     //Image
     const image = document.createElement("img");
     image.classList.add("image");
+    image.classList.add("view-image-container");
     database.getRecipeImage(recipeName, profile).then((url) => {
       image.src = url;
     });
@@ -687,11 +691,15 @@ function calculateGCD(a, b) {
   return b === 0 ? a : calculateGCD(b, a % b);
 }
 
-export async function createImageFileObject(image) {
+export async function createImageFileObject(image, type) {
+  if (type !== "src") {
+    image = image.src;
+  }
   if (image) {
     try {
+      console.log(image);
       // Fetch the image data
-      const response = await fetch(image.src);
+      const response = await fetch(image, { mode: "no-cors" });
 
       if (!response.ok) {
         throw new Error("Failed to fetch image");

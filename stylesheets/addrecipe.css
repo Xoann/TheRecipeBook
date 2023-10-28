@@ -323,7 +323,7 @@ input::-webkit-inner-spin-button {
   border: 2px solid var(--primary-colour);
   padding: 6px 10px;
   border-radius: 15px;
-  background-color: var(--dark-two-colour);
+  background-color: transparent;
   color: var(--light-text-colour);
   cursor: pointer;
   transition: background-color 0.1s ease;

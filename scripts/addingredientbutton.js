@@ -40,7 +40,7 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   input_value.placeholder = "Amount";
   input_value.classList.add("ingredient-input");
   input_value.classList.add("input-transition");
-  input_value.setAttribute("oninput", "restrictInput(event, this, 14)");
+  input_value.setAttribute("oninput", "restrictInput(event, this, 8)");
 
   const unitDiv = document.createElement("fieldset");
 

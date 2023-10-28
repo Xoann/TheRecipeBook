@@ -198,7 +198,6 @@ export function submitForm(
   const num_ingredients = document.getElementsByClassName(
     `ingredient-row-container_${recipeIdentifier}`
   ).length;
-  console.log(num_ingredients);
   for (let i = 0; i < num_ingredients; i++) {
     ingredients.push(
       new Ingredient(

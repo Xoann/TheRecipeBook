@@ -327,7 +327,7 @@ function createForkBtn(database, recipeDiv, recipe, recipeImg) {
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {
-    fetch(recipeImg.src).then((response) => {
+    fetch("../img/food-placeholder-1.jpg").then((response) => {
       response.blob().then((blob) => {
         const fileObject = new File([blob], "image.jpg", {
           type: "image/jpeg",

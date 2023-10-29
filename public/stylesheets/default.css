@@ -15,13 +15,14 @@ svg {
 }
 
 .main-nav {
+  padding-right: 6.1px;
   position: fixed;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--dark-one-colour);
-  border-bottom: 0px var(--light-button-hover) solid;
-  box-shadow: 0 4px 13px -7px var(--light-button-hover); /*remove this shit if it looks dumb*/
+  border-bottom: 1px var(--nav-border) solid;
+  /* box-shadow: 0 4px 13px -7px var(--light-button-hover); remove this shit if it looks dumb */
   height: 7vh;
   max-height: 60px;
   width: 100vw;
@@ -40,19 +41,25 @@ svg {
   z-index: 2;
 }
 
-.nav-list-item a:visited {
+.nav-list-link:visited {
   color: var(--light-text-colour);
 }
 
-.nav-list li:hover {
+.nav-list .nav-list-link:hover {
   background-color: var(--grey-one-colour);
   cursor: pointer;
 }
 
 .nav-list-item {
+  user-select: none;
+}
+
+.nav-list-link {
+  font-family: Gabarito;
   height: 100%;
   align-items: center;
   display: flex;
+  gap: 20px;
   height: 100%;
   padding: 0px 30px;
   border-radius: 7px;
@@ -60,29 +67,39 @@ svg {
 }
 
 .nav-list-link {
-  all: unset;
-  text-decoration: none;
-  font-family: Gabarito;
+  height: 100%;
 }
 
-.main-nav a {
-  height: 100%;
+#pfp-nav {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px var(--primary-colour) solid;
 }
 
 .logo {
   height: 100%;
+  cursor: pointer;
 }
 
 .user-menu {
   display: block;
-  position: fixed;
+  position: absolute;
+  top: calc(7vh);
+  right: 10px;
   height: 0;
-  width: auto;
+  width: 166px;
   margin-top: 6px;
   margin-left: 89%;
   background: var(--dark-two-colour);
   border-radius: 8px;
-  transition: height 0.06s ease-in;
+  transition: height 0.2s ease;
+  overflow: hidden;
+  user-select: none;
+  border-color: var(--nav-border);
+  border-style: solid;
+  border-width: 0;
 }
 
 .user-menu-list {
@@ -99,15 +116,23 @@ svg {
   border-radius: 8px;
 }
 
+.user-menu-list-item svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--light-colour);
+}
+
 .user-menu-list-item {
   z-index: 1;
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px 15px;
   color: var(--light-text-colour);
   font-family: Gabarito;
   border-radius: 8px;
-  transition: background-color 0.15s, opacity 0.1s ease-in-out;
-  opacity: 0;
+  /* transition: background-color 0.15s, opacity 0.1s ease-in-out; */
+  /* opacity: 0; */
 }
 
 .user-menu-list-item:hover {
@@ -119,21 +144,21 @@ svg {
 }
 
 .user-menu-appear {
-  height: auto;
+  height: 136px;
 }
 
-.user-menu-item-appear {
+/* .user-menu-item-appear {
   opacity: 1 !important;
   transition-delay: 0.015s;
-}
+} */
 
-.user-menu-item-block {
+/* .user-menu-item-block {
   display: block !important;
-}
+} */
 
-.user-menu-list a {
+/* .user-menu-list a {
   all: unset;
-}
+} */
 
 /* SCROLLBAR */
 

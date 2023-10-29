@@ -20,6 +20,7 @@ firebase.auth().onAuthStateChanged((user) => {
     displayRecipes(database, "home");
   } else {
     console.log("uid not found");
+    window.location.href = "html/login.html";
   }
 });
 
@@ -29,43 +30,6 @@ signOutButton.addEventListener("click", function () {
     database.signOut();
   } else {
     window.location.href = "html/login.html";
-  }
-});
-
-const userMenu = document.getElementsByClassName("user-menu")[0];
-const usernameButtonOut = document.getElementById("username-button");
-const usernameButtonIn = document.getElementById("username");
-const userMenuItems = document.getElementsByClassName("user-menu-list-item");
-let userMenuOpen = false;
-
-window.addEventListener("click", function (event) {
-  if (
-    (event.target === usernameButtonOut || event.target === usernameButtonIn) &&
-    !userMenuOpen
-  ) {
-    usernameButtonOut.classList.add("user-menu-button-maintain-hover");
-    userMenuOpen = true;
-    userMenu.classList.add("user-menu-appear");
-    for (const item of userMenuItems) {
-      item.classList.add("user-menu-item-appear");
-    }
-    this.setTimeout(function () {
-      for (const item of userMenuItems) {
-        item.classList.add("user-menu-item-block");
-      }
-    }, 40);
-  } else if (event.target !== userMenu && userMenuOpen) {
-    usernameButtonOut.classList.remove("user-menu-button-maintain-hover");
-    userMenuOpen = false;
-    userMenu.classList.remove("user-menu-appear");
-    for (const item of userMenuItems) {
-      item.classList.remove("user-menu-item-appear");
-    }
-    this.setTimeout(function () {
-      for (const item of userMenuItems) {
-        item.classList.remove("user-menu-item-block");
-      }
-    }, 20);
   }
 });
 

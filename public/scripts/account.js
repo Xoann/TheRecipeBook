@@ -20,7 +20,7 @@ firebase.auth().onAuthStateChanged((user) => {
   loadProfilePage(database);
 });
 
-function loadProfilePage(database, user) {
+function loadProfilePage(database) {
   database.getUsername().then((username) => {
     document.getElementById("user").textContent = username;
   });

@@ -1,25 +1,23 @@
 .mainBg {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-width: 950px;
+  min-width: 900px;
   font-family: Gabarito;
-}
-
-.profile-display {
   display: flex;
-  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
 }
 
 .profile-display {
+  padding: 20px 0;
   color: var(--light-colour);
-  height: 80vh;
+  /* height: 80vh; */
   width: 80vw;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .profile-details {
@@ -30,6 +28,7 @@
   grid-gap: 10px;
   width: 90%;
   padding: 30px;
+  min-width: 600px;
   /* align-items: center; */
 }
 

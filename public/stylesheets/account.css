@@ -67,10 +67,13 @@
   height: 100%;
   opacity: 0;
   cursor: pointer;
+  z-index: 2;
 }
 
 #pfp-upload {
+  position: absolute;
   display: none;
+  z-index: 2;
 }
 
 .friend-pfp {

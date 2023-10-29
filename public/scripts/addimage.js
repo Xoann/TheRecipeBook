@@ -55,9 +55,9 @@ export function displayImage(
           deleteImage(
             imageContainer,
             imagesArray,
-            index,
             imageForm,
-            imageIdentifier
+            imageIdentifier,
+            index
           );
         };
       })

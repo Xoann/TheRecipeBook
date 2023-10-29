@@ -235,8 +235,8 @@ export function submitForm(
   //console.log(image.src);
   console.log(imagesArray[0]);
 
-  createImageFileObject(image).then((result) => {
-    database.addRecipe(recipe, result);
+  return createImageFileObject(image).then((result) => {
+    return database.addRecipe(recipe, result);
   });
 }
 
@@ -308,14 +308,231 @@ export async function submitFormAsync(
   const promises = [];
   promises.push(
     createImageFileObject(image).then((result) => {
-      promises.push(database.addRecipe(recipe, result));
+      database.addRecipe(recipe, result);
     })
   );
 
   Promise.all(promises).then(() => {
+    // window.location.href = "./index.html";
     return "Recipe Edited";
   });
 }
+
+export async function createRecipe(
+  database,
+  e,
+  recipeIdentifier,
+  imagesArray,
+  recipeName,
+  recipeDesc,
+  prepTimeHrs,
+  prepTimeMins,
+  cookTimeHrs,
+  cookTimeMins,
+  servings
+) {
+  e.preventDefault();
+
+  let recipeNameVal = recipeName.value;
+  let recipeDescVal = recipeDesc.textContent;
+  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
+  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
+  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
+  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
+  let servingsVal = servings.value;
+
+  let ingredients = [];
+  let steps = [];
+  const num_ingredients = document.getElementsByClassName(
+    `ingredient-row-container_${recipeIdentifier}`
+  ).length;
+  console.log(num_ingredients);
+  for (let i = 0; i < num_ingredients; i++) {
+    ingredients.push(
+      new Ingredient(
+        getElementVal(`ingredient_${i}`),
+        getElementVal(`ingredient_value_${i}`),
+        getElementVal(`ingredient_unit_${i}`)
+      )
+    );
+  }
+
+  const num_steps = document.getElementsByClassName(
+    `step-item_${recipeIdentifier}`
+  ).length;
+  for (let i = 0; i < num_steps; i++) {
+    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+  }
+
+  const recipe = new Recipe(
+    recipeNameVal,
+    recipeDescVal,
+    cookTimeHrsVal,
+    cookTimeMinsVal,
+    prepTimeHrsVal,
+    prepTimeMinsVal,
+    servingsVal,
+    ingredients,
+    steps
+  );
+
+  //const image = imagesArray[0];
+  const image = document.getElementsByClassName(
+    `recipeImg_${recipeIdentifier}`
+  )[0];
+  //console.log(image.src);
+  console.log(imagesArray[0]);
+
+  createImageFileObject(image).then((result) => {
+    return [recipe, result];
+  });
+}
+
+export function submitFormCallback(
+  database,
+  e,
+  recipeIdentifier,
+  imagesArray,
+  recipeName,
+  recipeDesc,
+  prepTimeHrs,
+  prepTimeMins,
+  cookTimeHrs,
+  cookTimeMins,
+  servings,
+  callback
+) {
+  e.preventDefault();
+
+  let recipeNameVal = recipeName.value;
+  let recipeDescVal = recipeDesc.textContent;
+  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
+  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
+  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
+  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
+  let servingsVal = servings.value;
+
+  let ingredients = [];
+  let steps = [];
+  const num_ingredients = document.getElementsByClassName(
+    `ingredient-row-container_${recipeIdentifier}`
+  ).length;
+  console.log(num_ingredients);
+  for (let i = 0; i < num_ingredients; i++) {
+    ingredients.push(
+      new Ingredient(
+        getElementVal(`ingredient_${i}`),
+        getElementVal(`ingredient_value_${i}`),
+        getElementVal(`ingredient_unit_${i}`)
+      )
+    );
+  }
+
+  const num_steps = document.getElementsByClassName(
+    `step-item_${recipeIdentifier}`
+  ).length;
+  for (let i = 0; i < num_steps; i++) {
+    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+  }
+
+  const recipe = new Recipe(
+    recipeNameVal,
+    recipeDescVal,
+    cookTimeHrsVal,
+    cookTimeMinsVal,
+    prepTimeHrsVal,
+    prepTimeMinsVal,
+    servingsVal,
+    ingredients,
+    steps
+  );
+
+  //const image = imagesArray[0];
+  const image = document.getElementsByClassName(
+    `recipeImg_${recipeIdentifier}`
+  )[0];
+  //console.log(image.src);
+  console.log(imagesArray[0]);
+
+  createImageFileObject(image).then((result) => {
+    database.addRecipe(recipe, result);
+  });
+
+  callback();
+}
+
+export function submitFormPromise(
+  database,
+  e,
+  recipeIdentifier,
+  imagesArray,
+  recipeName,
+  recipeDesc,
+  prepTimeHrs,
+  prepTimeMins,
+  cookTimeHrs,
+  cookTimeMins,
+  servings
+) {
+  return new Promise((resolve, reject) => {
+    e.preventDefault();
+
+    let recipeNameVal = recipeName.value;
+    let recipeDescVal = recipeDesc.textContent;
+    let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
+    let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
+    let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
+    let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
+    let servingsVal = servings.value;
+
+    let ingredients = [];
+    let steps = [];
+    const num_ingredients = document.getElementsByClassName(
+      `ingredient-row-container_${recipeIdentifier}`
+    ).length;
+    console.log(num_ingredients);
+    for (let i = 0; i < num_ingredients; i++) {
+      ingredients.push(
+        new Ingredient(
+          getElementVal(`ingredient_${i}`),
+          getElementVal(`ingredient_value_${i}`),
+          getElementVal(`ingredient_unit_${i}`)
+        )
+      );
+    }
+
+    const num_steps = document.getElementsByClassName(
+      `step-item_${recipeIdentifier}`
+    ).length;
+    for (let i = 0; i < num_steps; i++) {
+      steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+    }
+
+    const recipe = new Recipe(
+      recipeNameVal,
+      recipeDescVal,
+      cookTimeHrsVal,
+      cookTimeMinsVal,
+      prepTimeHrsVal,
+      prepTimeMinsVal,
+      servingsVal,
+      ingredients,
+      steps
+    );
+
+    //const image = imagesArray[0];
+    const image = document.getElementsByClassName(
+      `recipeImg_${recipeIdentifier}`
+    )[0];
+    //console.log(image.src);
+    console.log(imagesArray[0]);
+
+    createImageFileObject(image).then((result) => {
+      database.addRecipe(recipe, result);
+    });
+  });
+}
+
 // function writeUserData(
 //   recipeName,
 //   recipeDesc,

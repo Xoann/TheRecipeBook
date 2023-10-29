@@ -1,10 +1,17 @@
-import { checkErrors, submitForm } from "./submitrecipe.js";
+import {
+  checkErrors,
+  submitForm,
+  submitFormAsync,
+  submitFormPromise,
+  createRecipe,
+} from "./submitrecipe.js";
 import { closeModal, openModal, displayRecipes } from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
-import { handleFileChange } from "./addimage.js";
+import { handleFileChange, deleteImage } from "./addimage.js";
 
 let changes = false;
+let imagesArray = [];
 export function generateEditModal(database, recipeName) {
   const recipeIdentifier = recipeName.replace(/ /g, "-");
 
@@ -81,7 +88,7 @@ export function generateEditModal(database, recipeName) {
   modalContentElement.appendChild(editImageContainer);
 
   //   let input = document.getElementById("recipeImg");
-  let imagesArray = [];
+
   let imageIdentifier = recipeIdentifier;
   //    let imageForm = document.getElementsByClassName("image-container")[0];
 
@@ -352,11 +359,17 @@ export function generateEditModal(database, recipeName) {
         editCookTimeHrsInput,
         editCookTimeMinsInput,
         editServingsInput
-      );
-
-      window.location.href = "./index.html";
-      closeModal(modalElement);
-      console.log("Recipe Edited");
+      )
+        .then(() => {
+          closeModal(modalElement);
+          console.log("Recipe Edited");
+          window.location.href = "./index.html";
+        })
+        .catch((error) => {
+          closeModal(modalElement);
+          console.log("Recipe Edited");
+          window.location.href = "./index.html";
+        });
     }
   });
 
@@ -383,6 +396,16 @@ export function generateEditModal(database, recipeName) {
   discardButtonContainer.classList.add("discard-button-container");
   discardModalContent.appendChild(discardButtonContainer);
 
+  const discardModalCancelButton = document.createElement("div");
+  discardModalCancelButton.classList.add("delete-recipe-final-btn");
+  discardModalCancelButton.classList.add("discard-cancel-button");
+  discardModalCancelButton.textContent = "Cancel";
+  discardModalCancelButton.addEventListener("click", function () {
+    closeModal(discardModalElement);
+  });
+
+  discardButtonContainer.appendChild(discardModalCancelButton);
+
   const discardModalDiscardButton = document.createElement("div");
   discardModalDiscardButton.classList.add("delete-recipe-final-btn");
   discardModalDiscardButton.textContent = "Discard";
@@ -393,16 +416,6 @@ export function generateEditModal(database, recipeName) {
   });
 
   discardButtonContainer.appendChild(discardModalDiscardButton);
-
-  const discardModalCancelButton = document.createElement("div");
-  discardModalCancelButton.classList.add("delete-recipe-final-btn");
-  discardModalCancelButton.classList.add("discard-cancel-button");
-  discardModalCancelButton.textContent = "Cancel";
-  discardModalCancelButton.addEventListener("click", function () {
-    closeModal(discardModalElement);
-  });
-
-  discardButtonContainer.appendChild(discardModalCancelButton);
 
   fetch("../svgs/x.svg")
     .then((response) => response.text())
@@ -481,9 +494,10 @@ export function fillEditInputs(database, recipeName) {
       recipeName;
 
     //fill image
-    document.getElementById(
+    const imageContainer = document.getElementById(
       `edit-image-container_${recipeIdentifier}`
-    ).innerHTML = "";
+    );
+    imageContainer.innerHTML = "";
 
     const image = document.createElement("img");
     image.classList.add("image");
@@ -492,9 +506,29 @@ export function fillEditInputs(database, recipeName) {
       image.src = url;
     });
 
-    document
-      .getElementById(`edit-image-container_${recipeIdentifier}`)
-      .appendChild(image);
+    imageContainer.appendChild(image);
+
+    fetch("../svgs/x.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const svgElement = svgDOM.querySelector("svg");
+        svgElement.classList.add("close");
+        imageContainer.appendChild(svgElement);
+        svgElement.onclick = function () {
+          deleteImage(
+            imageContainer,
+            imagesArray,
+            document.getElementById(`image-form_${recipeIdentifier}`),
+            recipeIdentifier,
+            0
+          );
+        };
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
 
     //fill description
     document.getElementById(

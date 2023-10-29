@@ -341,6 +341,9 @@ export class Database {
       .getDownloadURL()
       .then((url) => {
         return url;
+      })
+      .catch(() => {
+        return null;
       });
   }
 
@@ -441,7 +444,7 @@ export class Database {
     return Promise.all(promises);
   }
 
-  addRecipe(recipe, image) {
+  addRecipe(recipe, image = null) {
     this.increaseRecipeCount();
     const promises = [];
 
@@ -460,18 +463,6 @@ export class Database {
 
     if (image) {
       promises.push(this.recipeImageRef(recipe.name, this.user).put(image));
-    } else {
-      promises.push(
-        fetch("../../img/food-placeholder-1.jpg")
-          .then((response) => response.blob())
-          .then((blob) => {
-            promises.push(
-              this.recipeImageRef(recipe.name, this.user).put(
-                new File([blob], "image.png", { type: "image/png" })
-              )
-            );
-          })
-      );
     }
 
     console.log("uploaded");

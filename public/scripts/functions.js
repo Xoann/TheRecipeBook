@@ -262,11 +262,14 @@ export function displayRecipes(database, type, profile = database.user) {
       recipeImg.classList.add("recipe-img");
 
       const forkPromises = [];
-      let imageUrl;
+
       forkPromises.push(
         database.getRecipeImage(recipeName, profile).then((url) => {
-          recipeImg.src = url;
-          imageUrl = url;
+          if (url) {
+            recipeImg.src = url;
+          } else {
+            recipeImg.src = "./img/food-placeholder-1.jpg";
+          }
         })
       );
 
@@ -313,14 +316,14 @@ export function displayRecipes(database, type, profile = database.user) {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-          createForkBtn(database, recipeDiv, forkRecipe, recipeImg);
+          createForkBtn(database, recipeDiv, forkRecipe);
         });
       }
     }
   });
 }
 
-function createForkBtn(database, recipeDiv, recipe, recipeImg) {
+function createForkBtn(database, recipeDiv, recipe) {
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "fork";
@@ -415,7 +418,10 @@ export function generateRecipeModal(
     const image = document.createElement("img");
     image.classList.add("image");
     database.getRecipeImage(recipeName, profile).then((url) => {
-      image.src = url;
+      if (url) {
+        image.src = url;
+        modalContentElement.appendChild(image);
+      }
     });
 
     //Description
@@ -646,7 +652,7 @@ export function generateRecipeModal(
     modalElement.appendChild(modalContentElement);
 
     modalContentElement.appendChild(recipeNameElement);
-    modalContentElement.appendChild(image);
+
     modalContentElement.appendChild(descriptionDiv);
     modalContentElement.appendChild(detailsContainer);
     modalContentElement.appendChild(ingredientsStepsContainer);

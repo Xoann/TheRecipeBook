@@ -261,11 +261,11 @@ async function getImageURLs(image_names, uid) {
 //   }
 // }
 
-async function loadImg(imgElement, imgURLs, imageName) {
-  const imageURLs = await imgURLs;
-  const imageURL = await imageURLs[imageName];
-  imgElement.src = imageURL;
-}
+// async function loadImg(imgElement, imgURLs, imageName) {
+//   const imageURLs = await imgURLs;
+//   const imageURL = await imageURLs[imageName];
+//   imgElement.src = imageURL;
+// }
 
 ////////////////////////
 /// SEARCH BAR CODE ///

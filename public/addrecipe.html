@@ -18,6 +18,7 @@
   <body>
     <header>
       <nav class="main-nav">
+
         <img class="logo" id="h" src="img/logo.png" />
 
         <div class="nav-list">
@@ -32,10 +33,12 @@
             <img id="pfp-nav" src="img/default-pfp.png" alt="" />
           </div>
         </div>
+
       </nav>
     </header>
     <!-- Profile Dropdown -->
     <div class="mainBg">
+
       <div id="user-menu" class="user-menu">
         <div class="user-menu-list">
           <div class="user-menu-list-item" id="profile-page">
@@ -112,6 +115,7 @@
             <span id="toggle-dark-mode">Dark Mode</span>
           </div>
         </div>
+
       </div>
 
       <!-- Create Recipe -->
@@ -196,7 +200,9 @@
                           id="prepTimeHrs"
                           placeholder="0"
                           class="small-details-input time-input details-input input-transition"
-                          oninput="limitInputLength(this, 4)"
+
+                          oninput="restrictInput(this, 4)"
+
                         />
                       </div>
                       <div class="input-label">
@@ -206,7 +212,9 @@
                           id="prepTimeMins"
                           placeholder="0"
                           class="small-details-input time-input details-input input-transition"
-                          oninput="limitInputLength(this, 2)"
+
+                          oninput="restrictInput(this, 2)"
+
                         />
                       </div>
                     </div>
@@ -222,7 +230,9 @@
                           id="cookTimeHrs"
                           placeholder="0"
                           class="small-details-input time-input details-input input-transition"
-                          oninput="limitInputLength(this, 4)"
+
+                          oninput="restrictInput(this, 4)"
+
                         />
                       </div>
                       <div class="input-label">
@@ -232,7 +242,9 @@
                           id="cookTimeMins"
                           placeholder="0"
                           class="small-details-input time-input details-input input-transition"
-                          oninput="limitInputLength(this, 2)"
+
+                          oninput="restrictInput(this, 2)"
+
                         />
                       </div>
                     </div>
@@ -245,7 +257,9 @@
                     id="servings"
                     placeholder="#"
                     class="small-details-input details-input input-transition"
-                    oninput="limitInputLength(this, 4)"
+
+                    oninput="restrictInput(this, 4)"
+
                   />
                 </div>
                 <div id="list-container-ingredients">
@@ -288,7 +302,9 @@
       crossorigin="anonymous"
     ></script>
     <script src="../scripts/darkmode.js"></script>
+
     <script type="module" src="scripts/navbar.js"></script>
+
     <script>
       function limitInputLength(element, maxLength) {
         let inputValue = element.value.toString();
@@ -298,18 +314,10 @@
         }
       }
 
-      function restrictInput(event, element, maxLength) {
-        var allowedCharacters = /^[0-9\/]*$/; // Regex for numbers and /
-        var inputField = event.target;
-        //var errorMessage = document.getElementById("error-message");
 
-        // Check if the entered character is allowed
-        if (!allowedCharacters.test(inputField.value)) {
-          // Prevent the character from being entered
-          inputField.value = inputField.value.slice(0, -1);
+      function restrictInput(element, maxLength) {
+        element.value = element.value.replace(/[^0-9]/g, "");
 
-          //errorMessage.textContent = "Please enter only numbers and /.";
-        }
         limitInputLength(element, maxLength);
       }
     </script>

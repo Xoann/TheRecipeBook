@@ -1,9 +1,10 @@
 import { checkErrors, submitForm } from "./submitrecipe.js";
-import { closeModal, openModal } from "./functions.js";
+import { closeModal, openModal, displayRecipes } from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
 import { handleFileChange } from "./addimage.js";
 
+let changes = false;
 export function generateEditModal(database, recipeName) {
   const recipeIdentifier = recipeName.replace(/ /g, "-");
 
@@ -36,6 +37,9 @@ export function generateEditModal(database, recipeName) {
   const editNameInput = document.createElement("input");
   editNameInput.classList.add("edit-input");
   editNameInput.classList.add("input-transition");
+  editNameInput.addEventListener("input", function () {
+    changes = true;
+  });
   editNameInput.id = `edit-title_${recipeIdentifier}`;
 
   editTitleContainer.appendChild(editNameInput);
@@ -82,6 +86,7 @@ export function generateEditModal(database, recipeName) {
   //    let imageForm = document.getElementsByClassName("image-container")[0];
 
   editImageInput.addEventListener("change", () => {
+    changes = true;
     handleFileChange(
       editImageInput,
       imagesArray,
@@ -114,6 +119,9 @@ export function generateEditModal(database, recipeName) {
   editDescriptionInput.classList.add("input-transition");
   editDescriptionInput.role = "textbox";
   editDescriptionInput.contentEditable = true;
+  editDescriptionInput.addEventListener("input", function () {
+    changes = true;
+  });
   editDescriptionInput.id = `edit-description-input_${recipeName.replace(
     / /g,
     "-"
@@ -139,7 +147,11 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeHrsInput = document.createElement("input");
   editPrepTimeHrsInput.classList.add("edit-input");
   editPrepTimeHrsInput.classList.add("input-transition");
-  editPrepTimeHrsInput.onclick = "limitInputLength(this, 4)";
+  editPrepTimeHrsInput.oninput = "limitInputLength(this, 4)";
+  editPrepTimeHrsInput.addEventListener("input", function () {
+    changes = true;
+    restrictInput(this, 4);
+  });
   editPrepTimeHrsInput.id = `edit-preptime-hrs-input_${recipeName.replace(
     / /g,
     "-"
@@ -150,6 +162,11 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeMinsInput = document.createElement("input");
   editPrepTimeMinsInput.classList.add("edit-input");
   editPrepTimeMinsInput.classList.add("input-transition");
+  editPrepTimeMinsInput.oninput = "limitInputLength(this, 2)";
+  editPrepTimeMinsInput.addEventListener("input", function () {
+    changes = true;
+    restrictInput(this, 2);
+  });
   editPrepTimeMinsInput.id = `edit-preptime-mins-input_${recipeName.replace(
     / /g,
     "-"
@@ -171,6 +188,11 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeHrsInput = document.createElement("input");
   editCookTimeHrsInput.classList.add("edit-input");
   editCookTimeHrsInput.classList.add("input-transition");
+  editCookTimeHrsInput.oninput = "limitInputLength(this, 4)";
+  editCookTimeHrsInput.addEventListener("input", function () {
+    changes = true;
+    restrictInput(this, 4);
+  });
   editCookTimeHrsInput.id = `edit-cooktime-hrs-input_${recipeName.replace(
     / /g,
     "-"
@@ -181,6 +203,11 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeMinsInput = document.createElement("input");
   editCookTimeMinsInput.classList.add("edit-input");
   editCookTimeMinsInput.classList.add("input-transition");
+  editCookTimeMinsInput.oninput = "limitInputLength(this, 2)";
+  editCookTimeMinsInput.addEventListener("input", function () {
+    changes = true;
+    restrictInput(this, 2);
+  });
   editCookTimeMinsInput.id = `edit-cooktime-mins-input_${recipeName.replace(
     / /g,
     "-"
@@ -202,6 +229,10 @@ export function generateEditModal(database, recipeName) {
   const editServingsInput = document.createElement("input");
   editServingsInput.classList.add("edit-input");
   editServingsInput.classList.add("input-transition");
+  editServingsInput.addEventListener("input", function () {
+    changes = true;
+    restrictInput(this, 4);
+  });
   editServingsInput.id = `edit-servings-input_${recipeIdentifier}`;
 
   editServingsContainer.appendChild(editServingsInput);
@@ -243,6 +274,7 @@ export function generateEditModal(database, recipeName) {
 
       addIngredientButton.addEventListener("click", function () {
         addIngredient(editIngredientsRowContainer, recipeIdentifier);
+        changes = true;
       });
     })
     .catch((error) => {
@@ -281,6 +313,7 @@ export function generateEditModal(database, recipeName) {
 
       addStepButton.addEventListener("click", function () {
         addStep(editStepsRowContainer, recipeIdentifier);
+        changes = true;
       });
     })
     .catch((error) => {
@@ -306,6 +339,7 @@ export function generateEditModal(database, recipeName) {
         addStepButton
       )
     ) {
+      // database.deleteRecipe(recipeName);
       submitForm(
         database,
         e,
@@ -319,11 +353,83 @@ export function generateEditModal(database, recipeName) {
         editCookTimeMinsInput,
         editServingsInput
       );
+
+      window.location.href = "./index.html";
+      closeModal(modalElement);
       console.log("Recipe Edited");
     }
   });
 
   modalContentElement.appendChild(editSubmitButton);
+
+  //Discard modal
+  const discardModalElement = document.createElement("div");
+  discardModalElement.classList.add("modal");
+  discardModalElement.classList.add("discard-modal-element");
+  document.body.appendChild(discardModalElement);
+
+  const discardModalContent = document.createElement("div");
+  discardModalContent.classList.add("modal-content");
+  discardModalContent.classList.add("discard-modal-content");
+  discardModalElement.appendChild(discardModalContent);
+
+  const discardModalText = document.createElement("p");
+  discardModalText.classList.add("delete-modal-text");
+  discardModalText.textContent =
+    "Are you sure you want to discard your changes?";
+  discardModalContent.appendChild(discardModalText);
+
+  const discardButtonContainer = document.createElement("div");
+  discardButtonContainer.classList.add("discard-button-container");
+  discardModalContent.appendChild(discardButtonContainer);
+
+  const discardModalDiscardButton = document.createElement("div");
+  discardModalDiscardButton.classList.add("delete-recipe-final-btn");
+  discardModalDiscardButton.textContent = "Discard";
+  discardModalDiscardButton.addEventListener("click", function () {
+    changes = false;
+    closeModal(discardModalElement);
+    closeModal(modalElement);
+  });
+
+  discardButtonContainer.appendChild(discardModalDiscardButton);
+
+  const discardModalCancelButton = document.createElement("div");
+  discardModalCancelButton.classList.add("delete-recipe-final-btn");
+  discardModalCancelButton.classList.add("discard-cancel-button");
+  discardModalCancelButton.textContent = "Cancel";
+  discardModalCancelButton.addEventListener("click", function () {
+    closeModal(discardModalElement);
+  });
+
+  discardButtonContainer.appendChild(discardModalCancelButton);
+
+  fetch("../svgs/x.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      svgElement.classList.add("close-button");
+      discardModalContent.appendChild(svgElement);
+
+      svgElement.addEventListener("click", function () {
+        closeModal(discardModalElement);
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
+
+  // <div class="modal-content" id="discard-modal-content">
+  //   <p class="discard-modal-text" id="discard-modal-text"></p>
+  //   <div id="discard-btn_${recipeIdentifier}" class="discard-btn">Discard</div>
+  //   <div id="cancel-btn_${recipeIdentifier}" class="discard-btn">Cancel</div>
+  //   <svg id="close-discard-modal_${recipeIdentifier}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 close">
+  //     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+  //   </svg>
+  // </div>
+  // `;
 
   //close button
   fetch("../svgs/x.svg")
@@ -336,12 +442,34 @@ export function generateEditModal(database, recipeName) {
       modalContentElement.appendChild(svgElement);
 
       svgElement.addEventListener("click", function () {
-        closeModal(modalElement);
+        handleDiscard(modalElement, discardModalElement);
       });
     })
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
+}
+
+function handleDiscard(modalElement, discardModalElement) {
+  console.log(changes);
+  if (changes === false) {
+    closeModal(modalElement);
+  } else {
+    openModal(discardModalElement);
+  }
+}
+
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
+}
+
+function restrictInput(element, maxLength) {
+  element.value = element.value.replace(/[^0-9]/g, "");
+  limitInputLength(element, maxLength);
 }
 
 export function fillEditInputs(database, recipeName) {
@@ -369,7 +497,6 @@ export function fillEditInputs(database, recipeName) {
       .appendChild(image);
 
     //fill description
-    console.log(recipe.desc);
     document.getElementById(
       `edit-description-input_${recipeIdentifier}`
     ).innerHTML = recipe.desc;
@@ -421,12 +548,24 @@ export function fillEditInputs(database, recipeName) {
 
     for (let i = 0; i < itemCount; i++) {
       ingredientNames[i].value = recipe.ingredients[i].name;
+      ingredientNames[i].addEventListener("input", function () {
+        changes = true;
+        limitInputLength(this, 40);
+      });
     }
     for (let i = 0; i < itemCount; i++) {
       ingredientAmounts[i].value = recipe.ingredients[i].value;
+      ingredientAmounts[i].addEventListener("input", function () {
+        changes = true;
+        restrictInput(this, 8);
+      });
     }
     for (let i = 0; i < itemCount; i++) {
       ingredientUnits[i].value = recipe.ingredients[i].unit;
+      ingredientUnits[i].addEventListener("input", function () {
+        changes = true;
+        limitInputLength(this, 8);
+      });
     }
 
     //fill steps
@@ -448,6 +587,9 @@ export function fillEditInputs(database, recipeName) {
     );
     for (let i = 0; i < stepsList.length; i++) {
       stepInputs[i].innerHTML = stepsList[i];
+      stepInputs[i].addEventListener("input", function () {
+        changes = true;
+      });
     }
   });
 }

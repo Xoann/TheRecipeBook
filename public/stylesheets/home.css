@@ -285,6 +285,7 @@
 .peepee {
   height: 30px;
   width: auto;
+  font-family: Gabarito;
   color: var(--light-text-colour);
   left: 100px;
 }
@@ -465,7 +466,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: 80%;
   min-width: 550px;
   font-size: 18px;
   border: 2px var(--primary-colour) solid;
@@ -483,8 +484,9 @@
 
 .servings-container {
   display: flex;
-  width: 30%;
-  justify-content: space-between;
+  width: auto;
+  gap: 7px;
+  justify-content: center;
   align-items: center;
 }
 
@@ -780,4 +782,31 @@
   margin-bottom: 0;
   display: flex;
   justify-content: center;
+}
+
+.discard-modal-element .discard-modal-content {
+  margin-top: 30%;
+  width: 40% !important;
+  max-width: 500px !important;
+  min-width: 100px;
+}
+
+.discard-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.discard-cancel-button {
+  background-color: transparent;
+  border: 2px var(--grey-two-colour) solid;
+}
+
+.discard-modal-element .delete-modal-text {
+  margin-top: 20px;
+}
+
+.delete-recipe-final-btn + .delete-recipe-final-btn {
+  margin-left: 30px;
 }

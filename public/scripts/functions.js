@@ -221,9 +221,12 @@ export function displayRecipes(database, type, profile = database.user) {
   //     return;
   //   }
   // });
-  // if (noRecipes === 0) {
+  // if (noRecipes === 1) {
   //   return;
   // }
+  const recipeContainer =
+    document.getElementsByClassName("recipe-container")[0];
+  recipeContainer.innerHTML = "";
   database.getAllRecipeNames(profile).then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
@@ -232,9 +235,6 @@ export function displayRecipes(database, type, profile = database.user) {
       if (profile === database.user) {
         generateEditModal(database, recipeName);
       }
-
-      const recipeContainer =
-        document.getElementsByClassName("recipe-container")[0];
 
       const recipeDiv = document.createElement("div");
       recipeDiv.classList.add("recipe-div");
@@ -726,7 +726,7 @@ export async function createImageFileObject(image) {
   if (image) {
     try {
       // Fetch the image data
-      const response = await fetch(image.src);
+      const response = await fetch(image.src, { mode: "no-cors" });
 
       if (!response.ok) {
         throw new Error("Failed to fetch image");

@@ -285,6 +285,7 @@
 .peepee {
   height: 30px;
   width: auto;
+  font-family: Gabarito;
   color: var(--light-text-colour);
   left: 100px;
 }
@@ -465,7 +466,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: 80%;
   min-width: 550px;
   font-size: 18px;
   border: 2px var(--primary-colour) solid;
@@ -483,8 +484,9 @@
 
 .servings-container {
   display: flex;
-  width: 30%;
-  justify-content: space-between;
+  width: auto;
+  gap: 7px;
+  justify-content: center;
   align-items: center;
 }
 

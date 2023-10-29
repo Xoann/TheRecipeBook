@@ -1,5 +1,5 @@
 import { checkErrors, submitForm } from "./submitrecipe.js";
-import { closeModal, openModal } from "./functions.js";
+import { closeModal, openModal, displayRecipes } from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
 import { handleFileChange } from "./addimage.js";
@@ -147,9 +147,10 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeHrsInput = document.createElement("input");
   editPrepTimeHrsInput.classList.add("edit-input");
   editPrepTimeHrsInput.classList.add("input-transition");
-  editPrepTimeHrsInput.onclick = "limitInputLength(this, 4)";
+  editPrepTimeHrsInput.oninput = "limitInputLength(this, 4)";
   editPrepTimeHrsInput.addEventListener("input", function () {
     changes = true;
+    restrictInput(this, 4);
   });
   editPrepTimeHrsInput.id = `edit-preptime-hrs-input_${recipeName.replace(
     / /g,
@@ -161,8 +162,10 @@ export function generateEditModal(database, recipeName) {
   const editPrepTimeMinsInput = document.createElement("input");
   editPrepTimeMinsInput.classList.add("edit-input");
   editPrepTimeMinsInput.classList.add("input-transition");
+  editPrepTimeMinsInput.oninput = "limitInputLength(this, 2)";
   editPrepTimeMinsInput.addEventListener("input", function () {
     changes = true;
+    restrictInput(this, 2);
   });
   editPrepTimeMinsInput.id = `edit-preptime-mins-input_${recipeName.replace(
     / /g,
@@ -185,8 +188,10 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeHrsInput = document.createElement("input");
   editCookTimeHrsInput.classList.add("edit-input");
   editCookTimeHrsInput.classList.add("input-transition");
+  editCookTimeHrsInput.oninput = "limitInputLength(this, 4)";
   editCookTimeHrsInput.addEventListener("input", function () {
     changes = true;
+    restrictInput(this, 4);
   });
   editCookTimeHrsInput.id = `edit-cooktime-hrs-input_${recipeName.replace(
     / /g,
@@ -198,8 +203,10 @@ export function generateEditModal(database, recipeName) {
   const editCookTimeMinsInput = document.createElement("input");
   editCookTimeMinsInput.classList.add("edit-input");
   editCookTimeMinsInput.classList.add("input-transition");
+  editCookTimeMinsInput.oninput = "limitInputLength(this, 2)";
   editCookTimeMinsInput.addEventListener("input", function () {
     changes = true;
+    restrictInput(this, 2);
   });
   editCookTimeMinsInput.id = `edit-cooktime-mins-input_${recipeName.replace(
     / /g,
@@ -224,6 +231,7 @@ export function generateEditModal(database, recipeName) {
   editServingsInput.classList.add("input-transition");
   editServingsInput.addEventListener("input", function () {
     changes = true;
+    restrictInput(this, 4);
   });
   editServingsInput.id = `edit-servings-input_${recipeIdentifier}`;
 
@@ -331,6 +339,7 @@ export function generateEditModal(database, recipeName) {
         addStepButton
       )
     ) {
+      // database.deleteRecipe(recipeName);
       submitForm(
         database,
         e,
@@ -344,6 +353,8 @@ export function generateEditModal(database, recipeName) {
         editCookTimeMinsInput,
         editServingsInput
       );
+
+      window.location.href = "./index.html";
       closeModal(modalElement);
       console.log("Recipe Edited");
     }
@@ -448,6 +459,19 @@ function handleDiscard(modalElement, discardModalElement) {
   }
 }
 
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
+}
+
+function restrictInput(element, maxLength) {
+  element.value = element.value.replace(/[^0-9]/g, "");
+  limitInputLength(element, maxLength);
+}
+
 export function fillEditInputs(database, recipeName) {
   database.getRecipe(recipeName).then((recipe) => {
     let recipeIdentifier = recipeName.replace(/ /g, "-");
@@ -526,18 +550,21 @@ export function fillEditInputs(database, recipeName) {
       ingredientNames[i].value = recipe.ingredients[i].name;
       ingredientNames[i].addEventListener("input", function () {
         changes = true;
+        limitInputLength(this, 40);
       });
     }
     for (let i = 0; i < itemCount; i++) {
       ingredientAmounts[i].value = recipe.ingredients[i].value;
       ingredientAmounts[i].addEventListener("input", function () {
         changes = true;
+        restrictInput(this, 8);
       });
     }
     for (let i = 0; i < itemCount; i++) {
       ingredientUnits[i].value = recipe.ingredients[i].unit;
       ingredientUnits[i].addEventListener("input", function () {
         changes = true;
+        limitInputLength(this, 8);
       });
     }
 

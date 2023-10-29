@@ -30,7 +30,7 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   input_name.classList.add("ingredient-input");
   input_name.classList.add("input-transition");
   input_name.placeholder = "Add an ingredient";
-  input_name.setAttribute("oninput", "limitInputLength(this, 20)");
+  input_name.setAttribute("oninput", "limitInputLength(this, 40)");
 
   const input_value = document.createElement("input");
   input_value.type = "text";
@@ -40,7 +40,7 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   input_value.placeholder = "Amount";
   input_value.classList.add("ingredient-input");
   input_value.classList.add("input-transition");
-  input_value.setAttribute("oninput", "restrictInput(event, this, 14)");
+  input_value.setAttribute("oninput", "restrictInput(this, 8)");
 
   const unitDiv = document.createElement("fieldset");
 
@@ -55,7 +55,9 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   unitInput.name = "unitslist";
   unitInput.placeholder = "Unit";
   unitInput.type = "text";
-  unitInput.setAttribute("oninput", "limitInputLength(this, 8)");
+  unitInput.addEventListener("input", function () {
+    limitInputLength(unitInput, 8);
+  });
 
   const unitDatalist = document.createElement("datalist");
   unitDatalist.id = "units";
@@ -136,4 +138,12 @@ export function addIngredient(listContainer, ingredientIdentifier) {
     input_value.classList.add("ingredient-animation");
     unitInput.classList.add("ingredient-animation");
   }, 10);
+}
+
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
 }

@@ -239,6 +239,83 @@ export function submitForm(
     database.addRecipe(recipe, result);
   });
 }
+
+export async function submitFormAsync(
+  database,
+  e,
+  recipeIdentifier,
+  imagesArray,
+  recipeName,
+  recipeDesc,
+  prepTimeHrs,
+  prepTimeMins,
+  cookTimeHrs,
+  cookTimeMins,
+  servings
+) {
+  e.preventDefault();
+
+  let recipeNameVal = recipeName.value;
+  let recipeDescVal = recipeDesc.textContent;
+  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
+  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
+  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
+  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
+  let servingsVal = servings.value;
+
+  let ingredients = [];
+  let steps = [];
+  const num_ingredients = document.getElementsByClassName(
+    `ingredient-row-container_${recipeIdentifier}`
+  ).length;
+  console.log(num_ingredients);
+  for (let i = 0; i < num_ingredients; i++) {
+    ingredients.push(
+      new Ingredient(
+        getElementVal(`ingredient_${i}`),
+        getElementVal(`ingredient_value_${i}`),
+        getElementVal(`ingredient_unit_${i}`)
+      )
+    );
+  }
+
+  const num_steps = document.getElementsByClassName(
+    `step-item_${recipeIdentifier}`
+  ).length;
+  for (let i = 0; i < num_steps; i++) {
+    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+  }
+
+  const recipe = new Recipe(
+    recipeNameVal,
+    recipeDescVal,
+    cookTimeHrsVal,
+    cookTimeMinsVal,
+    prepTimeHrsVal,
+    prepTimeMinsVal,
+    servingsVal,
+    ingredients,
+    steps
+  );
+
+  //const image = imagesArray[0];
+  const image = document.getElementsByClassName(
+    `recipeImg_${recipeIdentifier}`
+  )[0];
+  //console.log(image.src);
+  console.log(imagesArray[0]);
+
+  const promises = [];
+  promises.push(
+    createImageFileObject(image).then((result) => {
+      promises.push(database.addRecipe(recipe, result));
+    })
+  );
+
+  Promise.all(promises).then(() => {
+    return "Recipe Edited";
+  });
+}
 // function writeUserData(
 //   recipeName,
 //   recipeDesc,

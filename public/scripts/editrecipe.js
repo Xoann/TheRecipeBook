@@ -352,11 +352,11 @@ export function generateEditModal(database, recipeName) {
         editCookTimeHrsInput,
         editCookTimeMinsInput,
         editServingsInput
-      );
-
-      window.location.href = "./index.html";
-      closeModal(modalElement);
-      console.log("Recipe Edited");
+      ).then(() => {
+        console.log("Recipe Edited");
+        closeModal(modalElement);
+        window.location.href = "./index.html";
+      });
     }
   });
 

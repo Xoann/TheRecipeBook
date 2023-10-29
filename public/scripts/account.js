@@ -36,9 +36,9 @@ function loadProfilePage(database) {
   database.getDateJoined().then((date) => {
     document.getElementById("date-joined").textContent = date;
   });
-  database.getForkCount().then((forks) => {
-    document.getElementById("fork-count").textContent = forks;
-  });
+  // database.getForkCount().then((forks) => {
+  //   document.getElementById("fork-count").textContent = forks;
+  // });
   database.getRecipeCount().then((recipes) => {
     document.getElementById("recipe-count").textContent = recipes;
   });
@@ -113,25 +113,58 @@ const addFriendBtn = document.getElementById("add-friend-btn");
 const addFriendClose = document.getElementById("add-friend-close");
 const addFriendInput = document.getElementById("add-friend-input");
 addFriendBtn.addEventListener("click", () => {
+  document.getElementById("friend-yourself-error").style.display = "none";
+  document.getElementById("already-friend-error").style.display = "none";
+  document.getElementById("no-such-user-error").style.display = "none";
   if (addFriendOpen) {
     const inputValue = addFriendInput.value;
-    database.addFriend(inputValue).then((friend) => {
-      createNewFriendElement(friend);
-    });
+
+    database
+      .addFriend(inputValue)
+      .then((friend) => {
+        createNewFriendElement(friend);
+      })
+      .catch((error) => {
+        if (error.message === "Can't friend yourself") {
+          document.getElementById("friend-yourself-error").style.display =
+            "block";
+        } else if (error.message === "They're already your friend") {
+          document.getElementById("already-friend-error").style.display =
+            "block";
+        } else if (error.message === "User doesn't exist") {
+          document.getElementById("no-such-user-error").style.display = "block";
+        }
+      });
   } else {
     addFriendDiv.classList.add("add-friend-animation");
     addFriendClose.classList.remove("hide-close");
     addFriendInput.classList.add("add-friend-input-animation");
+    addFriendOpen = !addFriendOpen;
   }
-  addFriendOpen = !addFriendOpen;
 });
 
 addFriendInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" && addFriendOpen) {
+    document.getElementById("friend-yourself-error").style.display = "none";
+    document.getElementById("already-friend-error").style.display = "none";
+    document.getElementById("no-such-user-error").style.display = "none";
     const inputValue = addFriendInput.value;
-    database.addFriend(inputValue).then((friend) => {
-      createNewFriendElement(friend);
-    });
+    database
+      .addFriend(inputValue)
+      .then((friend) => {
+        createNewFriendElement(friend);
+      })
+      .catch((error) => {
+        if (error.message === "Can't friend yourself") {
+          document.getElementById("friend-yourself-error").style.display =
+            "block";
+        } else if (error.message === "They're already your friend") {
+          document.getElementById("already-friend-error").style.display =
+            "block";
+        } else if (error.message === "User doesn't exist") {
+          document.getElementById("no-such-user-error").style.display = "block";
+        }
+      });
   }
 });
 
@@ -140,6 +173,12 @@ function createNewFriendElement(friend) {
   const friendElement = document.createElement("div");
   friendElement.classList.add("friend");
   friendElement.id = `friend_${friend}`;
+
+  friendsDiv.addEventListener("click", (event) => {
+    const params = { user: friend };
+    const queryString = new URLSearchParams(params).toString();
+    window.location.href = `profile.html?${queryString}`;
+  });
 
   const friendPfpElement = document.createElement("img");
   const friendUsernameElement = document.createElement("span");
@@ -175,7 +214,7 @@ function createNewFriendElement(friend) {
   rightSide.appendChild(friendUsernameElement);
   leftSide.appendChild(friendMenuBtn);
 
-  database.getPfp(friend).then((friendPfp) => {
+  database.getFriendPfp(friend).then((friendPfp) => {
     friendPfpElement.classList.add("friend-pfp");
     friendPfpElement.src = friendPfp;
   });
@@ -187,6 +226,9 @@ function createNewFriendElement(friend) {
 
 addFriendClose.addEventListener("click", () => {
   if (addFriendOpen) {
+    document.getElementById("friend-yourself-error").style.display = "none";
+    document.getElementById("already-friend-error").style.display = "none";
+    document.getElementById("no-such-user-error").style.display = "none";
     addFriendDiv.classList.remove("add-friend-animation");
     addFriendClose.classList.add("hide-close");
     addFriendInput.classList.remove("add-friend-input-animation");

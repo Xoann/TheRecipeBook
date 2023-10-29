@@ -235,8 +235,8 @@ export function submitForm(
   //console.log(image.src);
   console.log(imagesArray[0]);
 
-  createImageFileObject(image).then((result) => {
-    database.addRecipe(recipe, result);
+  return createImageFileObject(image).then((result) => {
+    return database.addRecipe(recipe, result);
   });
 }
 

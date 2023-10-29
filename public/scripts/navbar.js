@@ -4,11 +4,14 @@ const userMenu = document.getElementsByClassName("user-menu")[0];
 const usernameButtonOut = document.getElementById("username-button");
 const usernameButtonIn = document.getElementById("username");
 const userMenuItems = document.getElementsByClassName("user-menu-list-item");
+const pfp = document.getElementById("pfp-nav");
 let userMenuOpen = false;
 
 window.addEventListener("click", function (event) {
   if (
-    (event.target === usernameButtonOut || event.target === usernameButtonIn) &&
+    (event.target === usernameButtonOut ||
+      event.target === usernameButtonIn ||
+      event.target === pfp) &&
     !userMenuOpen
   ) {
     userMenuOpen = true;
@@ -24,7 +27,6 @@ window.addEventListener("click", function (event) {
     }, 200);
   }
 });
-
 document.getElementById("profile-page").addEventListener("click", () => {
   window.location.href = "account.html";
 });
@@ -49,10 +51,15 @@ firebase.auth().onAuthStateChanged((user) => {
   const database = new Database(firebase.auth().currentUser.uid);
 
   database.getUsername().then((username) => {
-    document.getElementById("username-button").textContent = username;
+    window.localStorage.setItem("username", username);
   });
 
   database.getPfp().then((url) => {
-    document.getElementById("pfp-nav").src = url;
+    window.localStorage.setItem("pfp", url);
   });
+
+  document.getElementById("username-button").textContent =
+    localStorage.getItem("username");
+
+  document.getElementById("pfp-nav").src = localStorage.getItem("pfp");
 });

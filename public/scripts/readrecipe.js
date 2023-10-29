@@ -20,7 +20,7 @@ firebase.auth().onAuthStateChanged((user) => {
     displayRecipes(database, "home");
   } else {
     console.log("uid not found");
-    window.location.href = "html/login.html";
+    window.location.href = "./login.html";
   }
 });
 

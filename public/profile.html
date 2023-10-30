@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../stylesheets/colours.css" />
+    <link rel="stylesheet" href="../stylesheets/home.css" />
+    <link rel="stylesheet" href="../stylesheets/default.css" />
+    <link rel="stylesheet" href="../stylesheets/profile.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Recipe Book</title>
+  </head>
+  <body id="body">
+    <header>
+      <nav class="main-nav">
+        <img class="logo" id="h" src="img/logo.png" />
+
+        <div class="nav-list">
+          <div id="shopping-list" class="nav-list-link">
+            <span class="nav-list-item">Shopping List</span>
+          </div>
+          <div id="add-recipe" class="nav-list-link">
+            <span class="nav-list-item">Add Recipe</span>
+          </div>
+          <div id="username" class="nav-list-link">
+            <span class="nav-list-item" id="username-button"></span>
+            <img id="pfp-nav" src="img/default-pfp.png" alt="" />
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div id="user-menu" class="user-menu">
+      <div class="user-menu-list">
+        <div class="user-menu-list-item" id="profile-page">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+
+          <span>Profile</span>
+        </div>
+
+        <div class="user-menu-list-item" id="sign-out-page">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+            />
+          </svg>
+
+          <span id="sign-out">Sign Out</span>
+        </div>
+
+        <div class="user-menu-list-item" id="darkmode">
+          <svg
+            id="sun"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+            />
+          </svg>
+
+          <svg
+            id="moon"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+            />
+          </svg>
+
+          <span id="toggle-dark-mode">Dark Mode</span>
+        </div>
+      </div>
+    </div>
+    <div class="mainBg">
+      <div class="profile-display">
+        <div class="profile-details">
+          <div class="profile-pfp">
+            <img id="pfp" src="" alt="" />
+          </div>
+          <div class="profile-info">
+            <span class="username" id="profile-username"></span>
+            <span class="name" id="name"></span>
+          </div>
+          <div class="profile-stats">
+            <div class="stat">
+              <span>Recipes: </span>
+              <span class="stat-value" id="recipe-count"></span>
+            </div>
+            <div class="stat">
+              <span>Date joined: </span>
+              <span class="stat-value" id="date-joined"></span>
+            </div>
+          </div>
+        </div>
+        <div class="recipe-container"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="forked-modal">
+      <div class="modal-content" id="forked-modal-content">
+        <p class="delete-modal-text" id="forked-text">Recipe Forked</p>
+        <div id="forked-done-button" class="delete-recipe-final-btn">Done</div>
+        <svg
+          id="close-forked-modal"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6 close close-button"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../scripts/setup.js"></script>
+    <script type="module" src="../scripts/profile.js"></script>
+
+    <script type="module" src="../scripts/navbar.js"></script>
+    <script src="../scripts/darkmode.js"></script>
+  </body>
+</html>

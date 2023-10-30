@@ -122,20 +122,18 @@
             <input type="file" id="pfp-upload" accept="image/*" />
             <div class="change-pfp"><span>Upload</span></div>
           </div>
-          <h2 id="user"></h2>
-          <h2 id="name"></h2>
+          <h2 id="user" class="stats-text"></h2>
+          <h2 id="name" class="stats-text"></h2>
           <div class="stats">
             <div class="stat">
-              <span>Recipes: </span>
-              <span class="stat-value" id="recipe-count"></span>
+              <span class="stats-text">Recipes: </span>
+              <span class="stat-value stats-text" id="recipe-count"></span>
             </div>
-            <!-- <div class="stat">
-              <span>Forks: </span>
-              <span class="stat-value" id="fork-count"></span>
-            </div> -->
-            <div class="stat">
-              <span>Date joined: </span>
-              <span class="stat-value" id="date-joined"></span>
+
+            <div class="stat" class="stats-text">
+              <span class="stats-text">Date joined: </span>
+              <span class="stat-value stats-text" id="date-joined"></span>
+
             </div>
             
           </div>
@@ -145,6 +143,7 @@
         <div class="profile-col friends-col">
           
             <div class="top-section-friend">
+
               <h3 class="friend-title">Friends</h3>
               <div class="add-friend-errors">
 
@@ -152,9 +151,6 @@
                 <div class="friend-error-div" id="already-friend-error"><span class="add-friend-error" >Already friended</span></div>
                 <div class="friend-error-div" id="no-such-user-error"><span class="add-friend-error" >User doesn't exist</span></div>
                 
-                
-                
-              
               <div class="add-friend" id="add-friend">
                 <input
                   type="text"

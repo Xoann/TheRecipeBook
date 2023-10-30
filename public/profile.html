@@ -127,16 +127,34 @@
               <span class="stat-value" id="recipe-count"></span>
             </div>
             <div class="stat">
-              <span>Forks: </span>
-              <span class="stat-value" id="fork-count"></span>
-            </div>
-            <div class="stat">
               <span>Date joined: </span>
               <span class="stat-value" id="date-joined"></span>
             </div>
           </div>
         </div>
         <div class="recipe-container"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="forked-modal">
+      <div class="modal-content" id="forked-modal-content">
+        <p class="delete-modal-text" id="forked-text">Recipe Forked</p>
+        <div id="forked-done-button" class="delete-recipe-final-btn">Done</div>
+        <svg
+          id="close-forked-modal"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6 close close-button"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>

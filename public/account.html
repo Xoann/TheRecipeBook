@@ -129,19 +129,28 @@
               <span class="stats-text">Recipes: </span>
               <span class="stat-value stats-text" id="recipe-count"></span>
             </div>
+
             <div class="stat" class="stats-text">
               <span class="stats-text">Date joined: </span>
               <span class="stat-value stats-text" id="date-joined"></span>
+
             </div>
             
           </div>
         </div>
         
 
-        <div class="profile-col">
-          <div class="friend-div">
+        <div class="profile-col friends-col">
+          
             <div class="top-section-friend">
-              <h3 class="stats-text">Friends</h3>
+
+              <h3 class="friend-title">Friends</h3>
+              <div class="add-friend-errors">
+
+                <div class="friend-error-div" id="friend-yourself-error"><span class="add-friend-error" >Can't friend yourself</span></div>
+                <div class="friend-error-div" id="already-friend-error"><span class="add-friend-error" >Already friended</span></div>
+                <div class="friend-error-div" id="no-such-user-error"><span class="add-friend-error" >User doesn't exist</span></div>
+                
               <div class="add-friend" id="add-friend">
                 <input
                   type="text"
@@ -183,12 +192,21 @@
                 </div>
               </div>
             </div>
-            <input type="text" id="searchFriends" placeholder="" />
-            <div
+            </div>
+            
+              <div
               class="scrollable-friends-div"
               id="scrollable-friends-div"
-            ></div>
+              >
+              <div class="friend-search">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 friend-search-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                
+                <input type="text" id="searchFriends" placeholder="" />
+              </div>
           </div>
+          
         </div>
       </div>
       </div>

@@ -20,7 +20,7 @@ firebase.auth().onAuthStateChanged((user) => {
     displayRecipes(database, "home");
   } else {
     console.log("uid not found");
-    window.location.href = "html/login.html";
+    window.location.href = "./login.html";
   }
 });
 
@@ -261,11 +261,11 @@ async function getImageURLs(image_names, uid) {
 //   }
 // }
 
-async function loadImg(imgElement, imgURLs, imageName) {
-  const imageURLs = await imgURLs;
-  const imageURL = await imageURLs[imageName];
-  imgElement.src = imageURL;
-}
+// async function loadImg(imgElement, imgURLs, imageName) {
+//   const imageURLs = await imgURLs;
+//   const imageURL = await imageURLs[imageName];
+//   imgElement.src = imageURL;
+// }
 
 ////////////////////////
 /// SEARCH BAR CODE ///

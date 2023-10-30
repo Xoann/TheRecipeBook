@@ -359,6 +359,7 @@ export function generateEditModal(database, recipeName) {
         editCookTimeHrsInput,
         editCookTimeMinsInput,
         editServingsInput
+
       )
         .then(() => {
           closeModal(modalElement);
@@ -370,6 +371,7 @@ export function generateEditModal(database, recipeName) {
           console.log("Recipe Edited");
           window.location.href = "./index.html";
         });
+
     }
   });
 

@@ -341,6 +341,9 @@ export class Database {
       .getDownloadURL()
       .then((url) => {
         return url;
+      })
+      .catch(() => {
+        return null;
       });
   }
 
@@ -387,8 +390,8 @@ export class Database {
   }
 
   addFriend(friendUsername) {
-    try {
-      return this.uidLookup(friendUsername).then((uid) => {
+    return this.uidLookup(friendUsername)
+      .then((uid) => {
         if (uid === this.user) {
           throw new Error("Can't friend yourself");
         }
@@ -396,20 +399,25 @@ export class Database {
           if (friends.includes(uid)) {
             throw new Error("They're already your friend");
           }
-          friends.push(uid);
-          return this.userRef
-            .update({
-              friendsList: JSON.stringify(friends),
-            })
-            .then(() => {
-              console.log("friend added");
-              return uid;
-            });
+          return this.isUsernameTaken(friendUsername).then((userExists) => {
+            if (!userExists) {
+              throw new Error("User doesn't exist");
+            }
+            friends.push(uid);
+            return this.userRef
+              .update({
+                friendsList: JSON.stringify(friends),
+              })
+              .then(() => {
+                console.log("friend added");
+                return uid;
+              });
+          });
         });
+      })
+      .catch((error) => {
+        throw error;
       });
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   decreaseRecipeCount() {
@@ -436,7 +444,7 @@ export class Database {
     return Promise.all(promises);
   }
 
-  addRecipe(recipe, image) {
+  addRecipe(recipe, image = null) {
     this.increaseRecipeCount();
     const promises = [];
 
@@ -467,7 +475,9 @@ export class Database {
             );
           })
       );
+
     }
+
     console.log("uploaded");
     return Promise.all(promises);
   }

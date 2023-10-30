@@ -463,20 +463,21 @@ export class Database {
 
     if (image) {
       promises.push(this.recipeImageRef(recipe.name, this.user).put(image));
-    } else {
-      promises.push(
-        fetch("../../img/food-placeholder-1.jpg")
-          .then((response) => response.blob())
-          .then((blob) => {
-            promises.push(
-              this.recipeImageRef(recipe.name, this.user).put(
-                new File([blob], "image.png", { type: "image/png" })
-              )
-            );
-          })
-      );
-
     }
+    // else {
+    //   promises.push(
+    //     fetch("../../img/food-placeholder-1.jpg")
+    //       .then((response) => response.blob())
+    //       .then((blob) => {
+    //         promises.push(
+    //           this.recipeImageRef(recipe.name, this.user).put(
+    //             new File([blob], "image.png", { type: "image/png" })
+    //           )
+    //         );
+    //       })
+    //   );
+
+    // }
 
     console.log("uploaded");
     return Promise.all(promises);

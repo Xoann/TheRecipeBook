@@ -1,6 +1,7 @@
 .mainBg {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,8 +35,19 @@
 }
 
 #pfp {
+  height: inherit;
+  width: auto;
+}
+
+.profile-pfp {
   width: 150px;
   height: 150px;
+  overflow: hidden;
+  border-radius: 200px;
+  border: 2px var(--primary-colour) solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-info {
@@ -58,4 +70,23 @@
   border-radius: 100px;
   overflow: hidden;
   z-index: 10;
+}
+
+#forked-modal-content {
+  margin-top: 20%;
+  min-width: 300px;
+  width: 300px;
+  width: 40%;
+}
+
+.stat-value {
+  color: var(--light-text-colour);
+}
+
+.name {
+  color: var(--light-text-colour);
+}
+
+.fork-btn {
+  color: var(--light-text-colour);
 }

@@ -211,7 +211,12 @@ function deleteRecipe(recipe) {
     });
 }
 
-export function displayRecipes(database, type, profile = database.user) {
+export function displayRecipes(
+  database,
+  type,
+  profile = database.user,
+  friendUsername
+) {
   // Displays recipes as card in the recipe-container DOM element (class)
 
   // let noRecipes = 0;
@@ -313,25 +318,35 @@ export function displayRecipes(database, type, profile = database.user) {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-          createForkBtn(database, recipeDiv, forkRecipe, recipeImg);
+          createForkBtn(
+            database,
+            recipeDiv,
+            forkRecipe,
+            recipeImg,
+            friendUsername
+          );
         });
       }
     }
   });
 }
 
-function createForkBtn(database, recipeDiv, recipe, recipeImg) {
+function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
-  forkBtn.innerHTML = "fork";
+  forkBtn.innerHTML = "Fork";
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {
+    const forkedModal = document.getElementById("forked-modal");
+    openModal(forkedModal);
     fetch("../img/food-placeholder-1.jpg").then((response) => {
       response.blob().then((blob) => {
         const fileObject = new File([blob], "image.jpg", {
           type: "image/jpeg",
         });
+        recipe.name = `${recipe.name} by ${friendUsername}`;
+        console.log(recipe.name);
         database.addRecipe(recipe, fileObject);
       });
     });

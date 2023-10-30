@@ -36,9 +36,9 @@ function loadProfilePage(database) {
   database.getDateJoined().then((date) => {
     document.getElementById("date-joined").textContent = date;
   });
-  database.getForkCount().then((forks) => {
-    document.getElementById("fork-count").textContent = forks;
-  });
+  // database.getForkCount().then((forks) => {
+  //   document.getElementById("fork-count").textContent = forks;
+  // });
   database.getRecipeCount().then((recipes) => {
     document.getElementById("recipe-count").textContent = recipes;
   });

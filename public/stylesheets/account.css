@@ -272,3 +272,11 @@
 .hide-close {
   right: -30px;
 }
+
+.stats-text {
+  color: var(--light-text-colour);
+}
+
+.friend-username {
+  color: var(--light-text-colour);
+}

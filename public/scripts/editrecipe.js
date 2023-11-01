@@ -1,14 +1,9 @@
-import {
-  checkErrors,
-  submitForm,
-  submitFormAsync,
-  submitFormPromise,
-  createRecipe,
-} from "./submitrecipe.js";
+import { checkErrors } from "./submitrecipe.js";
 import { closeModal, openModal, displayRecipes } from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
 import { handleFileChange, deleteImage } from "./addimage.js";
+import { Ingredient, Recipe } from "./classes.js";
 
 let changes = false;
 let imagesArray = [];
@@ -347,19 +342,51 @@ export function generateEditModal(database, recipeName) {
       )
     ) {
       // database.deleteRecipe(recipeName);
+
+      const ingredients = [];
+      const ingredientInput = document.getElementById(
+        `edit-ingredients-row-container_${recipeIdentifier}`
+      );
+      const numIngredients = ingredientInput.children.length;
+
+      for (let i = 0; i < numIngredients; i++) {
+        const ingredient = document.getElementById(`ingredient_${i}`).value;
+        const value = document.getElementById(`ingredient_value_${i}`).value;
+        const unit = document.getElementById(`ingredient_unit_${i}`).value;
+
+        if (ingredient) {
+          ingredients.push(new Ingredient(ingredient, value, unit));
+        }
+      }
+
+      const steps = [];
+      const stepContainer = document.getElementById(
+        `edit-steps-container_${recipeIdentifier}`
+      );
+      const numSteps = stepContainer.children.length;
+
+      for (let i = 0; i < numSteps; i++) {
+        const step = document.getElementById(`recipe-step_${i}`).textContent;
+        if (step) {
+          steps.push(step);
+        }
+      }
+      const image = imagesArray[0];
+
       submitForm(
         database,
         e,
         recipeIdentifier,
-        imagesArray,
+        image,
         editNameInput,
         editDescriptionInput,
         editPrepTimeHrsInput,
         editPrepTimeMinsInput,
         editCookTimeHrsInput,
         editCookTimeMinsInput,
-        editServingsInput
-
+        editServingsInput,
+        ingredients,
+        steps
       )
         .then(() => {
           closeModal(modalElement);
@@ -371,7 +398,6 @@ export function generateEditModal(database, recipeName) {
           console.log("Recipe Edited");
           window.location.href = "./index.html";
         });
-
     }
   });
 
@@ -493,7 +519,7 @@ export function fillEditInputs(database, recipeName) {
 
     //fill title
     document.getElementById(`edit-title_${recipeIdentifier}`).value =
-      recipeName;
+      recipe.name;
 
     //fill image
     const imageContainer = document.getElementById(
@@ -628,4 +654,44 @@ export function fillEditInputs(database, recipeName) {
       });
     }
   });
+}
+
+function submitForm(
+  database,
+  event,
+  recipeId,
+  image,
+  editNameInput,
+  editDescriptionInput,
+  editPrepTimeHrsInput,
+  editPrepTimeMinsInput,
+  editCookTimeHrsInput,
+  editCookTimeMinsInput,
+  editServingsInput,
+  editIngredients,
+  editSteps
+) {
+  event.preventDefault();
+  const promises = [];
+
+  console.log(image);
+  if (image) {
+    promises.push(database.editRecipeImage(recipeId, image));
+  }
+
+  const recipe = new Recipe(
+    editNameInput.value,
+    editDescriptionInput.textContent,
+    editCookTimeHrsInput.value,
+    editCookTimeMinsInput.value,
+    editPrepTimeHrsInput.value,
+    editPrepTimeMinsInput.value,
+    editServingsInput.value,
+    editIngredients,
+    editSteps
+  );
+
+  promises.push(database.editRecipeData(recipeId, recipe));
+
+  return Promise.all(promises);
 }

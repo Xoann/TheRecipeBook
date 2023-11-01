@@ -301,7 +301,7 @@ export function displayRecipes(
       let forkRecipe;
       forkPromises.push(
         database.getRecipe(recipeName, profile).then((recipe) => {
-          recipeNameElement.textContent = recipeName;
+          recipeNameElement.textContent = recipe.name;
           recipeDescription.innerHTML = recipe.desc;
           forkRecipe = recipe;
           forkRecipe.name = recipeName;
@@ -321,7 +321,6 @@ export function displayRecipes(
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-
           createForkBtn(
             database,
             recipeDiv,
@@ -329,16 +328,13 @@ export function displayRecipes(
             recipeImg,
             friendUsername
           );
-
         });
       }
     }
   });
 }
 
-
 function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
-
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "Fork";
@@ -431,7 +427,7 @@ export function generateRecipeModal(
     //Name
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("modal-recipe-name");
-    recipeNameElement.textContent = recipeName;
+    recipeNameElement.textContent = recipe.name;
 
     //Image
     const image = document.createElement("img");

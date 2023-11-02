@@ -324,13 +324,13 @@ export class Database {
   }
 
   getRecipeCount() {
-    return this.recipeRef(user)
+    return this.recipeRef(this.user)
       .once("value")
       .then((snapshot) => {
         if (!snapshot.val()) {
           return 0;
         }
-        return snapshot.val().length;
+        return Object.keys(snapshot.val()).length;
       });
   }
 
@@ -388,7 +388,7 @@ export class Database {
     const renamedFile = new File([file], "profile-picture.png", {
       type: file.type,
     });
-    this.profilePictureRef.put(renamedFile);
+    return this.profilePictureRef.put(renamedFile);
   }
 
   // Other

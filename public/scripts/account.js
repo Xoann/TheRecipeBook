@@ -40,6 +40,8 @@ function loadProfilePage(database) {
   //   document.getElementById("fork-count").textContent = forks;
   // });
   database.getRecipeCount().then((recipes) => {
+    console.log("hi");
+    console.log(recipes);
     document.getElementById("recipe-count").textContent = recipes;
   });
 
@@ -240,7 +242,11 @@ const pfpInput = document.getElementById("pfp-upload");
 pfpInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    database.updatePfp(file);
+    database.updatePfp(file).then(() => {
+      database.getPfp().then((pfp) => {
+        document.getElementById("pfp").src = pfp;
+      });
+    });
   }
 });
 

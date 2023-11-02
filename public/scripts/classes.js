@@ -220,6 +220,7 @@ export class Database {
       });
   }
 
+  // Returns all recipe Ids
   getAllRecipeNames(user = this.user) {
     return this.recipeRef(user)
       .once("value")
@@ -229,6 +230,23 @@ export class Database {
         }
         return Object.keys(snapshot.val());
       });
+  }
+
+  getRecipeNames() {
+    return this.getAllRecipeNames().then((ids) => {
+      const promises = [];
+      const names = {};
+      for (const id of ids) {
+        promises.push(
+          this.getRecipe(id).then((recipe) => {
+            names[recipe.name] = id;
+          })
+        );
+      }
+      return Promise.all(promises).then(() => {
+        return names;
+      });
+    });
   }
 
   getUid(username) {
@@ -510,11 +528,11 @@ export class Database {
       servings: recipe.servings,
       ingredients: recipe.ingredients,
       steps: recipe.steps,
-    })
+    });
   }
 
   editRecipeImage(recipeId, image) {
-    return this.recipeImageRef(recipeId, this.user).put(image)
+    return this.recipeImageRef(recipeId, this.user).put(image);
   }
 
   recipeInShoppingList(recipeId) {

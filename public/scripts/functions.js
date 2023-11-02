@@ -217,22 +217,10 @@ export function displayRecipes(
   profile = database.user,
   friendUsername
 ) {
-  // Displays recipes as card in the recipe-container DOM element (class)
-
-  // let noRecipes = 0;
-  // database.getRecipeCount().then((count) => {
-  //   if (count === 0) {
-  //     noRecipes = 1;
-  //     return;
-  //   }
-  // });
-  // if (noRecipes === 1) {
-  //   return;
-  // }
   const recipeContainer =
     document.getElementsByClassName("recipe-container")[0];
   recipeContainer.innerHTML = "";
-  database.getAllRecipeNames(profile).then((recipeNames) => {
+  database.getAllRecipeNames().then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 

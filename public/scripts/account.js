@@ -50,6 +50,23 @@ function loadProfilePage(database) {
   });
 }
 
+function handleViewportChange(mq) {
+  if (mq.matches) {
+    // Media query matches (viewport is 600px or less)
+    document.body.style.backgroundColor = "lightblue";
+  } else {
+    // Media query doesn't match
+    document.body.style.backgroundColor = "white";
+  }
+}
+
+// Initial check
+const initialMatch = window.matchMedia("(max-width: 600px)");
+handleViewportChange(initialMatch);
+
+// Add a listener for viewport changes
+initialMatch.addListener(handleViewportChange);
+
 let friendMenuIsOpen = false;
 const friendMenu = document.querySelector(".friend-menu");
 function handleOpenFriendMenu(event, user, friend) {
@@ -63,8 +80,8 @@ function handleOpenFriendMenu(event, user, friend) {
   const btnRect = event.target.getBoundingClientRect();
   const top = btnRect.top + window.scrollY;
   const left = btnRect.left + window.scrollX;
-  friendMenu.style.left = `${left + 50}px`;
-  friendMenu.style.top = `${top}px`;
+  friendMenu.style.left = `${left + 15}px`;
+  friendMenu.style.top = `${top + 35}px`;
   friendMenu.style.display = "flex";
 
   const unfriendBtn = document.getElementById("remove-friend-btn");
@@ -174,7 +191,7 @@ function createNewFriendElement(friend) {
   friendElement.classList.add("friend");
   friendElement.id = `friend_${friend}`;
 
-  friendsDiv.addEventListener("click", (event) => {
+  friendElement.addEventListener("click", (event) => {
     const params = { user: friend };
     const queryString = new URLSearchParams(params).toString();
     window.location.href = `profile.html?${queryString}`;

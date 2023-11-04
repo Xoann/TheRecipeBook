@@ -17,7 +17,6 @@ export function checkErrors(
   let error = 0;
 
   //Empty Recipe Name
-
   if (!recipeName.value) {
     error = 1;
     recipeName.classList.add("input-error");
@@ -25,6 +24,7 @@ export function checkErrors(
       checkIfEmpty(recipeName);
     });
   }
+
   //Empty Prep Time (Only one of mins or hrs needs a value)
   if (!prepTimeMins.value && !prepTimeHrs.value) {
     error = 1;

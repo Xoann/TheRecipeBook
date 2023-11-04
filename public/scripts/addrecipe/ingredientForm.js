@@ -151,8 +151,9 @@ document.getElementById("submit").addEventListener("click", function (e) {
       cookTimeHrs,
       cookTimeMins,
       servings
-    );
-    document.getElementById("upload-modal").classList.add("show-done-button");
+    ).then(() => {
+      document.getElementById("upload-modal").classList.add("show-done-button");
+    });
   }
 });
 
@@ -180,3 +181,17 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById("signin-modal").style.display = "flex";
   }
 });
+
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
+}
+
+function restrictInput(element, maxLength) {
+  element.value = element.value.replace(/[^0-9]/g, "");
+
+  limitInputLength(element, maxLength);
+}

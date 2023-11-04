@@ -321,7 +321,6 @@ export function displayRecipes(
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-
           createForkBtn(
             database,
             recipeDiv,
@@ -329,16 +328,13 @@ export function displayRecipes(
             recipeImg,
             friendUsername
           );
-
         });
       }
     }
   });
 }
 
-
 function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
-
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "Fork";
@@ -432,14 +428,23 @@ export function generateRecipeModal(
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("modal-recipe-name");
     recipeNameElement.textContent = recipeName;
+    modalContentElement.appendChild(recipeNameElement);
 
     //Image
+    const imageDiv = document.createElement("div");
+    imageDiv.classList.add("image-div");
+
+    modalContentElement.appendChild(imageDiv);
+
     const image = document.createElement("img");
     image.classList.add("image");
     database.getRecipeImage(recipeName, profile).then((url) => {
       if (url) {
         image.src = url;
-        modalContentElement.appendChild(image);
+        imageDiv.appendChild(image);
+        imageDiv.classList.remove("no-image-container");
+      } else {
+        imageDiv.classList.add("no-image-container");
       }
     });
 
@@ -669,8 +674,6 @@ export function generateRecipeModal(
 
     documentBody.appendChild(modalElement);
     modalElement.appendChild(modalContentElement);
-
-    modalContentElement.appendChild(recipeNameElement);
 
     modalContentElement.appendChild(descriptionDiv);
     modalContentElement.appendChild(detailsContainer);

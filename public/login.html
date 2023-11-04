@@ -40,9 +40,9 @@
         d="M79.6303 47.3472C79.7602 47.3542 79.8899 47.3627 80.0194 47.3724M80.0194 47.3724C82.6223 47.5687 85.162 48.3074 87.483 49.545C89.9196 50.8442 92.0586 52.663 93.7566 54.8794C95.4545 57.0957 96.6719 59.6582 97.3271 62.3947C97.9822 65.1312 98.0599 67.9783 97.5549 70.7447C97.05 73.5111 95.974 76.1327 94.3993 78.4334C92.8247 80.7342 90.7878 82.6607 88.4256 84.0836C86.0633 85.5065 83.4304 86.3928 80.7038 86.683M80.0194 47.3724C80.0325 47.0798 80.039 46.7865 80.0389 46.4928C80.0376 43.0702 79.1356 39.7082 77.4233 36.7447C75.7111 33.7812 73.249 31.3205 70.2845 29.61C67.32 27.8994 63.9574 26.9993 60.5348 27C57.1122 27.0007 53.7501 27.9023 50.7862 29.614C47.8224 31.3258 45.3614 33.7875 43.6504 36.7518C41.9394 39.716 41.0387 43.0784 41.0389 46.501C41.0389 46.7875 41.0452 47.0735 41.0578 47.3588M80.0194 47.3724C79.8798 50.4897 78.9938 53.5325 77.4305 56.2429M41.2533 47.3472C41.1881 47.3507 41.1229 47.3546 41.0578 47.3588M41.0578 47.3588C38.3873 47.5324 35.7791 48.2767 33.4006 49.545C30.964 50.8442 28.825 52.663 27.127 54.8794C25.4291 57.0957 24.2117 59.6582 23.5565 62.3947C22.9014 65.1312 22.8237 67.9783 23.3287 70.7447C23.8337 73.5111 24.9096 76.1327 26.4843 78.4334C28.0589 80.7342 30.0958 82.6607 32.4581 84.0836C34.8203 85.5065 37.4532 86.3928 40.1798 86.683M41.0578 47.3588C41.1956 50.4836 42.0833 53.534 43.6514 56.25M0.499832 143V20C0.499832 5.50001 7.49996 0.500023 25 0.500023H96.5C112.5 0.500023 119.5 6.00001 120 20C120.5 34 120 129 120 129M0.499832 143C0.499832 154 7.27739 157.5 19.5 157.5H31.7225M0.499832 143C0.499832 143 0.499973 129 19.5 129H120M120 129V145C120 154 113 157.5 103.5 157.5H49M25 143H32M32 143H49M32 143L31.7225 157.5M49 143H96.5M49 143V157.5M31.7225 157.5V175L40.5 169.5L49 175V157.5M35 101.5V106C35 111 40.2774 111 40.2774 111H80.7774C80.7774 111 86.2775 111 86.2775 106V101.5M35 101.5V85M35 101.5H86.2775M86.2775 101.5V85M60.6387 87.4653V97.5001M47.8194 87.4653V97.5001M73.4581 87.4652V97.5"
       />
     </svg>
-    <a class="logo-link" href="../index.html">
+    <!-- <a class="logo-link" href="../index.html">
       <img class="logo" src="../img/logo.png" />
-    </a>
+    </a> -->
 
     <div class="container" id="container">
       <div class="form-container sign-up-container">
@@ -77,7 +77,7 @@
                 class="name"
                 type="text"
               />
-              <label id="sign-up-first-name-label" for="">First</label>
+              <label id="sign-up-first-name-label" for="">First name</label>
               <span
                 class="error-message hide errorMissingField"
                 id="errorMissingFirst"
@@ -92,7 +92,7 @@
                 class="name"
                 type="text"
               />
-              <label id="sign-up-last-name-label" for="">Last</label>
+              <label id="sign-up-last-name-label" for="">Last Name</label>
               <span
                 class="error-message hide errorMissingField"
                 id="errorMissingLast"
@@ -221,6 +221,185 @@
             <p>Sign up if you still don't have an account...</p>
             <button class="ghost" id="signUp">Sign Up</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-container">
+      <div class="mobile-view-btns">
+        <div id="sign-in-view" class="mobile-view-btn mobile-view-btn-active">
+          <span>Sign In</span>
+        </div>
+        <div id="sign-up-view" class="mobile-view-btn">
+          <span>Sign Up</span>
+        </div>
+      </div>
+      <div id="sign-in-part-doohickey">
+        <div id="mobile-sign-in" class="mobile-sign-in-container mobile-active">
+          <form action="#">
+            <h1>Sign In</h1>
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-in-email"
+                type="email"
+              />
+              <label id="sign-in-email-label" for="">Email</label>
+              <span
+                class="error-message hide errorInvalidEmail"
+                id="errorInvalidEmail"
+                >Invalid Email</span
+              >
+              <span
+                class="error-message hide errorUserNotFound"
+                id="errorUserNotFound"
+                >User not found</span
+              >
+            </div>
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-in-password"
+                type="password"
+              />
+              <label id="sign-in-password-label" class="placeholder" for=""
+                >Password</label
+              >
+              <span
+                class="error-message hide errorUserPasswordWrong"
+                id="errorUserPasswordWrong"
+                >Incorrect email or password</span
+              >
+            </div>
+            <a href="forgotpassword.html">Forgot your password?</a>
+            <button id="mobileSignInAccount">Sign In</button>
+          </form>
+        </div>
+        <div id="mobile-sign-up" class="mobile-sign-up-container">
+          <form action="#">
+            <h1>Sign Up</h1>
+
+            <div class="input-field" id="username-input-div">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-username"
+                type="text"
+              />
+              <label id="sign-up-username-label">Username</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingUser"
+                >Missing username</span
+              >
+              <span
+                class="error-message hide errorMissingField"
+                id="errorUsernameTaken"
+                >Username taken</span
+              >
+            </div>
+
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-first-name"
+                class="name"
+                type="text"
+              />
+              <label id="sign-up-first-name-label" for="">First Name</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingFirst"
+                >Missing first name</span
+              >
+            </div>
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-last-name"
+                class="name"
+                type="text"
+              />
+              <label id="sign-up-last-name-label" for="">Last Name</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingLast"
+                >Missing last name</span
+              >
+            </div>
+
+            <div class="input-field" id="email-input-div">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-email"
+                type="email"
+              />
+              <label id="sign-up-email-label" for="">Email</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingEmail"
+                >Missing email</span
+              >
+              <span
+                class="error-message hide errorMissingField"
+                id="errorInvalidEmail"
+                >Invalid email</span
+              >
+            </div>
+
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-password-one"
+                type="password"
+              />
+              <label id="sign-up-password-one-label" for="">Password</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingPassword"
+                >Missing password</span
+              >
+              <span class="suggestion hide" id="errorPasswordTooShort"
+                >At least 8 characters</span
+              >
+              <span class="suggestion hide" id="errorPasswordNoUppercase"
+                >Add a capital</span
+              >
+              <span class="suggestion hide" id="errorNoNumber"
+                >Add a number</span
+              >
+              <span class="suggestion hide" id="errorNoSpecialCharacter"
+                >Add a special character</span
+              >
+            </div>
+            <div class="input-field">
+              <input
+                placeholder=" "
+                class="inputColor"
+                id="sign-up-password-two"
+                type="password"
+              />
+              <label id="sign-up-password-two-label" for="">Confirm</label>
+              <span
+                class="error-message hide errorMissingField"
+                id="errorMissingConfirm"
+                >Missing confirm</span
+              >
+              <span class="suggestion-confirm hide" id="errorPasswordDontMatch"
+                >Passwords don't match</span
+              >
+            </div>
+
+            <button id="mobileSignUpAccount" style="margin-top: 15px">
+              Sign Up
+            </button>
+          </form>
         </div>
       </div>
     </div>

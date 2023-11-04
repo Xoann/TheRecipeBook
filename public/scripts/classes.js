@@ -440,7 +440,13 @@ export class Database {
     this.decreaseRecipeCount();
     const promises = [];
     promises.push(this.singleRecipeRef(recipe, this.user).remove());
-    promises.push(this.recipeImageRef(recipe, this.user).delete());
+    promises.push(
+      this.recipeImageRef(recipe, this.user)
+        .delete()
+        .catch((error) => {
+          console.log(error);
+        })
+    );
     return Promise.all(promises);
   }
 

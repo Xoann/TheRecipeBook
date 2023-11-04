@@ -11,6 +11,7 @@
 //   getRecipeCount,
 // } from "./functions.js";
 import { Database } from "./classes.js";
+import { compressImage } from "./functions.js";
 
 let currentUid;
 let database;
@@ -242,9 +243,11 @@ const pfpInput = document.getElementById("pfp-upload");
 pfpInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    database.updatePfp(file).then(() => {
-      database.getPfp().then((pfp) => {
-        document.getElementById("pfp").src = pfp;
+    compressImage(file, 512, 512).then((compressedImage) => {
+      database.updatePfp(compressedImage).then(() => {
+        database.getPfp().then((pfp) => {
+          document.getElementById("pfp").src = pfp;
+        });
       });
     });
   }

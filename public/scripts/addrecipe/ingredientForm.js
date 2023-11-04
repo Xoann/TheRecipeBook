@@ -5,6 +5,7 @@ import { handleFileChange } from "../addimage.js";
 import { checkErrors, submitForm } from "../submitrecipe.js";
 import { addStep } from "../addstepbutton.js";
 import { Database } from "../classes.js";
+import { compressImage } from "../functions.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("addRecipeForm");

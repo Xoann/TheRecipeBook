@@ -1,5 +1,10 @@
 import { checkErrors } from "./submitrecipe.js";
-import { closeModal, openModal, displayRecipes } from "./functions.js";
+import {
+  closeModal,
+  openModal,
+  displayRecipes,
+  compressImage,
+} from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
 import { handleFileChange, deleteImage } from "./addimage.js";
@@ -676,7 +681,11 @@ function submitForm(
 
   console.log(image);
   if (image) {
-    promises.push(database.editRecipeImage(recipeId, image));
+    promises.push(
+      compressImage(image, 800, 800).then((compressedImage) => {
+        return database.editRecipeImage(recipeId, compressedImage);
+      })
+    );
   }
 
   const recipe = new Recipe(

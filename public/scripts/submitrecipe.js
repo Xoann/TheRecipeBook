@@ -1,5 +1,5 @@
 import { Database, Recipe, Ingredient } from "./classes.js";
-import { createImageFileObject } from "./functions.js";
+import { compressImage, createImageFileObject } from "./functions.js";
 
 export function checkErrors(
   recipeIdentifier,
@@ -236,7 +236,9 @@ export function submitForm(
   console.log(imagesArray[0]);
 
   return createImageFileObject(image).then((result) => {
-    return database.addRecipe(recipe, result);
+    return compressImage(result, 800, 800).then((compressedImage) => {
+      return database.addRecipe(recipe, compressedImage);
+    });
   });
 }
 

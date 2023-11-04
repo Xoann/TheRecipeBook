@@ -758,3 +758,67 @@ export async function createImageFileObject(image) {
     return null;
   }
 }
+
+export function compressImage(file, sizeX, sizeY) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function (readerEvent) {
+      const img = new Image();
+
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas dimensions to resize the image
+        const maxWidth = sizeX; // Set your desired maximum width
+        const maxHeight = sizeY; // Set your desired maximum height
+
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions while maintaining the aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        // Resize the canvas and draw the resized image
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert canvas content back to a Blob with reduced size
+        canvas.toBlob(
+          (blob) => {
+            if (blob.size > 200000) {
+              compressImage(blob, sizeX - 100, sizeY - 100).then(
+                (compressedImage) => {
+                  resolve(compressedImage);
+                }
+              );
+            } else {
+              resolve(blob);
+            }
+            // Resolve with the compressed image Blob
+          },
+          file.type,
+          0.8
+        );
+      };
+
+      // Set the image source to the uploaded file
+      img.src = readerEvent.target.result;
+    };
+
+    // Read the uploaded file as a data URL
+    reader.readAsDataURL(file);
+  });
+}

@@ -104,16 +104,17 @@ form h1 {
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
-  outline: 2px solid var(--light-colour);
-  transition: outline 0.2s ease;
+  border: 1px solid var(--light-button-hover);
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
-.input-field input:focus {
-  outline: 2px solid var(--primary-colour);
+.input-field-transition:hover {
+  border-color: white;
 }
 
-.form-container input:hover {
-  transform: scale(101%);
+.input-field-transition:focus {
+  border-color: var(--primary-colour);
 }
 
 .input-field {
@@ -133,6 +134,10 @@ form h1 {
   left: 20px;
   font-size: 16px;
   transition: top 0.2s ease-out, color 0.2s ease, font-size 0.2s ease;
+  color: var(--light-colour);
+}
+
+.overlay-panel h1 {
   color: var(--light-colour);
 }
 

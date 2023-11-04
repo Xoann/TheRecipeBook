@@ -4,6 +4,19 @@ document.addEventListener("DOMContentLoaded", function () {
   firebase.auth().signOut();
 });
 
+window.addEventListener("load", function () {
+  document
+    .getElementById("sign-up-view")
+    .classList.remove("mobile-view-btn-active");
+  document
+    .getElementById("sign-in-view")
+    .classList.add("mobile-view-btn-active");
+  document.getElementById("mobile-sign-in").classList.add("mobile-active");
+  document.getElementById("mobile-sign-up").classList.remove("mobile-active");
+  document.getElementById("sign-in-part-doohickey").style.borderRadius =
+    "0px 20px 20px 20px";
+});
+
 // Sign in/up interactivity
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");

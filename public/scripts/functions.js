@@ -109,7 +109,7 @@ function createMenu(database, recipeDiv, recipeName) {
   recipeCardMenuBtn.classList.add("recipe-card-menu-btn");
   recipeCardMenuBtn.id = "recipe-card-menu-btn";
 
-  fetch("../svgs/elipses.svg")
+  fetch("../svgs/vertical-elipses.svg")
     .then((response) => response.text())
     .then((svgData) => {
       const parser = new DOMParser();

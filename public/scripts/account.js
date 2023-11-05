@@ -99,8 +99,7 @@ searchInput.addEventListener("input", function () {
   const friends = scrollableDiv.getElementsByClassName("friend");
   // Loop through elements and hide/show based on search value
   for (let friendElement of friends) {
-    const childElements = friendElement.children;
-    const friend = childElements[1];
+    const friend = friendElement.children[0].children[1];
     const text = friend.textContent.toLowerCase();
     if (text.includes(searchValue)) {
       friendElement.style.display = "flex";

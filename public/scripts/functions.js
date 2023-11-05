@@ -348,9 +348,11 @@ function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
         const fileObject = new File([blob], "image.jpg", {
           type: "image/jpeg",
         });
+        let origRecipeName = recipe.name;
         recipe.name = `${recipe.name} by ${friendUsername}`;
         console.log(recipe.name);
         database.addRecipe(recipe, fileObject);
+        recipe.name = origRecipeName;
       });
     });
     // match /users/{userId}/{allPaths=**} {

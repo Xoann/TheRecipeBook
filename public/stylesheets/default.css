@@ -114,7 +114,7 @@ svg {
   border-color: var(--nav-border);
   border-style: solid;
   border-width: 0;
-  z-index: 5;
+  z-index: 999;
 }
 
 .user-menu-list {

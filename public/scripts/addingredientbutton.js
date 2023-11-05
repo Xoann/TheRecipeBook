@@ -4,17 +4,20 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   ).length;
 
   const units = [
-    "Grams",
-    "Ounces",
-    "lbs",
+    "mg.",
+    "g.",
     "kg",
-    "Liters",
+    "oz.",
+    "lbs",
+    "mL.",
+    "L.",
     "drop",
     "tsp.",
     "tbsp.",
+    "cup.",
     "pt.",
     "qt.",
-    // "gal.",
+    "gal.",
   ];
 
   const listItem = document.createElement("div");

@@ -81,6 +81,11 @@
   border-radius: 100px;
   overflow: hidden;
   z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.fork-btn:hover {
+  background-color: var(--grey-one-colour);
 }
 
 #forked-modal-content {
@@ -104,6 +109,10 @@
 
 .recipe-container {
   align-items: flex-start;
+}
+
+#forked-text {
+  font-size: 20px;
 }
 
 @media only screen and (min-width: 700px) and (max-width: 900px) {

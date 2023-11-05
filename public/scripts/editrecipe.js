@@ -260,6 +260,7 @@ export function generateEditModal(database, recipeName) {
 
   const editServingsInput = document.createElement("input");
   editServingsInput.classList.add("edit-input");
+  editServingsInput.classList.add("edit-servings-input");
   editServingsInput.classList.add("input-transition");
   editServingsInput.placeholder = "#";
   editServingsInput.addEventListener("input", function () {

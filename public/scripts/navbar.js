@@ -24,7 +24,7 @@ window.addEventListener("click", function (event) {
     usernameButtonIn.classList.remove("user-menu-button-maintain-hover");
     this.setTimeout(() => {
       userMenu.style.borderWidth = "0px";
-    }, 200);
+    }, 100);
   }
 });
 document.getElementById("profile-page").addEventListener("click", () => {

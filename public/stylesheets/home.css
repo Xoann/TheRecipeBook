@@ -283,7 +283,7 @@
 }
 
 .search-input:hover {
-  border-color: white;
+  border-color: var(--textbox-hover);
   outline: none;
 }
 .search-input:focus {
@@ -355,7 +355,7 @@
 }
 
 .recipe-div:hover {
-  transform: scale(101%) translateY(-4px);
+  transform: scale(101%) translateY(-2px);
   box-shadow: 0px 3px 15px 4px rgba(0, 0, 0, 0.57);
 }
 
@@ -642,10 +642,11 @@
   color: gray;
 }
 
-.step-item .textarea {
+.edit-steps-row-container .step-item .textarea {
   width: 80%;
   min-width: 350px;
   max-width: 400px;
+  min-width: 0px;
 }
 
 .resizable-p {
@@ -694,12 +695,14 @@
   font-family: inherit;
   color: var(--light-text-colour);
   font-size: inherit;
+  z-index: 2;
 }
 
 .edit-description-input.edit-input {
   width: 80%;
   padding: 2% 2%;
   min-width: 600px;
+  border-color: var(--light-button-hover);
 }
 
 .edit-small-input-div {
@@ -719,6 +722,7 @@
   width: 70px;
   height: 30px;
   border-radius: 10px;
+  padding: 3% 2%;
 }
 
 .edit-small-input-div .edit-name-title {
@@ -740,6 +744,10 @@
 
 .edit-small-input-div + .edit-small-input-div {
   margin-left: 2%;
+}
+
+.edit-servings-input {
+  padding: 3% 5% !important;
 }
 
 .custom-file-input {
@@ -859,6 +867,7 @@
   margin-bottom: 0;
   display: flex;
   justify-content: center;
+  gap: 8px;
 }
 
 .discard-modal-content {
@@ -1059,11 +1068,6 @@
     align-items: center;
     width: 95%;
     gap: 20px;
-  }
-
-  .step-item .textarea {
-    min-width: 0px;
-    width: 75%;
   }
 
   .ingredient-name {

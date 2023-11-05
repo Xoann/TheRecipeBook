@@ -286,11 +286,11 @@
 }
 
 .input-transition {
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s ease;
 }
 
 .input-transition:hover {
-  border-color: white;
+  border-color: var(--textbox-hover);
 }
 
 .input-transition:focus {
@@ -327,8 +327,12 @@ input::-webkit-inner-spin-button {
   background-color: transparent;
   color: var(--light-text-colour);
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  transition: background-color 0.3s ease;
   font-size: 14px;
+}
+
+.custom-file-input:hover {
+  background-color: var(--grey-two-colour);
 }
 
 .image-input {
@@ -339,10 +343,6 @@ input::-webkit-inner-spin-button {
   width: 1px;
   height: auto;
   display: none;
-}
-
-.custom-file-input:hover {
-  background-color: var(--grey-one-colour);
 }
 
 .display-image img {
@@ -381,7 +381,7 @@ input::-webkit-inner-spin-button {
   border: 2px solid var(--primary-colour);
   background-color: var(--grey-one-colour);
   color: var(--light-text-colour);
-  transition: background-color 0.1s ease;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
@@ -429,7 +429,7 @@ input::-webkit-inner-spin-button {
   color: var(--light-text-colour);
   padding: 0 3%;
   font-size: inherit;
-  transition: height 0.05s ease-out, border-color 0.2s ease;
+  transition: height 0.05s ease-out, border-color 0.3s ease;
 }
 
 .ingredient-name {
@@ -460,7 +460,7 @@ input::-webkit-inner-spin-button {
   height: 27px;
   width: 27px;
   font-size: 24px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
@@ -494,7 +494,7 @@ input::-webkit-inner-spin-button {
 
 .step-item .textarea {
   font-size: 17px;
-  width: 70%;
+  width: 80%;
   min-height: 0;
   transition: min-height 0.05s ease-out, border-color 0.2s ease;
 }
@@ -666,7 +666,7 @@ option:hover,
     min-width: 0px;
   }
   .title {
-    overflow: auto;
+    font-size: 20px;
   }
   .column-container {
     flex-direction: column;
@@ -677,6 +677,7 @@ option:hover,
 
   .name-description-container {
     width: 90%;
+    margin-top: 10px;
   }
 
   .number-column-container {
@@ -717,10 +718,6 @@ option:hover,
 
   #details-title {
     display: none;
-  }
-
-  .name-description-container {
-    margin-top: 20px;
   }
 
   .display-image img {

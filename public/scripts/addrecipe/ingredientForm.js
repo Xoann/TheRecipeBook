@@ -139,6 +139,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
       addStep
     )
   ) {
+    document.getElementById("loading-modal").classList.add("show-done-button");
     submitForm(
       database,
       e,
@@ -152,13 +153,16 @@ document.getElementById("submit").addEventListener("click", function (e) {
       cookTimeMins,
       servings
     ).then(() => {
+      document
+        .getElementById("loading-modal")
+        .classList.remove("show-done-button");
       document.getElementById("upload-modal").classList.add("show-done-button");
     });
   }
 });
 
 document.getElementById("signin-button").addEventListener("click", function () {
-  window.location.href = "../../html/login.html";
+  window.location.href = "../../login.html";
 });
 
 //Sign out / Sign in button

@@ -193,10 +193,6 @@ form h1 {
   background-color: var(--grey-one-colour);
 }
 
-.double-input {
-  width: 100%;
-}
-
 /* .double-input input {
   width: 48.75%;
 } */
@@ -205,6 +201,7 @@ form h1 {
   display: flex;
   flex-direction: row;
   gap: 2.5%;
+  width: 100%;
 }
 
 .overlay-panel p {

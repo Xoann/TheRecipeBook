@@ -374,6 +374,8 @@ export function generateEditModal(database, recipeName) {
         addStepButton
       )
     ) {
+      document.getElementById("loading-modal").style.display = "flex";
+      closeModal(modalElement);
       database.deleteRecipe(recipeName).then(() => {
         submitForm(
           database,
@@ -389,7 +391,8 @@ export function generateEditModal(database, recipeName) {
           editServingsInput
         )
           .then(() => {
-            closeModal(modalElement);
+            document.getElementById("loading-modal").style.display = "none";
+
             console.log("Recipe Edited");
             window.location.href = "./index.html";
           })

@@ -266,46 +266,54 @@
 
 .search-input {
   width: 100%;
-  height: 5vh;
+  height: 45px;
   /* border-radius: 100px; */
-  font-size: 18px;
+  border: 1.5px solid var(--primary-colour);
+  padding-left: 50px;
+  border-radius: 50px;
+  font-size: 19px;
   text-align: left;
-  font-family: sans-serif;
-  border: none;
+  font-family: Gabarito;
+  outline: none;
   /* outline: 2px solid var(--primary-colour); */
   background: transparent;
-  transition: background-color 0.15s;
+  transition: all 0.15s ease;
   color: var(--light-text-colour);
   z-index: 10;
 }
 
+.search-input:hover {
+  border-color: white;
+  outline: none;
+}
 .search-input:focus {
-  outline: 0px;
+  border-color: var(--light-text-colour);
+  outline: none;
+}
+
+.search-input::placeholder {
+  font-size: 18px;
 }
 
 .peepee {
+  padding-left: 10px;
+  position: absolute;
   height: 30px;
   width: auto;
-  font-family: Gabarito;
   color: var(--light-text-colour);
-  left: 100px;
 }
 
 .searchbar-div {
   display: flex;
   align-items: center;
-  border: 2px solid var(--primary-colour);
+  border: 0;
   border-radius: 69px;
   height: 5vh;
   min-height: 40px;
   width: 100%;
   gap: 10px;
-  padding-left: 10px;
   left: -20px;
-}
-
-.search-input:hover {
-  background-color: var(--searchHoverColor);
+  transition: all 0.25s ease;
 }
 
 /* Recipe div styles */
@@ -343,6 +351,12 @@
   /* margin: 10px; */
   font-family: Gabarito;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.recipe-div:hover {
+  transform: scale(101%) translateY(-4px);
+  box-shadow: 0px 3px 15px 4px rgba(0, 0, 0, 0.57);
 }
 
 .recipe-div:last-child {
@@ -505,12 +519,25 @@
   border-radius: 8px;
   border: 2px var(--grey-two-colour) solid;
   background-color: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.servings-input:focus,
+.servings-input:hover {
+  border-color: var(--grey-text-colour);
 }
 
 .servings-button {
   height: 20px;
   width: auto;
   cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.servings-button:hover {
+  background-color: var(--grey-two-colour);
 }
 
 .med-label {

@@ -82,12 +82,12 @@ export class Database {
     this.profilePictureRef = firebase
       .storage()
       .ref(`${user}/pfp/profile-picture`);
-    this.recipeImageRef = (imageName, user) =>
-      firebase.storage().ref(`${user}/images/${imageName}`);
+    this.recipeImageRef = (imageId, user) =>
+      firebase.storage().ref(`${user}/images/${imageId}`);
     this.recipeImagesRef = firebase.storage().ref(user);
     this.recipeRef = (user) => firebase.database().ref(`${user}/recipes`);
-    this.singleRecipeRef = (recipe, user) =>
-      firebase.database().ref(`${user}/recipes/${recipe}`);
+    this.singleRecipeRef = (recipeId, user) =>
+      firebase.database().ref(`${user}/recipes/${recipeId}`);
     this.friendProfilePictureRef = (friend) =>
       firebase.storage().ref(`${friend}/pfp/profile-picture`);
     this.user = user;
@@ -191,8 +191,8 @@ export class Database {
   }
 
   // Getters
-  getRecipe(name, user = this.user) {
-    return this.singleRecipeRef(name, user)
+  getRecipe(id, user = this.user) {
+    return this.singleRecipeRef(id, user)
       .once("value")
       .then((snapshot) => {
         const recipe = snapshot.val();
@@ -207,7 +207,7 @@ export class Database {
           );
         }
         return new Recipe(
-          recipe["name"],
+          recipe["recipeName"],
           recipe["recipeDesc"],
           recipe["cookTimeHrs"],
           recipe["cookTimeMins"],
@@ -220,8 +220,8 @@ export class Database {
       });
   }
 
+  // Returns all recipe Ids
   getAllRecipeNames(user = this.user) {
-    console.log(`profil recipe user: ${user}`);
     return this.recipeRef(user)
       .once("value")
       .then((snapshot) => {
@@ -230,6 +230,23 @@ export class Database {
         }
         return Object.keys(snapshot.val());
       });
+  }
+
+  getRecipeNames() {
+    return this.getAllRecipeNames().then((ids) => {
+      const promises = [];
+      const names = {};
+      for (const id of ids) {
+        promises.push(
+          this.getRecipe(id).then((recipe) => {
+            names[recipe.name] = id;
+          })
+        );
+      }
+      return Promise.all(promises).then(() => {
+        return names;
+      });
+    });
   }
 
   getUid(username) {
@@ -307,9 +324,14 @@ export class Database {
   }
 
   getRecipeCount() {
-    return this.userRef.get().then((doc) => {
-      return doc.data().recipeCount;
-    });
+    return this.recipeRef(this.user)
+      .once("value")
+      .then((snapshot) => {
+        if (!snapshot.val()) {
+          return 0;
+        }
+        return Object.keys(snapshot.val()).length;
+      });
   }
 
   getFriendDateJoined(friend) {
@@ -336,8 +358,8 @@ export class Database {
       });
   }
 
-  getRecipeImage(imageName, user = this.user) {
-    return this.recipeImageRef(imageName, user)
+  getRecipeImage(imageId, user = this.user) {
+    return this.recipeImageRef(imageId, user)
       .getDownloadURL()
       .then((url) => {
         return url;
@@ -366,7 +388,7 @@ export class Database {
     const renamedFile = new File([file], "profile-picture.png", {
       type: file.type,
     });
-    this.profilePictureRef.put(renamedFile);
+    return this.profilePictureRef.put(renamedFile);
   }
 
   // Other
@@ -420,25 +442,36 @@ export class Database {
       });
   }
 
-  decreaseRecipeCount() {
-    return this.userRef.get().then((doc) => {
-      return this.userRef.update({
-        recipes: doc.data().recipes - 1,
-      });
+  generateId() {
+    const characters =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let id = "";
+    const length = 16;
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      id += characters[randomIndex];
+    }
+
+    return id;
+  }
+
+  getNewRecipeId() {
+    return this.getAllRecipeNames().then((ids) => {
+      let id;
+
+      id = this.generateId();
+
+      // do {
+      //   id = this.generateId();
+      // } while (ids.includes(id));
+
+      return id;
     });
   }
 
-  increaseRecipeCount() {
-    return this.userRef.get().then((doc) => {
-      return this.userRef.update({
-        recipes: doc.data().recipes + 1,
-      });
-    });
-  }
-
-  deleteRecipe(recipe) {
-    this.decreaseRecipeCount();
+  deleteRecipe(recipeId) {
     const promises = [];
+
     promises.push(this.singleRecipeRef(recipe, this.user).remove());
     promises.push(
       this.recipeImageRef(recipe, this.user)
@@ -447,60 +480,83 @@ export class Database {
           console.log(error);
         })
     );
+
     return Promise.all(promises);
   }
 
   addRecipe(recipe, image = null) {
-    this.increaseRecipeCount();
     const promises = [];
 
     promises.push(
-      this.singleRecipeRef(recipe.name, this.user).set({
-        recipeDesc: recipe.desc,
-        cookTimeHrs: recipe.cookTimeHrs,
-        cookTimeMins: recipe.cookTimeMins,
-        prepTimeHrs: recipe.prepTimeHrs,
-        prepTimeMins: recipe.prepTimeMins,
-        servings: recipe.servings,
-        ingredients: recipe.ingredients,
-        steps: recipe.steps,
+
+      this.getNewRecipeId().then((id) => {
+        promises.push(
+          this.singleRecipeRef(id, this.user).set({
+            recipeName: recipe.name,
+            recipeDesc: recipe.desc,
+            cookTimeHrs: recipe.cookTimeHrs,
+            cookTimeMins: recipe.cookTimeMins,
+            prepTimeHrs: recipe.prepTimeHrs,
+            prepTimeMins: recipe.prepTimeMins,
+            servings: recipe.servings,
+            ingredients: recipe.ingredients,
+            steps: recipe.steps,
+          })
+        );
+
+        if (image) {
+          promises.push(this.recipeImageRef(id, this.user).put(image));
+        } else {
+          promises.push(
+            fetch("../../img/food-placeholder-1.jpg")
+              .then((response) => response.blob())
+              .then((blob) => {
+                promises.push(
+                  this.recipeImageRef(recipe.name, this.user).put(
+                    new File([blob], "image.png", { type: "image/png" })
+                  )
+                );
+              })
+          );
+        }
       })
     );
 
-    if (image) {
-      promises.push(this.recipeImageRef(recipe.name, this.user).put(image));
-    }
-    // else {
-    //   promises.push(
-    //     fetch("../../img/food-placeholder-1.jpg")
-    //       .then((response) => response.blob())
-    //       .then((blob) => {
-    //         promises.push(
-    //           this.recipeImageRef(recipe.name, this.user).put(
-    //             new File([blob], "image.png", { type: "image/png" })
-    //           )
-    //         );
-    //       })
-    //   );
-
-    // }
 
     console.log("uploaded");
     return Promise.all(promises);
   }
 
-  recipeInShoppingList(recipe) {
-    return this.userRef.get().then((doc) => {
-      return doc.data().shoppingListRecipes.includes(recipe);
+  editRecipeData(recipeId, recipe) {
+    return this.singleRecipeRef(recipeId, this.user).set({
+      recipeName: recipe.name,
+      recipeDesc: recipe.desc,
+      cookTimeHrs: recipe.cookTimeHrs,
+      cookTimeMins: recipe.cookTimeMins,
+      prepTimeHrs: recipe.prepTimeHrs,
+      prepTimeMins: recipe.prepTimeMins,
+      servings: recipe.servings,
+      ingredients: recipe.ingredients,
+      steps: recipe.steps,
     });
   }
 
-  updateShoppingList(recipe) {
+  editRecipeImage(recipeId, image) {
+    return this.recipeImageRef(recipeId, this.user).put(image);
+  }
+
+  recipeInShoppingList(recipeId) {
+    return this.userRef.get().then((doc) => {
+      return doc.data().shoppingListRecipes.includes(recipeId);
+    });
+  }
+
+  updateShoppingList(recipeId) {
     this.getShoppingList().then((shoppingList) => {
-      if (!shoppingList.includes(recipe)) {
-        shoppingList.push(recipe);
+      if (!shoppingList.includes(recipeId)) {
+        shoppingList.push(recipeId);
       } else {
-        const idxToRemove = shoppingList.indexOf(recipe);
+        const idxToRemove = shoppingList.indexOf(recipeId);
         if (idxToRemove !== -1) {
           shoppingList.splice(idxToRemove, 1);
         }

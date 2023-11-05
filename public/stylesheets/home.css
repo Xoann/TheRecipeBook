@@ -163,34 +163,8 @@
   width: 30px;
 }
 
-.ellipsis-x {
-  width: 100%;
-  height: auto;
-  margin-top: -2px;
-  margin-left: -2px;
-}
-
-.ellipsis-x .dot {
-  fill: var(--light-colour);
-  transform-origin: center;
-  transform: scale(1, 1);
-  opacity: 1;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.ellipsis-x.x .dot:nth-child(1) {
-  transform: translateY(7px);
-  opacity: 0;
-}
-
-.ellipsis-x.x .dot:nth-child(2) {
-  transform: translateY(0);
-  opacity: 0;
-}
-
-.ellipsis-x.x .dot:nth-child(3) {
-  transform: translateY(-7px);
-  opacity: 0;
+.ellipsis {
+  stroke: var(--light-colour);
 }
 
 #delete-modal-content {

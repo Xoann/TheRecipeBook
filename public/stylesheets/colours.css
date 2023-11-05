@@ -27,6 +27,8 @@
   --error-colour: #ee4144;
   --textbox-hover: white;
   --nav-border: #aaaaaa40;
+
+  --phone-nav-bg-colour: rgba(0, 0, 0);
 }
 
 /* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

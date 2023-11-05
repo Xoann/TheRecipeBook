@@ -109,7 +109,7 @@ function createMenu(database, recipeDiv, recipeName) {
   recipeCardMenuBtn.classList.add("recipe-card-menu-btn");
   recipeCardMenuBtn.id = "recipe-card-menu-btn";
 
-  fetch("../svgs/elipses.svg")
+  fetch("../svgs/vertical-elipses.svg")
     .then((response) => response.text())
     .then((svgData) => {
       const parser = new DOMParser();
@@ -217,22 +217,10 @@ export function displayRecipes(
   profile = database.user,
   friendUsername
 ) {
-  // Displays recipes as card in the recipe-container DOM element (class)
-
-  // let noRecipes = 0;
-  // database.getRecipeCount().then((count) => {
-  //   if (count === 0) {
-  //     noRecipes = 1;
-  //     return;
-  //   }
-  // });
-  // if (noRecipes === 1) {
-  //   return;
-  // }
   const recipeContainer =
     document.getElementsByClassName("recipe-container")[0];
   recipeContainer.innerHTML = "";
-  database.getAllRecipeNames(profile).then((recipeNames) => {
+  database.getAllRecipeNames().then((recipeNames) => {
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 
@@ -301,7 +289,7 @@ export function displayRecipes(
       let forkRecipe;
       forkPromises.push(
         database.getRecipe(recipeName, profile).then((recipe) => {
-          recipeNameElement.textContent = recipeName;
+          recipeNameElement.textContent = recipe.name;
           recipeDescription.innerHTML = recipe.desc;
           forkRecipe = recipe;
           forkRecipe.name = recipeName;
@@ -429,8 +417,10 @@ export function generateRecipeModal(
     //Name
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("modal-recipe-name");
+
     recipeNameElement.textContent = recipeName;
     modalContentElement.appendChild(recipeNameElement);
+
 
     //Image
     const imageDiv = document.createElement("div");
@@ -778,4 +768,68 @@ export async function createImageFileObject(image) {
   } else {
     return null;
   }
+}
+
+export function compressImage(file, sizeX, sizeY) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function (readerEvent) {
+      const img = new Image();
+
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas dimensions to resize the image
+        const maxWidth = sizeX; // Set your desired maximum width
+        const maxHeight = sizeY; // Set your desired maximum height
+
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions while maintaining the aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        // Resize the canvas and draw the resized image
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert canvas content back to a Blob with reduced size
+        canvas.toBlob(
+          (blob) => {
+            if (blob.size > 200000) {
+              compressImage(blob, sizeX - 100, sizeY - 100).then(
+                (compressedImage) => {
+                  resolve(compressedImage);
+                }
+              );
+            } else {
+              resolve(blob);
+            }
+            // Resolve with the compressed image Blob
+          },
+          file.type,
+          0.8
+        );
+      };
+
+      // Set the image source to the uploaded file
+      img.src = readerEvent.target.result;
+    };
+
+    // Read the uploaded file as a data URL
+    reader.readAsDataURL(file);
+  });
 }

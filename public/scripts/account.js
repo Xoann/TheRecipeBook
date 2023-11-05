@@ -11,6 +11,7 @@
 //   getRecipeCount,
 // } from "./functions.js";
 import { Database } from "./classes.js";
+import { compressImage } from "./functions.js";
 
 let currentUid;
 let database;
@@ -40,6 +41,8 @@ function loadProfilePage(database) {
   //   document.getElementById("fork-count").textContent = forks;
   // });
   database.getRecipeCount().then((recipes) => {
+    console.log("hi");
+    console.log(recipes);
     document.getElementById("recipe-count").textContent = recipes;
   });
 
@@ -113,8 +116,7 @@ searchInput.addEventListener("input", function () {
   const friends = scrollableDiv.getElementsByClassName("friend");
   // Loop through elements and hide/show based on search value
   for (let friendElement of friends) {
-    const childElements = friendElement.children;
-    const friend = childElements[1];
+    const friend = friendElement.children[0].children[1];
     const text = friend.textContent.toLowerCase();
     if (text.includes(searchValue)) {
       friendElement.style.display = "flex";
@@ -257,7 +259,13 @@ const pfpInput = document.getElementById("pfp-upload");
 pfpInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    database.updatePfp(file);
+    compressImage(file, 512, 512).then((compressedImage) => {
+      database.updatePfp(compressedImage).then(() => {
+        database.getPfp().then((pfp) => {
+          document.getElementById("pfp").src = pfp;
+        });
+      });
+    });
   }
 });
 

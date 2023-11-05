@@ -16,6 +16,7 @@
 .mainBg {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   min-width: 950px;
@@ -26,9 +27,9 @@
   display: block;
 }
 
-#shopping-list {
+/* #shopping-list {
   height: 100%;
-}
+} */
 
 .overlay {
   display: flex;
@@ -36,7 +37,7 @@
   justify-content: flex-start;
   align-items: center;
   border-radius: 30px;
-  margin-top: 15px;
+  margin-top: 8vh;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -174,9 +175,9 @@
   margin-top: -2%;
 }
 
-.step-input {
+/* .step-input {
   margin-right: 10px;
-}
+} */
 
 .number-column-container {
   height: 100%;
@@ -229,8 +230,8 @@
 }
 
 .details-input {
-  border-radius: 13px;
-  min-width: 300px;
+  border-radius: 9px;
+  min-width: 200px;
   /* max-width: 00px; */
   width: 90%;
   border: solid 1px var(--light-button-hover);
@@ -285,11 +286,11 @@
 }
 
 .input-transition {
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s ease;
 }
 
 .input-transition:hover {
-  border-color: white;
+  border-color: var(--textbox-hover);
 }
 
 .input-transition:focus {
@@ -323,11 +324,15 @@ input::-webkit-inner-spin-button {
   border: 2px solid var(--primary-colour);
   padding: 6px 10px;
   border-radius: 15px;
-  background-color: var(--dark-two-colour);
+  background-color: transparent;
   color: var(--light-text-colour);
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  transition: background-color 0.3s ease;
   font-size: 14px;
+}
+
+.custom-file-input:hover {
+  background-color: var(--grey-two-colour);
 }
 
 .image-input {
@@ -340,15 +345,9 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.custom-file-input:hover {
-  background-color: var(--grey-one-colour);
-}
-
 .display-image img {
-  min-width: 100px;
-  min-height: 200px;
-  max-width: 400px;
-  max-height: 300px;
+  height: 215px;
+  max-width: 380px;
   object-fit: cover;
   border-radius: 10px;
   border-width: 2px;
@@ -376,13 +375,13 @@ input::-webkit-inner-spin-button {
   border-radius: 10px;
   font-size: 18px;
   font-family: Gabarito;
-  height: 5vh;
-  width: 7vw;
+  height: 45px;
+  width: 55px;
   min-width: 80px;
   border: 2px solid var(--primary-colour);
   background-color: var(--grey-one-colour);
   color: var(--light-text-colour);
-  transition: background-color 0.1s ease;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
@@ -399,6 +398,7 @@ input::-webkit-inner-spin-button {
 }
 
 #list-container-ingredients {
+  gap: 12px;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -412,12 +412,12 @@ input::-webkit-inner-spin-button {
 }
 
 .ingredient-row-container {
-  margin-top: 4px;
+  margin-top: 8px;
   width: 85%;
   display: flex;
   justify-content: center;
-  align-items: space-between;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 }
 
 .ingredient-input {
@@ -429,7 +429,7 @@ input::-webkit-inner-spin-button {
   color: var(--light-text-colour);
   padding: 0 3%;
   font-size: inherit;
-  transition: height 0.05s ease-out, border-color 0.2s ease;
+  transition: height 0.05s ease-out, border-color 0.3s ease;
 }
 
 .ingredient-name {
@@ -460,13 +460,16 @@ input::-webkit-inner-spin-button {
   height: 27px;
   width: 27px;
   font-size: 24px;
-  transition: background-color 0.1s ease;
+  transition: background-color 0.3s ease;
   cursor: pointer;
-  margin-bottom: 12px;
 }
 
 .plus-button:hover {
-  background-color: var(--light-button-hover);
+  background-color: var(--grey-two-colour);
+}
+
+.number-container {
+  width: 27px;
 }
 
 .step-item {
@@ -479,18 +482,19 @@ input::-webkit-inner-spin-button {
 }
 
 #list-container-steps {
+  gap: 12px;
   display: flex;
   align-items: center;
 }
 
 .form-heading {
-  margin-bottom: 3%;
+  margin-bottom: 0;
   font-size: 30px;
 }
 
 .step-item .textarea {
   font-size: 17px;
-  width: 70%;
+  width: 80%;
   min-height: 0;
   transition: min-height 0.05s ease-out, border-color 0.2s ease;
 }
@@ -506,13 +510,13 @@ input::-webkit-inner-spin-button {
 
 .step-number {
   font-size: 25px;
-  margin-right: 10px;
+  /* margin-right: 10px; */
+  width: 20px;
 }
 
 fieldset {
   border: none;
   width: 60px;
-  margin-right: 4%;
   display: flex;
   align-items: flex-start;
 }
@@ -563,6 +567,7 @@ option:hover,
 .addrecipe-modal {
   display: none;
   justify-content: center;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -579,7 +584,6 @@ option:hover,
   margin: 6% auto;
   padding: 20px;
   border: 1px solid var(--grey-two-colour);
-  margin-top: 30%;
   width: 300px;
   height: 150px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -613,4 +617,111 @@ option:hover,
 #signin-button {
   height: 70px;
   width: 150px;
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px) {
+  .mainBg {
+    min-width: 0px;
+  }
+
+  .overlay {
+    width: 90%;
+    min-width: 0px;
+  }
+
+  #list-container-ingredients {
+    width: 80%;
+  }
+
+  .ingredient-row-container {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 260px;
+  }
+
+  .ingredient-row-container_add .ingredient-name {
+    width: 242px;
+  }
+
+  .ingredient-row-container_add .ingredient-amount {
+    width: 100px;
+  }
+  .ingredient-row-container_add .unit-input {
+    width: 100px;
+  }
+
+  .display-image img {
+    height: 200px;
+    max-width: 300px;
+  }
+}
+
+@media only screen and (max-width: 699px) {
+  .mainBg {
+    min-width: 0px;
+  }
+
+  .overlay {
+    width: 90%;
+    min-width: 0px;
+  }
+  .title {
+    font-size: 20px;
+  }
+  .column-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .name-description-container {
+    width: 90%;
+    margin-top: 10px;
+  }
+
+  .number-column-container {
+    width: 90%;
+  }
+
+  #left-recipe-form {
+    width: 90%;
+  }
+
+  .details-form .form-heading {
+    margin-bottom: 5px;
+  }
+
+  #right-recipe-form {
+    width: 90%;
+  }
+  .ingredient-row-container {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 260px;
+  }
+
+  .ingredient-row-container_add .ingredient-name {
+    width: 242px;
+  }
+
+  .ingredient-row-container_add .ingredient-amount {
+    width: 100px;
+  }
+  .ingredient-row-container_add .unit-input {
+    width: 100px;
+  }
+
+  .submit-button {
+    margin-top: 25px;
+  }
+
+  #details-title {
+    display: none;
+  }
+
+  .display-image img {
+    height: 180px;
+    max-width: 300px;
+  }
 }

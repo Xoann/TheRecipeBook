@@ -14,8 +14,7 @@ firebase.auth().onAuthStateChanged((user) => {
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/v8/firebase.User
     var uid = user.uid;
-    console.log(firebase.auth().currentUser.uid);
-    console.log("signed in");
+    console.log("signed in:" + firebase.auth().currentUser.uid);
   } else {
     console.log("signed out");
     // User is signed out
@@ -23,13 +22,28 @@ firebase.auth().onAuthStateChanged((user) => {
   }
 });
 
+function signInWithCredential(credential) {
+  firebase
+    .auth()
+    .signInWithCredential(credential)
+    .then((userCredential) => {
+      // User signed in
+      const user = userCredential.user;
+      console.log("Signed in with Firebase:", user);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Firebase sign-in error:", error);
+    });
+}
+
 window.addEventListener("load", (event) => {
   console.log("initialized");
 });
 
 firebase
   .auth()
-  .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   .then(() => {
     // Existing and future Auth states are now persisted in the current
     // session only. Closing the window would clear any existing state even

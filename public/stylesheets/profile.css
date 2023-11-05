@@ -1,13 +1,11 @@
 .mainBg {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
-
   min-width: 900px;
-
   font-family: Gabarito;
   display: flex;
-  /* justify-content: center; */
-  align-items: center;
+  justify-content: center;
+  padding-top: 75px;
 }
 
 .profile-display {
@@ -31,6 +29,7 @@
   width: 90%;
   padding: 30px;
   min-width: 600px;
+  justify-content: flex-start;
   /* align-items: center; */
 }
 
@@ -56,6 +55,18 @@
   gap: 15px;
 }
 
+.username {
+  font-size: 30px;
+}
+
+.name {
+  font-size: 20px;
+}
+
+.profile-stats {
+  font-size: 18px;
+}
+
 .fork-btn {
   position: absolute;
   display: flex;
@@ -70,6 +81,11 @@
   border-radius: 100px;
   overflow: hidden;
   z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.fork-btn:hover {
+  background-color: var(--grey-one-colour);
 }
 
 #forked-modal-content {
@@ -89,4 +105,44 @@
 
 .fork-btn {
   color: var(--light-text-colour);
+}
+
+.recipe-container {
+  align-items: flex-start;
+}
+
+#forked-text {
+  font-size: 20px;
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px) {
+  .mainBg {
+    min-width: 0px;
+    width: 100vw;
+  }
+
+  .profile-display {
+    width: 95vw;
+  }
+}
+
+@media only screen and (max-width: 699px) {
+  .mainBg {
+    min-width: 0px;
+    width: 100vw;
+  }
+
+  .profile-display {
+    width: 95vw;
+  }
+
+  .profile-details {
+    min-width: 0px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-stats {
+    margin-top: 15px;
+  }
 }

@@ -9,13 +9,14 @@
   margin-bottom: 2%;
 }
 
-.mainBg {
+.mainBgHome {
   background-color: var(--dark-one-colour);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
-  min-width: 900px;
+  width: 100vw;
+  /* min-width: 900px; */
 }
 
 .addRecipeMsg {
@@ -23,9 +24,9 @@
   display: block;
 }
 
-#shopping-list {
+/* #shopping-list {
   height: 100%;
-}
+} */
 
 /* Recipe card menu styles */
 
@@ -239,46 +240,54 @@
 
 .search-input {
   width: 100%;
-  height: 5vh;
+  height: 45px;
   /* border-radius: 100px; */
-  font-size: 18px;
+  border: 1.5px solid var(--primary-colour);
+  padding-left: 50px;
+  border-radius: 50px;
+  font-size: 19px;
   text-align: left;
-  font-family: sans-serif;
-  border: none;
+  font-family: Gabarito;
+  outline: none;
   /* outline: 2px solid var(--primary-colour); */
   background: transparent;
-  transition: background-color 0.15s;
+  transition: all 0.15s ease;
   color: var(--light-text-colour);
   z-index: 10;
 }
 
+.search-input:hover {
+  border-color: var(--textbox-hover);
+  outline: none;
+}
 .search-input:focus {
-  outline: 0px;
+  border-color: var(--light-text-colour);
+  outline: none;
+}
+
+.search-input::placeholder {
+  font-size: 18px;
 }
 
 .peepee {
+  padding-left: 10px;
+  position: absolute;
   height: 30px;
   width: auto;
-  font-family: Gabarito;
   color: var(--light-text-colour);
-  left: 100px;
 }
 
 .searchbar-div {
   display: flex;
   align-items: center;
-  border: 2px solid var(--primary-colour);
+  border: 0;
   border-radius: 69px;
   height: 5vh;
   min-height: 40px;
   width: 100%;
   gap: 10px;
-  padding-left: 10px;
   left: -20px;
-}
-
-.search-input:hover {
-  background-color: var(--searchHoverColor);
+  transition: all 0.25s ease;
 }
 
 /* Recipe div styles */
@@ -299,6 +308,7 @@
   gap: 25px;
   /* min-height: 49vh; */
   height: 100%;
+  margin-inline: 15px;
 }
 
 .recipe-div {
@@ -314,8 +324,13 @@
   display: inline-block;
   /* margin: 10px; */
   font-family: Gabarito;
-
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.recipe-div:hover {
+  transform: scale(101%) translateY(-2px);
+  box-shadow: 0px 3px 15px 4px rgba(0, 0, 0, 0.57);
 }
 
 .recipe-div:last-child {
@@ -397,7 +412,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 99;
+  z-index: 999;
   overflow-y: auto;
   /* overflow: visible !important; */
 }
@@ -405,6 +420,11 @@
 .body-modal-open {
   overflow: hidden !important;
   overflow-y: hidden !important;
+}
+
+.body {
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .modal-content {
@@ -473,12 +493,25 @@
   border-radius: 8px;
   border: 2px var(--grey-two-colour) solid;
   background-color: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.servings-input:focus,
+.servings-input:hover {
+  border-color: var(--grey-text-colour);
 }
 
 .servings-button {
   height: 20px;
   width: auto;
   cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.servings-button:hover {
+  background-color: var(--grey-two-colour);
 }
 
 .med-label {
@@ -496,11 +529,12 @@
   width: 90%;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   margin-left: -10px;
 }
 
 .ingredients-container {
-  width: 35%;
+  width: 60%;
   list-style-type: disc;
   margin-right: 35px;
   list-style-position: inside;
@@ -535,7 +569,7 @@
 
 .steps-container {
   font-size: 18px;
-  width: 65%;
+  width: 60%;
   list-style-type: decimal;
 }
 
@@ -554,8 +588,8 @@
 }
 
 .image {
-  max-height: 300px;
-  max-width: auto;
+  height: 300px;
+  max-width: 600px;
 }
 
 /* Edit Modal Styles */
@@ -569,7 +603,6 @@
 
 .textarea {
   width: 100%;
-  min-width: 600px;
   max-width: 600px;
   display: inline-block;
   overflow: hidden;
@@ -583,10 +616,11 @@
   color: gray;
 }
 
-.step-item .textarea {
+.edit-steps-row-container .step-item .textarea {
   width: 80%;
   min-width: 350px;
   max-width: 400px;
+  min-width: 0px;
 }
 
 .resizable-p {
@@ -605,6 +639,17 @@
 .edit-name-title {
   color: var(--primary-colour);
   font-size: 24px;
+}
+
+.description-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.justify-left .edit-name-title {
   margin-bottom: 10px;
 }
 
@@ -624,17 +669,21 @@
   font-family: inherit;
   color: var(--light-text-colour);
   font-size: inherit;
+  z-index: 2;
 }
 
 .edit-description-input.edit-input {
   width: 80%;
   padding: 2% 2%;
+  min-width: 600px;
+  border-color: var(--light-button-hover);
 }
 
 .edit-small-input-div {
+  position: relative;
   width: 40%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   white-space: nowrap;
 }
@@ -647,6 +696,7 @@
   width: 70px;
   height: 30px;
   border-radius: 10px;
+  padding: 3% 2%;
 }
 
 .edit-small-input-div .edit-name-title {
@@ -656,9 +706,10 @@
 
 .edit-details-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   max-width: 80%;
+  gap: 20px;
 }
 
 .edit-input + .edit-input {
@@ -667,6 +718,10 @@
 
 .edit-small-input-div + .edit-small-input-div {
   margin-left: 2%;
+}
+
+.edit-servings-input {
+  padding: 3% 5% !important;
 }
 
 .custom-file-input {
@@ -716,14 +771,43 @@
   position: relative;
 }
 
+.edit-ingredients-row-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-image-container {
+  order: -1;
+}
+
 .edit-ingredients-steps-div {
   width: 90%;
   display: flex;
+  gap: 10px;
   align-items: flex-start;
 }
 
 .edit-ingredients-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
   width: 50%;
+}
+
+.edit-ingredients-row-container .ingredient-row-container {
+  width: 95%;
+}
+
+.edit-small-input-div .time-label {
+  right: 80px;
+}
+
+.time-label + .time-label {
+  right: 5px;
 }
 
 .edit-steps-container {
@@ -731,7 +815,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   width: 50%;
 }
 
@@ -740,6 +824,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 10px;
+  width: 100%;
 }
 
 .edit-plus-button {
@@ -747,8 +832,8 @@
   color: var(--light-text-colour);
   height: 28px;
   width: auto;
-  border: 2px var(--primary-colour) solid;
-  border-radius: 8px;
+  border: 0px var(--primary-colour) solid;
+  border-radius: 50px;
 }
 
 .edit-steps-row-container .step-item {
@@ -756,12 +841,13 @@
   margin-bottom: 0;
   display: flex;
   justify-content: center;
+  gap: 8px;
 }
 
-.discard-modal-element .discard-modal-content {
+.discard-modal-content {
   margin-top: 30%;
-  width: 40% !important;
-  max-width: 500px !important;
+  width: 40%;
+  max-width: 500px;
   min-width: 100px;
 }
 
@@ -783,4 +869,221 @@
 
 .delete-recipe-final-btn + .delete-recipe-final-btn {
   margin-left: 30px;
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px) {
+  .modal-content {
+    width: 85%;
+    min-width: 600px;
+  }
+
+  .edit-description-input.edit-input {
+    min-width: 500px;
+  }
+
+  .edit-details-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .step-item .textarea {
+    min-width: 250px;
+  }
+
+  .edit-small-input-div {
+    width: 50%;
+  }
+
+  .edit-small-input-div .time-label {
+    right: 84px;
+  }
+
+  .time-label + .time-label {
+    right: 14px;
+  }
+
+  .edit-small-input-div + .edit-small-input-div {
+    margin-left: 0;
+  }
+
+  .edit-small-input-div .edit-input {
+    width: 65px;
+    height: 30px;
+    border-radius: 10px;
+  }
+
+  .edit-ingredients-steps-div {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .edit-steps-container {
+    width: 70%;
+  }
+  .edit-ingredients-container {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 699px) {
+  .main-title {
+    font-size: 60px;
+    margin-top: 10px;
+  }
+  .search-bar-div {
+    width: 85%;
+  }
+  .search {
+    padding-top: 45px;
+    height: 28vh;
+  }
+
+  .image {
+    height: 165px;
+    max-width: 200px;
+  }
+  .modal {
+    width: 100vw;
+  }
+  .modal-content {
+    width: 90%;
+    min-width: 200px;
+    gap: 20px;
+  }
+  .details-container {
+    flex-direction: column;
+    min-width: 0px;
+    gap: 12px;
+  }
+  .ingredients-steps-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .ingredients-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 0;
+    width: 80%;
+  }
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 71%;
+  }
+
+  .ingredients-container .med-label {
+    margin-left: 0px;
+  }
+  .ingredient-element {
+    margin-right: auto;
+  }
+
+  .step {
+    margin-right: auto;
+  }
+
+  .recipe-div {
+    width: 90%;
+    aspect-ratio: 1;
+  }
+
+  #delete-modal-content {
+    min-width: 0px;
+    width: 80%;
+  }
+
+  .edit-title-div {
+    width: 65%;
+  }
+
+  .edit-description-input.edit-input {
+    min-width: 0px;
+  }
+
+  .description-container {
+    width: 80%;
+  }
+
+  .edit-details-container {
+    flex-direction: column;
+    width: 90%;
+  }
+
+  .edit-small-input-div {
+    width: 100%;
+  }
+
+  .edit-small-input-div .edit-input {
+    width: 65px;
+  }
+
+  .edit-small-input-div .time-label {
+    right: 75px;
+  }
+
+  .edit-small-input-div + .edit-small-input-div {
+    margin-left: 0;
+  }
+
+  .time-label + .time-label {
+    right: 5px;
+  }
+
+  .edit-ingredients-steps-div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    gap: 20px;
+  }
+
+  .ingredient-name {
+    min-width: 0px;
+    width: 90% !important;
+  }
+
+  .ingredient-input[placeholder="Amount"] {
+    min-width: 80px;
+  }
+
+  .ingredient-amount {
+    min-width: 0px;
+    width: 100px !important;
+  }
+
+  .unit-input {
+    min-width: 0px;
+    width: 100px !important;
+  }
+
+  .edit-steps-container {
+    width: 100%;
+  }
+
+  .edit-ingredients-container {
+    width: 100%;
+  }
+  .plus-button {
+    height: 20px;
+    aspect-ratio: 1;
+  }
+
+  .ingredient-row-container {
+    flex-wrap: wrap;
+  }
+
+  .edit-ingredients-row-container {
+    gap: 10px;
+  }
+
+  .discard-modal-content {
+    width: 80%;
+  }
 }

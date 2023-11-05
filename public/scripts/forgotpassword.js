@@ -7,10 +7,10 @@ function sendPasswordResetEmail() {
     .sendPasswordResetEmail(email)
     .then(() => {
       document.getElementById("message").innerHTML =
-        "Password reset email sent successfully!";
+        "Password reset email sent!";
     })
     .catch((error) => {
-      document.getElementById("message").innerHTML = `Error: ${error.message}`;
+      document.getElementById("message").innerHTML = "Email address not found";
     });
 }
 

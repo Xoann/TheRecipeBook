@@ -4,17 +4,20 @@ export function addIngredient(listContainer, ingredientIdentifier) {
   ).length;
 
   const units = [
-    "Grams",
-    "Ounces",
-    "lbs",
+    "mg.",
+    "g.",
     "kg",
-    "Liters",
+    "oz.",
+    "lbs",
+    "mL.",
+    "L.",
     "drop",
     "tsp.",
     "tbsp.",
+    "cup.",
     "pt.",
     "qt.",
-    // "gal.",
+    "gal.",
   ];
 
   const listItem = document.createElement("div");
@@ -96,41 +99,51 @@ export function addIngredient(listContainer, ingredientIdentifier) {
     }
   };
 
-  const removeButton = document.createElement("button");
-  removeButton.classList.add("remove-item");
-  removeButton.classList.add("plus-button");
-  removeButton.innerText = "-";
-  removeButton.addEventListener("click", function () {
-    input_name.classList.remove("ingredient-animation");
-    input_value.classList.remove("ingredient-animation");
-    unitInput.classList.remove("ingredient-animation");
+  let removeButton;
+  fetch("../svgs/x.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      removeButton = svgDOM.querySelector("svg");
+      removeButton.classList.add("edit-plus-button");
+      listItem.appendChild(removeButton);
+      removeButton.classList.add("plus-button");
 
-    setTimeout(function () {
-      listContainer.removeChild(listItem);
-      let nameList = document.getElementsByClassName(
-        `ingredient-name_${ingredientIdentifier}`
-      );
-      let amountList = document.getElementsByClassName(
-        `ingredient-amount_${ingredientIdentifier}`
-      );
-      let unitList = document.getElementsByClassName(
-        `ingredient-unit_${ingredientIdentifier}`
-      );
-      itemCount = document.getElementsByClassName(
-        `ingredient-row-container_${ingredientIdentifier}`
-      ).length;
-      for (let i = 0; i < itemCount; i++) {
-        nameList[i].id = `ingredient_${i}`;
-        amountList[i].id = `ingredient_value_${i}`;
-        unitList[i].id = `ingredient_unit_${i}`;
-      }
-    }, 50);
-  });
+      removeButton.addEventListener("click", function () {
+        input_name.classList.remove("ingredient-animation");
+        input_value.classList.remove("ingredient-animation");
+        unitInput.classList.remove("ingredient-animation");
+
+        setTimeout(function () {
+          listContainer.removeChild(listItem);
+          let nameList = document.getElementsByClassName(
+            `ingredient-name_${ingredientIdentifier}`
+          );
+          let amountList = document.getElementsByClassName(
+            `ingredient-amount_${ingredientIdentifier}`
+          );
+          let unitList = document.getElementsByClassName(
+            `ingredient-unit_${ingredientIdentifier}`
+          );
+          itemCount = document.getElementsByClassName(
+            `ingredient-row-container_${ingredientIdentifier}`
+          ).length;
+          for (let i = 0; i < itemCount; i++) {
+            nameList[i].id = `ingredient_${i}`;
+            amountList[i].id = `ingredient_value_${i}`;
+            unitList[i].id = `ingredient_unit_${i}`;
+          }
+        }, 50);
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
 
   listItem.appendChild(input_name);
   listItem.appendChild(input_value);
   listItem.appendChild(unitDiv);
-  listItem.appendChild(removeButton);
   listContainer.appendChild(listItem);
 
   setTimeout(function () {

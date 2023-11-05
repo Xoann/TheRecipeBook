@@ -140,6 +140,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
       addStep
     )
   ) {
+    document.getElementById("loading-modal").classList.add("show-done-button");
     submitForm(
       database,
       e,
@@ -152,13 +153,17 @@ document.getElementById("submit").addEventListener("click", function (e) {
       cookTimeHrs,
       cookTimeMins,
       servings
-    );
-    document.getElementById("upload-modal").classList.add("show-done-button");
+    ).then(() => {
+      document
+        .getElementById("loading-modal")
+        .classList.remove("show-done-button");
+      document.getElementById("upload-modal").classList.add("show-done-button");
+    });
   }
 });
 
 document.getElementById("signin-button").addEventListener("click", function () {
-  window.location.href = "../../html/login.html";
+  window.location.href = "../../login.html";
 });
 
 //Sign out / Sign in button
@@ -181,3 +186,17 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById("signin-modal").style.display = "flex";
   }
 });
+
+function limitInputLength(element, maxLength) {
+  let inputValue = element.value.toString();
+
+  if (inputValue.length > maxLength) {
+    element.value = inputValue.slice(0, maxLength);
+  }
+}
+
+function restrictInput(element, maxLength) {
+  element.value = element.value.replace(/[^0-9]/g, "");
+
+  limitInputLength(element, maxLength);
+}

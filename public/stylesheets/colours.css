@@ -25,7 +25,7 @@
 
   /* Accent colours */
   --error-colour: #ee4144;
-
+  --textbox-hover: white;
   --nav-border: #aaaaaa40;
 
   --phone-nav-bg-colour: rgba(0, 0, 0);
@@ -37,6 +37,7 @@
 
 .lightMode {
   --primary-colour: #ff7700;
+  --textbox-hover: black;
 
   --dark-one-colour: #f9f3e8;
 
@@ -45,6 +46,7 @@
   --grey-two-colour: #e3e0d3;
 
   --light-text-colour: #140a00;
+  --light-colour: #140a00;
 
   --dark-two-colour: #cac7bb;
 

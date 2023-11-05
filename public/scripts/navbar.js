@@ -57,19 +57,32 @@ document.getElementById("add-recipe").addEventListener("click", () => {
 
 firebase.auth().onAuthStateChanged((user) => {
   const database = new Database(firebase.auth().currentUser.uid);
+  const usernameText = document.getElementById("username-button");
+  const navPfp = document.getElementById("pfp-nav");
 
   database.getUsername().then((username) => {
+    if (!window.localStorage.getItem("username")) {
+      usernameText.textContent = username;
+    }
+
     window.localStorage.setItem("username", username);
   });
 
   database.getPfp().then((url) => {
+    if (!window.localStorage.getItem("pfp")) {
+      navPfp.src = url;
+    }
+
     window.localStorage.setItem("pfp", url);
   });
 
-  document.getElementById("username-button").textContent =
-    localStorage.getItem("username");
+  if (window.localStorage.getItem("username")) {
+    usernameText.textContent = localStorage.getItem("username");
+  }
 
-  document.getElementById("pfp-nav").src = localStorage.getItem("pfp");
+  if (window.localStorage.getItem("pfp")) {
+    navPfp.src = localStorage.getItem("pfp");
+  }
 });
 
 const navToggleButton = document.querySelector(".nav-toggle");

@@ -36,25 +36,64 @@ function generateDOMContent(database, ingredients, recipes) {
   // Display Recipes
   for (const recipe of recipes) {
     // console.log(recipes[recipeName]);
-    const recipeListEntry = document.createElement("div");
-    recipeListEntry.classList.add("shopping-list-entry-div");
-    recipeContainer.appendChild(recipeListEntry);
+    const recipeEntry = document.createElement("div");
+    recipeEntry.classList.add("recipe-entry-container");
+    recipeContainer.appendChild(recipeEntry);
+
+    const recipeListImageContainer = document.createElement("div");
+    recipeListImageContainer.classList.add("shopping-list-entry-div");
+    recipeEntry.appendChild(recipeListImageContainer);
 
     const recipeTitleDiv = document.createElement("div");
     recipeTitleDiv.classList.add("recipe-title-div");
-    recipeListEntry.appendChild(recipeTitleDiv);
+    recipeListImageContainer.appendChild(recipeTitleDiv);
 
     const recipeListEntryText = document.createElement("h3");
     recipeListEntryText.classList.add("recipe-list-entry-text");
-    recipeListEntryText.textContent = `${recipe}`;
+
     recipeTitleDiv.appendChild(recipeListEntryText);
 
+    fetch("../svgs/minus.svg")
+      .then((response) => response.text())
+      .then((svgData) => {
+        const parser = new DOMParser();
+        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+        const removeButton = svgDOM.querySelector("svg");
+        recipeEntry.appendChild(removeButton);
+        removeButton.classList.add("remove-button");
+        removeButton.addEventListener("click", () => {
+          database.updateShoppingList(recipe).then(() => {
+            window.location.href = "../shoppinglist.html";
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+      });
+
+    let noimg = false;
     const recipeListEntryImage = document.createElement("img");
     recipeListEntryImage.classList.add("recipe-list-entry-image");
     database.getRecipeImage(recipe).then((url) => {
-      recipeListEntryImage.src = url;
-    });
+      if (url) {
+        recipeListEntryImage.src = url;
+        recipeListImageContainer.appendChild(recipeListEntryImage);
+      } else {
+        noimg = true;
+        recipeListImageContainer.classList.add(
+          "shopping-list-entry-div-no-image"
+        );
 
-    recipeListEntry.appendChild(recipeListEntryImage);
+        recipeTitleDiv.classList.add("recipe-title-div-no-image");
+      }
+      database.getRecipe(recipe).then((recipeObject) => {
+        recipeListEntryText.textContent = `${recipeObject.name}`;
+
+        if (noimg) {
+          console.log(recipeTitleDiv.offsetHeight);
+          recipeListImageContainer.style.height = `${recipeTitleDiv.offsetHeight}px`;
+        }
+      });
+    });
   }
 }

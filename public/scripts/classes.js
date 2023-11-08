@@ -472,9 +472,9 @@ export class Database {
   deleteRecipe(recipeId) {
     const promises = [];
 
-    promises.push(this.singleRecipeRef(recipe, this.user).remove());
+    promises.push(this.singleRecipeRef(recipeId, this.user).remove());
     promises.push(
-      this.recipeImageRef(recipe, this.user)
+      this.recipeImageRef(recipeId, this.user)
         .delete()
         .catch((error) => {
           console.log(error);
@@ -488,7 +488,6 @@ export class Database {
     const promises = [];
 
     promises.push(
-
       this.getNewRecipeId().then((id) => {
         promises.push(
           this.singleRecipeRef(id, this.user).set({
@@ -522,7 +521,6 @@ export class Database {
       })
     );
 
-
     console.log("uploaded");
     return Promise.all(promises);
   }
@@ -552,7 +550,7 @@ export class Database {
   }
 
   updateShoppingList(recipeId) {
-    this.getShoppingList().then((shoppingList) => {
+    return this.getShoppingList().then((shoppingList) => {
       if (!shoppingList.includes(recipeId)) {
         shoppingList.push(recipeId);
       } else {
@@ -562,7 +560,7 @@ export class Database {
         }
       }
 
-      this.userRef.update({
+      return this.userRef.update({
         shoppingListRecipes: shoppingList,
       });
     });

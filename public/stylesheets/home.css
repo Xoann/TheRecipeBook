@@ -449,6 +449,7 @@
 .modal-recipe-name {
   font-size: 30px;
   color: var(--primary-colour);
+  text-transform: capitalize;
 }
 
 .image {

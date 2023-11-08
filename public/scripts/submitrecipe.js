@@ -236,9 +236,13 @@ export function submitForm(
   console.log(imagesArray[0]);
 
   return createImageFileObject(image).then((result) => {
-    return compressImage(result, 800, 800).then((compressedImage) => {
-      return database.addRecipe(recipe, compressedImage);
-    });
+    if (image) {
+      return compressImage(result, 800, 800).then((compressedImage) => {
+        return database.addRecipe(recipe, compressedImage);
+      });
+    } else {
+      return database.addRecipe(recipe, image);
+    }
   });
 }
 

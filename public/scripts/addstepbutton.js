@@ -30,7 +30,7 @@ export function addStep(listContainer, stepIdentifier) {
   stepInput.classList.add("step-input");
   stepInput.classList.add(`step-input_${stepIdentifier}`);
   stepInput.addEventListener("input", (e) => {
-    limitSpanLength(e.target, 10);
+    limitSpanLength(e.target, 300);
   });
   stepInput.id = `recipe-step_${itemCount}`;
 

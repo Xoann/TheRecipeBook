@@ -120,7 +120,8 @@ function createMenu(database, recipeDiv, recipeName) {
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
-  recipeCardMenuBtn.addEventListener("click", () => {
+  recipeCardMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     handleElipsisBtnPress(recipeName);
   });
 
@@ -418,9 +419,8 @@ export function generateRecipeModal(
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("modal-recipe-name");
 
-    recipeNameElement.textContent = recipeName;
+    recipeNameElement.textContent = recipe.name.toString();
     modalContentElement.appendChild(recipeNameElement);
-
 
     //Image
     const imageDiv = document.createElement("div");

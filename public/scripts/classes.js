@@ -591,6 +591,15 @@ export class Database {
                   shoppingIngredientObject[[ingredient.name, "vol"]] +=
                     convertToMl(ingredient);
                 }
+                if (
+                  !prefferedIngredientUnit.hasOwnProperty([
+                    ingredient.unit,
+                    "vol",
+                  ])
+                ) {
+                  prefferedIngredientUnit[(ingredient.unit, "vol")] =
+                    ingredient.unit;
+                }
               } else if (massUnitsToG.hasOwnProperty(ingredient.unit)) {
                 if (
                   !shoppingIngredientObject.hasOwnProperty([
@@ -603,6 +612,15 @@ export class Database {
                 } else {
                   shoppingIngredientObject[[ingredient.name, "mass"]] +=
                     convertToG(ingredient);
+                }
+                if (
+                  !prefferedIngredientUnit.hasOwnProperty([
+                    ingredient.unit,
+                    "mass",
+                  ])
+                ) {
+                  prefferedIngredientUnit[(ingredient.unit, "mass")] =
+                    ingredient.unit;
                 }
               } else {
                 if (
@@ -618,10 +636,15 @@ export class Database {
                     [ingredient.name, ingredient.unit]
                   ] += Number(ingredient.value);
                 }
-              }
-
-              if (!prefferedIngredientUnit.hasOwnProperty(ingredient.unit)) {
-                prefferedIngredientUnit[ingredient.name] = ingredient.unit;
+                if (
+                  !prefferedIngredientUnit.hasOwnProperty([
+                    ingredient.name,
+                    ingredient.unit,
+                  ])
+                ) {
+                  prefferedIngredientUnit[[ingredient.name, ingredient.unit]] =
+                    ingredient.unit;
+                }
               }
             }
           })
@@ -636,12 +659,22 @@ export class Database {
           const unitType = temp[1];
           let value = shoppingIngredientObject[ingAndUnitType];
           if (unitType === "vol") {
-            value = convertMlToOther(value, prefferedIngredientUnit[ing]);
+            value = convertMlToOther(
+              value,
+              prefferedIngredientUnit[[ing, "vol"]]
+            );
           } else if (unitType === "mass") {
-            value = convertGToOther(value, prefferedIngredientUnit[ing]);
+            value = convertGToOther(
+              value,
+              prefferedIngredientUnit[[ing, "mass"]]
+            );
           }
           returnIngredients.push(
-            new Ingredient(ing, Number(value), prefferedIngredientUnit[ing])
+            new Ingredient(
+              ing,
+              Number(value),
+              prefferedIngredientUnit[[ing, unitType]]
+            )
           );
         }
         return returnIngredients;

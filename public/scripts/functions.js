@@ -182,6 +182,9 @@ function handleDeleteRecipe(database, recipeName) {
     database.deleteRecipe(recipeName);
     document.getElementById(`${recipeName}-recipe-div`).style.display = "none";
     closeModal(modal);
+    database.recipeInShoppingList(recipeName).then(() => {
+      database.updateShoppingList(recipeName);
+    });
   });
 }
 

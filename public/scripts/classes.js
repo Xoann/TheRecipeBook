@@ -6,6 +6,8 @@ function capitalize(word) {
 }
 
 const volUnitsToMl = {
+  "mL.": 1,
+  mL: 1,
   "dr.": 0.0513429,
   "smdg.": 0.115522,
   "pn.": 0.231043,
@@ -226,7 +228,9 @@ export class Database {
       .once("value")
       .then((snapshot) => {
         if (!snapshot.val()) {
-          throw new Error("You have no recipes");
+          // throw new Error("You have no recipes");
+          console.log("no recipes");
+          return null;
         }
         return Object.keys(snapshot.val());
       });
@@ -461,11 +465,13 @@ export class Database {
 
       id = this.generateId();
 
-      // do {
-      //   id = this.generateId();
-      // } while (ids.includes(id));
-
-      return id;
+      if (ids) {
+        while (ids.includes(id)) {
+          id = this.generateId();
+        }
+      } else {
+        return id;
+      }
     });
   }
 

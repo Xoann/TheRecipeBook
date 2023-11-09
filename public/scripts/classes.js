@@ -6,8 +6,8 @@ function capitalize(word) {
 }
 
 const volUnitsToMl = {
-  "mL.": 1,
-  mL: 1,
+  ml: 1,
+  "ml.": 1,
   "dr.": 0.0513429,
   "smdg.": 0.115522,
   "pn.": 0.231043,
@@ -599,11 +599,11 @@ export class Database {
                 }
                 if (
                   !prefferedIngredientUnit.hasOwnProperty([
-                    ingredient.unit,
+                    ingredient.name,
                     "vol",
                   ])
                 ) {
-                  prefferedIngredientUnit[(ingredient.unit, "vol")] =
+                  prefferedIngredientUnit[[ingredient.name, "vol"]] =
                     ingredient.unit;
                 }
               } else if (massUnitsToG.hasOwnProperty(ingredient.unit)) {
@@ -621,11 +621,11 @@ export class Database {
                 }
                 if (
                   !prefferedIngredientUnit.hasOwnProperty([
-                    ingredient.unit,
+                    ingredient.name,
                     "mass",
                   ])
                 ) {
-                  prefferedIngredientUnit[(ingredient.unit, "mass")] =
+                  prefferedIngredientUnit[[ingredient.name, "mass"]] =
                     ingredient.unit;
                 }
               } else {
@@ -656,7 +656,6 @@ export class Database {
           })
         );
       }
-
       return Promise.all(promises).then(() => {
         const returnIngredients = [];
         for (let ingAndUnitType of Object.keys(shoppingIngredientObject)) {

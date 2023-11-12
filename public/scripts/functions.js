@@ -225,6 +225,9 @@ export function displayRecipes(
     document.getElementsByClassName("recipe-container")[0];
   recipeContainer.innerHTML = "";
   database.getAllRecipeNames().then((recipeNames) => {
+    if (!recipeNames) {
+      return;
+    }
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 

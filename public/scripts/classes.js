@@ -7,7 +7,22 @@ function capitalize(word) {
 
 const volUnitsToMl = {
   ml: 1,
+  mL: 1,
+  mls: 1,
+  mLs: 1,
+  ML: 1,
+  MLs: 1,
+  "mL.": 1,
   "ml.": 1,
+
+  "L.": 1000,
+  L: 1000,
+  l: 1000,
+  liter: 1000,
+  Liter: 1000,
+  liters: 1000,
+  Liters: 1000,
+
   "dr.": 0.0513429,
   "smdg.": 0.115522,
   "pn.": 0.231043,
@@ -15,22 +30,86 @@ const volUnitsToMl = {
   "ssp.": 0.924173,
   "csp.": 1.84835,
   "fl.dr.": 3.69669,
+
   "tsp.": 4.92892,
+  tsp: 4.92892,
+  Tsp: 4.92892,
+
   "dsp.": 9.85784,
+
   "tbsp.": 14.7868,
+  tbsp: 14.7868,
+  "Tbsp.": 14.7868,
+  TbSp: 14.7868,
+
   "oz.": 29.5735,
+  oz: 29.5735,
+  ounce: 29.5735,
+  Oz: 29.5735,
+  Ounce: 29.5735,
+  ounces: 29.5735,
+  Ounces: 29.5735,
+
   "wgf.": 59.1471,
   "tcf.": 118.294,
   C: 236.588,
+
   "pt.": 473.176,
+  pt: 473.176,
+  pint: 473.176,
+  Pint: 473.176,
+  Pt: 473.176,
+  pints: 473.176,
+  Pints: 473.176,
+
   "qt.": 946.353,
+  "Qt.": 946.353,
+  qt: 946.353,
+  quart: 946.353,
+  Quart: 946.353,
+  quarts: 946.353,
+  Quarts: 946.353,
+
   "gal.": 3785.41,
+  gal: 3785.41,
+  gallon: 3785.41,
+  gallons: 3785.41,
+  Gallon: 3785.41,
+  Gallons: 3785.41,
 };
 
 const massUnitsToG = {
-  "oz.": 28.3495231,
+  mg: 0.001,
+  "mg.": 0.001,
+  mgs: 0.001,
+
+  "g.": 1,
+  g: 1,
+  gram: 1,
+  Gram: 1,
+  grams: 1,
+  Grams: 1,
+
   kg: 1000,
+  "kg.": 1000,
+  Kg: 1000,
+  kilogram: 1000,
+  Kilogram: 1000,
+  KG: 1000,
+  Kgs: 1000,
+
+  "oz.": 28.3495231,
+  oz: 28.3495231,
+  ounce: 28.3495231,
+  ounces: 28.3495231,
+  Ounce: 28.3495231,
+  Ounces: 28.3495231,
+
   lbs: 453.59,
+  pound: 453.59,
+  pounds: 453.59,
+  Pound: 453.59,
+  Pounds: 453.59,
 };
 
 function convertToMl(ingredient) {
@@ -238,6 +317,9 @@ export class Database {
 
   getRecipeNames() {
     return this.getAllRecipeNames().then((ids) => {
+      if (!ids) {
+        return null;
+      }
       const promises = [];
       const names = {};
       for (const id of ids) {

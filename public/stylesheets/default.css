@@ -95,6 +95,30 @@ svg {
 .logo {
   height: 100%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 15px;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 100%;
+}
+
+.logo-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-title-word {
+  display: block;
+  font-size: 32px;
+  font-family: Gabarito;
+  color: var(--primary-colour);
 }
 
 .user-menu {

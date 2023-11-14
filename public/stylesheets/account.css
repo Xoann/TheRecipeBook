@@ -142,6 +142,7 @@
   border-radius: 500px;
   object-fit: cover;
   border: 2px var(--primary-colour) solid;
+  user-select: none;
 }
 
 .change-pfp {
@@ -371,6 +372,7 @@
 
 .friend-username {
   color: var(--light-text-colour);
+  user-select: none;
 }
 
 @media only screen and (min-width: 700px) and (max-width: 900px) {

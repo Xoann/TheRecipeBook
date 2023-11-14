@@ -73,6 +73,10 @@ initialMatch.addListener(handleViewportChange);
 let friendMenuIsOpen = false;
 const friendMenu = document.querySelector(".friend-menu");
 function handleOpenFriendMenu(event, user, friend) {
+  if (friendMenu.style.display === "flex") {
+    friendMenu.style.display === "none";
+    return;
+  }
   document
     .getElementById("friend-profile-btn")
     .addEventListener("click", () => {
@@ -82,7 +86,11 @@ function handleOpenFriendMenu(event, user, friend) {
     });
   const btnRect = event.target.getBoundingClientRect();
   const top = btnRect.top + window.scrollY;
-  const left = btnRect.left + window.scrollX;
+  let left = btnRect.left + window.scrollX;
+
+  if (window.innerWidth < left + 135) {
+    left -= 110;
+  }
   friendMenu.style.left = `${left + 15}px`;
   friendMenu.style.top = `${top + 35}px`;
   friendMenu.style.display = "flex";
@@ -94,6 +102,7 @@ function handleOpenFriendMenu(event, user, friend) {
   });
   friendMenuIsOpen = !friendMenuIsOpen;
 }
+
 document.body.addEventListener("click", (event) => {
   const OpenMenuBtns = document.getElementsByClassName("friend-menu-btn-open");
   const OpenMenuBtnsLst = Array.from(OpenMenuBtns);
@@ -211,6 +220,7 @@ function createNewFriendElement(friend) {
 
   const rightSide = document.createElement("div");
   rightSide.classList.add("friend-side");
+  rightSide.classList.add("friend-item-username");
   const leftSide = document.createElement("div");
   leftSide.classList.add("friend-side");
 

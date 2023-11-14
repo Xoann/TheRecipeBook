@@ -164,7 +164,7 @@ function updateShoppingListModal() {
 function handleDeleteRecipe(database, recipeName) {
   // Modify delete modal
   const deleteModalText = document.getElementById("delete-modal-text");
-  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
+  deleteModalText.textContent = `Are you sure you want to delete this recipe?`;
 
   // Display delete modal
   const modal = document.getElementById("delete-modal");
@@ -471,10 +471,12 @@ export function generateRecipeModal(
     const servingsLabel = document.createElement("label");
     servingsLabel.classList.add("detail-label");
     servingsLabel.textContent = "Servings:";
+    servingsLabel.style.order = 1;
     servingsContainer.appendChild(servingsLabel);
 
     const servingsInput = document.createElement("input");
     servingsInput.classList.add("servings-input");
+    servingsInput.style.order = 3;
 
     const detailsContainer = document.createElement("div");
     detailsContainer.classList.add("details-container");
@@ -556,6 +558,7 @@ export function generateRecipeModal(
         const svgElement = svgDOM.querySelector("svg");
         svgElement.classList.add("servings-button");
         servingsContainer.appendChild(svgElement);
+        svgElement.style.order = 2;
 
         servingsContainer.appendChild(servingsInput);
 
@@ -575,6 +578,7 @@ export function generateRecipeModal(
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         svgElement.classList.add("servings-button");
+        svgElement.style.order = 4;
         servingsContainer.appendChild(svgElement);
 
         svgElement.addEventListener("click", function () {
@@ -593,33 +597,8 @@ export function generateRecipeModal(
       const ingredientElement = document.createElement("li");
       ingredientElement.classList.add("ingredient-element");
 
-      const ingredientDiv = document.createElement("div");
-      ingredientDiv.classList.add("ingredient-div");
-
-      let ingredientValue = document.createElement("h3");
-      let ingredientNameUnit = document.createElement("h3");
-
-      ingredientValue.textContent = ingredient.value;
-      ingredientNameUnit.textContent = `${ingredient.unit} ${ingredient.name}`;
-
-      ingredientValue.classList.add("ingredient");
-      ingredientValue.classList.add("ingredient-value");
-      ingredientValue.classList.add(
-        `ingredient_${recipeName.replace(/ /g, "-")}`
-      );
-      ingredientNameUnit.classList.add("ingredient");
-
-      if (ingredient.value.length === 0) {
-        ingredientNameUnit.classList.add("no-value");
-      }
-
-      //ingredientValue.classList.add(`${recipeName}-ingredient`);
-
-      ingredientDiv.appendChild(ingredientValue);
-
-      ingredientDiv.appendChild(ingredientNameUnit);
-
-      ingredientElement.appendChild(ingredientDiv);
+      let ingredientText = document.createElement("h3");
+      ingredientText.classList.add("ingredient");
 
       ingredientsContainer.appendChild(ingredientElement);
     }

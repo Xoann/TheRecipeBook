@@ -230,7 +230,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 45vh;
+  height: 36vh;
 }
 
 .search-bar-div {
@@ -527,7 +527,7 @@
 }
 
 .ingredients-steps-container {
-  width: 90%;
+  width: 80%;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -930,7 +930,7 @@
 
 @media only screen and (max-width: 699px) {
   .main-title {
-    font-size: 60px;
+    font-size: 50px;
     margin-top: 10px;
   }
   .search-bar-div {
@@ -939,6 +939,7 @@
   .search {
     padding-top: 45px;
     height: 28vh;
+    min-height: 250px;
   }
 
   .image {
@@ -969,14 +970,14 @@
     justify-content: flex-start;
     align-items: center;
     margin-right: 0;
-    width: 80%;
+    width: 100%;
   }
   .steps-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    width: 71%;
+    width: 100%;
   }
 
   .ingredients-container .med-label {

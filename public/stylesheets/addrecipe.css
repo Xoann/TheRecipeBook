@@ -37,7 +37,7 @@
   justify-content: flex-start;
   align-items: center;
   border-radius: 30px;
-  margin-top: 8vh;
+  margin-top: 70px;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -657,6 +657,10 @@ option:hover,
 }
 
 @media only screen and (max-width: 699px) {
+  .addrecipe-modal-content {
+    gap: 10px;
+  }
+
   .mainBg {
     min-width: 0px;
   }
@@ -681,7 +685,8 @@ option:hover,
   }
 
   .number-column-container {
-    width: 90%;
+    width: 100%;
+    justify-content: center;
   }
 
   #left-recipe-form {

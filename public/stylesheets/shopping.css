@@ -23,7 +23,7 @@
   gap: 40px;
   align-items: center;
   border-radius: 30px;
-  margin-top: 75px;
+  margin-top: 70px;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -54,7 +54,7 @@
 }
 
 .column {
-  width: 50%;
+  width: 70%;
   display: flex;
   justify-content: center;
 }
@@ -71,7 +71,7 @@
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  width: 60%;
+  width: 100%;
 }
 
 .recipe-container {

@@ -403,11 +403,11 @@ form {
   }
 
   #username-input-div {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   #email-input-div {
-    margin: 20px 0;
+    margin: 10px 0;
   }
 
   body {
@@ -428,6 +428,7 @@ form {
     height: 100%;
     margin-top: -1px;
     transition: border-radius 0.1s ease;
+    min-height: 300px;
   }
 
   .overlay-container {

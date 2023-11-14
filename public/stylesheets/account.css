@@ -174,12 +174,18 @@
 }
 
 #user {
+  inline-size: 100%;
   font-size: 48px;
   font-weight: bold;
+  overflow-wrap: break-word;
+  hyphens: manual;
 }
 
 #name {
+  inline-size: 100%;
   font-size: 36px;
+  overflow-wrap: break-word;
+  hyphens: manual;
 }
 
 .stat {

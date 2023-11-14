@@ -59,10 +59,15 @@ svg {
   align-items: center;
   display: flex;
   gap: 20px;
-  height: 100%;
   padding: 0px 30px;
   border-radius: 7px;
   transition: background-color 0.15s;
+}
+
+#username {
+  width: 175px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .nav-list-link {

@@ -75,7 +75,8 @@ const friendMenu = document.querySelector(".friend-menu");
 function handleOpenFriendMenu(event, user, friend) {
   if (friendMenuIsOpen) {
     friendMenu.style.display = "none";
-    friendMenuIsOpen = !friendMenuIsOpen;
+    friendMenuIsOpen != friendMenuIsOpen;
+    console.log(friendMenuIsOpen);
     return;
   }
   document

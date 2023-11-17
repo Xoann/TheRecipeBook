@@ -224,7 +224,7 @@ export function displayRecipes(
   const recipeContainer =
     document.getElementsByClassName("recipe-container")[0];
   recipeContainer.innerHTML = "";
-  database.getAllRecipeNames().then((recipeNames) => {
+  database.getAllRecipeNames(profile).then((recipeNames) => {
     if (!recipeNames) {
       return;
     }
@@ -299,7 +299,6 @@ export function displayRecipes(
           recipeNameElement.textContent = recipe.name;
           recipeDescription.innerHTML = recipe.desc;
           forkRecipe = recipe;
-          forkRecipe.name = recipeName;
         })
       );
 
@@ -343,11 +342,9 @@ function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
         const fileObject = new File([blob], "image.jpg", {
           type: "image/jpeg",
         });
-        let origRecipeName = recipe.name;
-        recipe.name = `${recipe.name} by ${friendUsername}`;
-        console.log(recipe.name);
-        database.addRecipe(recipe, fileObject);
-        recipe.name = origRecipeName;
+        const newRecipe = Object.assign({}, recipe);
+        newRecipe.name = `${recipe.name} by ${friendUsername}`;
+        database.addRecipe(newRecipe, fileObject);
       });
     });
     // match /users/{userId}/{allPaths=**} {

@@ -73,8 +73,9 @@ initialMatch.addListener(handleViewportChange);
 let friendMenuIsOpen = false;
 const friendMenu = document.querySelector(".friend-menu");
 function handleOpenFriendMenu(event, user, friend) {
-  if (friendMenu.style.display === "flex") {
-    friendMenu.style.display === "none";
+  if (friendMenuIsOpen) {
+    friendMenu.style.display = "none";
+    friendMenuIsOpen = !friendMenuIsOpen;
     return;
   }
   document

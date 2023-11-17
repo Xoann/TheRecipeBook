@@ -32,7 +32,7 @@ export function addStep(listContainer, stepIdentifier) {
   stepInput.addEventListener("input", (e) => {
     limitSpanLength(e.target, 300);
   });
-  stepInput.id = `recipe-step_${itemCount}`;
+  stepInput.id = `recipe-step_${stepIdentifier}_${itemCount}`;
 
   //Create Minus button
   let removeButton;
@@ -60,7 +60,7 @@ export function addStep(listContainer, stepIdentifier) {
           for (let i = 0; i < itemCount; i++) {
             labelList[i].id = `step-number_${i}`;
             labelList[i].innerText = `${i + 1}:`;
-            textareaList[i].id = `recipe-step_${i}`;
+            textareaList[i].id = `recipe-step_${stepIdentifier}_${i}`;
           }
         }, 40);
       });

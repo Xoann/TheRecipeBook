@@ -538,15 +538,37 @@ export function generateRecipeModal(
       let origServings = Number(recipe.servings);
 
       for (let i = 0; i < recipe.ingredients.length; i++) {
-        let ingredientString = recipe.ingredients[i].value;
-        let ingredientValue;
+        let ingredientElementArray =
+          ingredientValueElements[i].textContent.split(" ");
 
-        ingredientValue = multiplyFractionByNumber(
-          ingredientString,
-          numServings,
-          origServings
-        );
-        ingredientValueElements[i].textContent = ingredientValue;
+        let firstValue = ingredientElementArray[0];
+
+        if (
+          !isNaN(Number(firstValue)) ||
+          (firstValue.includes("/") &&
+            !isNaN(Number(firstValue.replace("/", ""))))
+        ) {
+          let ingredientString = recipe.ingredients[i].value;
+          let ingredientValue;
+
+          ingredientValue = multiplyFractionByNumber(
+            ingredientString,
+            numServings,
+            origServings
+          );
+          // ingredientValueElements[i].textContent = ingredientValue;
+          let ingredientUnitAndName = ingredientElementArray.slice(1);
+          if (ingredientUnitAndName[0].includes("/")) {
+            let value = ingredientUnitAndName[0].replace("/", "");
+            if (!isNaN(Number(value))) {
+              ingredientUnitAndName = ingredientUnitAndName.slice(1);
+            }
+          }
+          let ingredientUnitNameString = ingredientUnitAndName.join(" ");
+          ingredientValueElements[
+            i
+          ].textContent = `${ingredientValue} ${ingredientUnitNameString}`;
+        }
       }
     }
 
@@ -599,6 +621,12 @@ export function generateRecipeModal(
 
       let ingredientText = document.createElement("h3");
       ingredientText.classList.add("ingredient");
+      ingredientText.classList.add(
+        `ingredient_${recipeName.replace(/ /g, "-")}`
+      );
+      ingredientText.textContent = `${ingredient.value} ${ingredient.unit} ${ingredient.name}`;
+
+      ingredientElement.appendChild(ingredientText);
 
       ingredientsContainer.appendChild(ingredientElement);
     }
@@ -681,6 +709,17 @@ function multiplyFractionByNumber(fractionString, numerator, denominator) {
 
   if (fractionString.indexOf("/") === -1) {
     fractionString = fractionString + "/1";
+  }
+
+  if (fractionString.includes(" ")) {
+    let wholePart = fractionString.split(" ")[0];
+    let fractionPart = fractionString.split(" ")[1];
+    let denominator = fractionPart.split("/")[1];
+    let numerator = fractionPart.split("/")[0];
+
+    fractionString = `${
+      Number(wholePart) * Number(denominator) + Number(numerator)
+    }/${denominator}`;
   }
 
   // Extract numerator and denominator from the fraction string

@@ -551,9 +551,8 @@ export class Database {
         while (ids.includes(id)) {
           id = this.generateId();
         }
-      } else {
-        return id;
       }
+      return id;
     });
   }
 

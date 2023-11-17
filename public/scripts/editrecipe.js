@@ -375,7 +375,6 @@ export function generateEditModal(database, recipeName) {
         addStepButton
       )
     ) {
-
       // database.deleteRecipe(recipeName);
 
       const ingredients = [];
@@ -385,9 +384,15 @@ export function generateEditModal(database, recipeName) {
       const numIngredients = ingredientInput.children.length;
 
       for (let i = 0; i < numIngredients; i++) {
-        const ingredient = document.getElementById(`ingredient_${i}`).value;
-        const value = document.getElementById(`ingredient_value_${i}`).value;
-        const unit = document.getElementById(`ingredient_unit_${i}`).value;
+        const ingredient = document.getElementById(
+          `ingredient_${recipeIdentifier}_${i}`
+        ).value;
+        const value = document.getElementById(
+          `ingredient_value_${recipeIdentifier}_${i}`
+        ).value;
+        const unit = document.getElementById(
+          `ingredient_unit_${recipeIdentifier}_${i}`
+        ).value;
 
         if (ingredient) {
           ingredients.push(new Ingredient(ingredient, value, unit));
@@ -401,7 +406,9 @@ export function generateEditModal(database, recipeName) {
       const numSteps = stepContainer.children.length;
 
       for (let i = 0; i < numSteps; i++) {
-        const step = document.getElementById(`recipe-step_${i}`).textContent;
+        const step = document.getElementById(
+          `recipe-step_${recipeIdentifier}_${i}`
+        ).textContent;
         if (step) {
           steps.push(step);
         }
@@ -433,7 +440,6 @@ export function generateEditModal(database, recipeName) {
           console.log("Recipe Edited");
           window.location.href = "./index.html";
         });
-
     }
   });
 
@@ -659,7 +665,7 @@ export function fillEditInputs(database, recipeName) {
       ingredientAmounts[i].value = recipe.ingredients[i].value;
       ingredientAmounts[i].addEventListener("input", function () {
         changes = true;
-        restrictInput(this, 8);
+        // restrictInput(this, 8);
       });
     }
     for (let i = 0; i < itemCount; i++) {

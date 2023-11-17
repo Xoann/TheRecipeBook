@@ -319,7 +319,6 @@
 
       function limitSpanLength(element, maxLength) {
         let inputValue = element.innerHTML.toString();
-        console.log(inputValue);
         if (inputValue.length > maxLength) {
           element.innerHTML = inputValue.slice(0, maxLength);
         }
@@ -328,6 +327,11 @@
       function restrictInput(element, maxLength) {
         element.value = element.value.replace(/[^0-9]/g, "");
 
+        limitInputLength(element, maxLength);
+      }
+
+      function restrictAmountInput(element, maxLength){
+        element.value = element.value.replace(/[^0-9\/ ]/g, "");
         limitInputLength(element, maxLength);
       }
     </script>

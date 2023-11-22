@@ -11,6 +11,7 @@
 //   getRecipeCount,
 // } from "./functions.js";
 import { Database } from "./classes.js";
+import { compressImage } from "./functions.js";
 
 let currentUid;
 let database;
@@ -40,6 +41,8 @@ function loadProfilePage(database) {
   //   document.getElementById("fork-count").textContent = forks;
   // });
   database.getRecipeCount().then((recipes) => {
+    console.log("hi");
+    console.log(recipes);
     document.getElementById("recipe-count").textContent = recipes;
   });
 
@@ -50,9 +53,32 @@ function loadProfilePage(database) {
   });
 }
 
+function handleViewportChange(mq) {
+  if (mq.matches) {
+    // Media query matches (viewport is 600px or less)
+    document.body.style.backgroundColor = "lightblue";
+  } else {
+    // Media query doesn't match
+    document.body.style.backgroundColor = "white";
+  }
+}
+
+// Initial check
+const initialMatch = window.matchMedia("(max-width: 600px)");
+handleViewportChange(initialMatch);
+
+// Add a listener for viewport changes
+initialMatch.addListener(handleViewportChange);
+
 let friendMenuIsOpen = false;
 const friendMenu = document.querySelector(".friend-menu");
 function handleOpenFriendMenu(event, user, friend) {
+  if (friendMenuIsOpen) {
+    friendMenu.style.display = "none";
+    friendMenuIsOpen != friendMenuIsOpen;
+    console.log(friendMenuIsOpen);
+    return;
+  }
   document
     .getElementById("friend-profile-btn")
     .addEventListener("click", () => {
@@ -62,9 +88,13 @@ function handleOpenFriendMenu(event, user, friend) {
     });
   const btnRect = event.target.getBoundingClientRect();
   const top = btnRect.top + window.scrollY;
-  const left = btnRect.left + window.scrollX;
-  friendMenu.style.left = `${left + 50}px`;
-  friendMenu.style.top = `${top}px`;
+  let left = btnRect.left + window.scrollX;
+
+  if (window.innerWidth < left + 135) {
+    left -= 110;
+  }
+  friendMenu.style.left = `${left + 15}px`;
+  friendMenu.style.top = `${top + 35}px`;
   friendMenu.style.display = "flex";
 
   const unfriendBtn = document.getElementById("remove-friend-btn");
@@ -74,6 +104,7 @@ function handleOpenFriendMenu(event, user, friend) {
   });
   friendMenuIsOpen = !friendMenuIsOpen;
 }
+
 document.body.addEventListener("click", (event) => {
   const OpenMenuBtns = document.getElementsByClassName("friend-menu-btn-open");
   const OpenMenuBtnsLst = Array.from(OpenMenuBtns);
@@ -96,8 +127,7 @@ searchInput.addEventListener("input", function () {
   const friends = scrollableDiv.getElementsByClassName("friend");
   // Loop through elements and hide/show based on search value
   for (let friendElement of friends) {
-    const childElements = friendElement.children;
-    const friend = childElements[1];
+    const friend = friendElement.children[0].children[1];
     const text = friend.textContent.toLowerCase();
     if (text.includes(searchValue)) {
       friendElement.style.display = "flex";
@@ -174,7 +204,7 @@ function createNewFriendElement(friend) {
   friendElement.classList.add("friend");
   friendElement.id = `friend_${friend}`;
 
-  friendsDiv.addEventListener("click", (event) => {
+  friendElement.addEventListener("click", (event) => {
     const params = { user: friend };
     const queryString = new URLSearchParams(params).toString();
     window.location.href = `profile.html?${queryString}`;
@@ -192,6 +222,7 @@ function createNewFriendElement(friend) {
 
   const rightSide = document.createElement("div");
   rightSide.classList.add("friend-side");
+  rightSide.classList.add("friend-item-username");
   const leftSide = document.createElement("div");
   leftSide.classList.add("friend-side");
 
@@ -240,7 +271,13 @@ const pfpInput = document.getElementById("pfp-upload");
 pfpInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    database.updatePfp(file);
+    compressImage(file, 512, 512).then((compressedImage) => {
+      database.updatePfp(compressedImage).then(() => {
+        database.getPfp().then((pfp) => {
+          document.getElementById("pfp").src = pfp;
+        });
+      });
+    });
   }
 });
 

@@ -7,10 +7,15 @@ export function addStep(listContainer, stepIdentifier) {
   listItem.classList.add(`step-item_${stepIdentifier}`);
 
   //Create number label
+  const numberContainer = document.createElement("div");
+  numberContainer.classList.add("number-container");
+
   const number = document.createElement("label");
   number.classList.add("step-number");
   number.id = `step-number_${itemCount}`;
   number.innerText = `${itemCount + 1}:`;
+
+  numberContainer.appendChild(number);
 
   //Create textarea
   const paragraph = document.createElement("p");
@@ -24,37 +29,47 @@ export function addStep(listContainer, stepIdentifier) {
   stepInput.classList.add("textarea");
   stepInput.classList.add("step-input");
   stepInput.classList.add(`step-input_${stepIdentifier}`);
-
-  stepInput.id = `recipe-step_${itemCount}`;
+  stepInput.addEventListener("input", (e) => {
+    limitSpanLength(e.target, 300);
+  });
+  stepInput.id = `recipe-step_${stepIdentifier}_${itemCount}`;
 
   //Create Minus button
-  const removeButton = document.createElement("button");
-  removeButton.classList.add("remove-item");
-  removeButton.innerText = "-";
-  removeButton.classList.add("plus-button");
+  let removeButton;
+  fetch("../svgs/x.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      removeButton = svgDOM.querySelector("svg");
+      removeButton.classList.add("edit-plus-button");
+      listItem.appendChild(removeButton);
+      removeButton.classList.add("plus-button");
 
-  //When minus button clicked:
-  removeButton.addEventListener("click", function () {
-    //remove animation
-    stepInput.classList.remove("textarea-animation");
-    listItem.classList.remove("step-container-animation");
-    setTimeout(function () {
-      listContainer.removeChild(listItem);
-      itemCount--;
-      //Reassign indexes for label and ids
-      let labelList = document.getElementsByClassName("step-number");
-      let textareaList = document.getElementsByClassName("step-input");
-      itemCount = document.getElementsByClassName("step-item").length;
-      for (let i = 0; i < itemCount; i++) {
-        labelList[i].id = `step-number_${i}`;
-        labelList[i].innerText = `${i + 1}:`;
-        textareaList[i].id = `recipe-step_${i}`;
-      }
-    }, 40);
-  });
-  listItem.append(number);
+      removeButton.addEventListener("click", function () {
+        //remove animation
+        stepInput.classList.remove("textarea-animation");
+        listItem.classList.remove("step-container-animation");
+        setTimeout(function () {
+          listContainer.removeChild(listItem);
+          itemCount--;
+          //Reassign indexes for label and ids
+          let labelList = document.getElementsByClassName("step-number");
+          let textareaList = document.getElementsByClassName("step-input");
+          itemCount = document.getElementsByClassName("step-item").length;
+          for (let i = 0; i < itemCount; i++) {
+            labelList[i].id = `step-number_${i}`;
+            labelList[i].innerText = `${i + 1}:`;
+            textareaList[i].id = `recipe-step_${stepIdentifier}_${i}`;
+          }
+        }, 40);
+      });
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
+  listItem.append(numberContainer);
   listItem.appendChild(stepInput);
-  listItem.appendChild(removeButton);
   listContainer.appendChild(listItem);
 
   //New Step animation
@@ -64,4 +79,12 @@ export function addStep(listContainer, stepIdentifier) {
   }, 10);
 
   itemCount++;
+}
+
+function limitSpanLength(element, maxLength) {
+  let inputValue = element.innerHTML.toString();
+  console.log(inputValue);
+  if (inputValue.length > maxLength) {
+    element.innerHTML = inputValue.slice(0, maxLength);
+  }
 }

@@ -1,14 +1,14 @@
+import { checkErrors } from "./submitrecipe.js";
 import {
-  checkErrors,
-  submitForm,
-  submitFormAsync,
-  submitFormPromise,
-  createRecipe,
-} from "./submitrecipe.js";
-import { closeModal, openModal, displayRecipes } from "./functions.js";
+  closeModal,
+  openModal,
+  displayRecipes,
+  compressImage,
+} from "./functions.js";
 import { addIngredient } from "./addingredientbutton.js";
 import { addStep } from "./addstepbutton.js";
 import { handleFileChange, deleteImage } from "./addimage.js";
+import { Ingredient, Recipe } from "./classes.js";
 
 let changes = false;
 let imagesArray = [];
@@ -80,6 +80,7 @@ export function generateEditModal(database, recipeName) {
 
   const editImageContainer = document.createElement("div");
   editImageContainer.classList.add("image-container");
+  editImageContainer.classList.add("no-image-container");
   editImageContainer.id = `edit-image-container_${recipeName.replace(
     / /g,
     "-"
@@ -181,6 +182,18 @@ export function generateEditModal(database, recipeName) {
 
   editPrepTimeContainer.appendChild(editPrepTimeMinsInput);
 
+  const editPrepTimeHrsLabel = document.createElement("label");
+  editPrepTimeHrsLabel.textContent = "Hrs";
+  editPrepTimeHrsLabel.classList.add("time-label");
+
+  editPrepTimeContainer.appendChild(editPrepTimeHrsLabel);
+
+  const editPrepTimeMinsLabel = document.createElement("label");
+  editPrepTimeMinsLabel.textContent = "Mins";
+  editPrepTimeMinsLabel.classList.add("time-label");
+
+  editPrepTimeContainer.appendChild(editPrepTimeMinsLabel);
+
   //edit cook time
   const editCookTimeContainer = document.createElement("div");
   editCookTimeContainer.classList.add("edit-small-input-div");
@@ -222,6 +235,18 @@ export function generateEditModal(database, recipeName) {
 
   editCookTimeContainer.appendChild(editCookTimeMinsInput);
 
+  const editCookTimeHrsLabel = document.createElement("label");
+  editCookTimeHrsLabel.textContent = "Hrs";
+  editCookTimeHrsLabel.classList.add("time-label");
+
+  editCookTimeContainer.appendChild(editCookTimeHrsLabel);
+
+  const editCookTimeMinsLabel = document.createElement("label");
+  editCookTimeMinsLabel.textContent = "Mins";
+  editCookTimeMinsLabel.classList.add("time-label");
+
+  editCookTimeContainer.appendChild(editCookTimeMinsLabel);
+
   //edit servings
   const editServingsContainer = document.createElement("div");
   editServingsContainer.classList.add("edit-small-input-div");
@@ -235,7 +260,9 @@ export function generateEditModal(database, recipeName) {
 
   const editServingsInput = document.createElement("input");
   editServingsInput.classList.add("edit-input");
+  editServingsInput.classList.add("edit-servings-input");
   editServingsInput.classList.add("input-transition");
+  editServingsInput.placeholder = "#";
   editServingsInput.addEventListener("input", function () {
     changes = true;
     restrictInput(this, 4);
@@ -277,6 +304,7 @@ export function generateEditModal(database, recipeName) {
       const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
       addIngredientButton = svgDOM.querySelector("svg");
       addIngredientButton.classList.add("edit-plus-button");
+      addIngredientButton.classList.add("plus-button");
       editIngredientsContainer.appendChild(addIngredientButton);
 
       addIngredientButton.addEventListener("click", function () {
@@ -316,6 +344,7 @@ export function generateEditModal(database, recipeName) {
       const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
       addStepButton = svgDOM.querySelector("svg");
       addStepButton.classList.add("edit-plus-button");
+      addStepButton.classList.add("plus-button");
       editStepsContainer.appendChild(addStepButton);
 
       addStepButton.addEventListener("click", function () {
@@ -347,19 +376,59 @@ export function generateEditModal(database, recipeName) {
       )
     ) {
       // database.deleteRecipe(recipeName);
+
+      const ingredients = [];
+      const ingredientInput = document.getElementById(
+        `edit-ingredients-row-container_${recipeIdentifier}`
+      );
+      const numIngredients = ingredientInput.children.length;
+
+      for (let i = 0; i < numIngredients; i++) {
+        const ingredient = document.getElementById(
+          `ingredient_${recipeIdentifier}_${i}`
+        ).value;
+        const value = document.getElementById(
+          `ingredient_value_${recipeIdentifier}_${i}`
+        ).value;
+        const unit = document.getElementById(
+          `ingredient_unit_${recipeIdentifier}_${i}`
+        ).value;
+
+        if (ingredient) {
+          ingredients.push(new Ingredient(ingredient, value, unit));
+        }
+      }
+
+      const steps = [];
+      const stepContainer = document.getElementById(
+        `edit-steps-container_${recipeIdentifier}`
+      );
+      const numSteps = stepContainer.children.length;
+
+      for (let i = 0; i < numSteps; i++) {
+        const step = document.getElementById(
+          `recipe-step_${recipeIdentifier}_${i}`
+        ).textContent;
+        if (step) {
+          steps.push(step);
+        }
+      }
+      const image = imagesArray[0];
+
       submitForm(
         database,
         e,
         recipeIdentifier,
-        imagesArray,
+        image,
         editNameInput,
         editDescriptionInput,
         editPrepTimeHrsInput,
         editPrepTimeMinsInput,
         editCookTimeHrsInput,
         editCookTimeMinsInput,
-        editServingsInput
-
+        editServingsInput,
+        ingredients,
+        steps
       )
         .then(() => {
           closeModal(modalElement);
@@ -371,7 +440,6 @@ export function generateEditModal(database, recipeName) {
           console.log("Recipe Edited");
           window.location.href = "./index.html";
         });
-
     }
   });
 
@@ -493,7 +561,7 @@ export function fillEditInputs(database, recipeName) {
 
     //fill title
     document.getElementById(`edit-title_${recipeIdentifier}`).value =
-      recipeName;
+      recipe.name;
 
     //fill image
     const imageContainer = document.getElementById(
@@ -501,36 +569,40 @@ export function fillEditInputs(database, recipeName) {
     );
     imageContainer.innerHTML = "";
 
-    const image = document.createElement("img");
-    image.classList.add("image");
-    image.classList.add(`recipeImg_${recipeIdentifier}`);
     database.getRecipeImage(recipeName).then((url) => {
-      image.src = url;
+      if (url) {
+        imageContainer.classList.remove("no-image-container");
+        const image = document.createElement("img");
+        image.classList.add("image");
+        image.classList.add(`recipeImg_${recipeIdentifier}`);
+        image.src = url;
+        imageContainer.appendChild(image);
+
+        fetch("../svgs/x.svg")
+          .then((response) => response.text())
+          .then((svgData) => {
+            const parser = new DOMParser();
+            const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+            const svgElement = svgDOM.querySelector("svg");
+            svgElement.classList.add("close");
+            imageContainer.appendChild(svgElement);
+            svgElement.id = `close_${recipeIdentifier}`;
+            svgElement.onclick = function () {
+              deleteImage(
+                imageContainer,
+                imagesArray,
+                document.getElementById(`image-form_${recipeIdentifier}`),
+                recipeIdentifier,
+                0
+              );
+              changes = 1;
+            };
+          })
+          .catch((error) => {
+            console.error("Error loading SVG:", error);
+          });
+      }
     });
-
-    imageContainer.appendChild(image);
-
-    fetch("../svgs/x.svg")
-      .then((response) => response.text())
-      .then((svgData) => {
-        const parser = new DOMParser();
-        const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
-        const svgElement = svgDOM.querySelector("svg");
-        svgElement.classList.add("close");
-        imageContainer.appendChild(svgElement);
-        svgElement.onclick = function () {
-          deleteImage(
-            imageContainer,
-            imagesArray,
-            document.getElementById(`image-form_${recipeIdentifier}`),
-            recipeIdentifier,
-            0
-          );
-        };
-      })
-      .catch((error) => {
-        console.error("Error loading SVG:", error);
-      });
 
     //fill description
     document.getElementById(
@@ -593,7 +665,7 @@ export function fillEditInputs(database, recipeName) {
       ingredientAmounts[i].value = recipe.ingredients[i].value;
       ingredientAmounts[i].addEventListener("input", function () {
         changes = true;
-        restrictInput(this, 8);
+        // restrictInput(this, 8);
       });
     }
     for (let i = 0; i < itemCount; i++) {
@@ -628,4 +700,48 @@ export function fillEditInputs(database, recipeName) {
       });
     }
   });
+}
+
+function submitForm(
+  database,
+  event,
+  recipeId,
+  image,
+  editNameInput,
+  editDescriptionInput,
+  editPrepTimeHrsInput,
+  editPrepTimeMinsInput,
+  editCookTimeHrsInput,
+  editCookTimeMinsInput,
+  editServingsInput,
+  editIngredients,
+  editSteps
+) {
+  event.preventDefault();
+  const promises = [];
+
+  console.log(image);
+  if (image) {
+    promises.push(
+      compressImage(image, 800, 800).then((compressedImage) => {
+        return database.editRecipeImage(recipeId, compressedImage);
+      })
+    );
+  }
+
+  const recipe = new Recipe(
+    editNameInput.value,
+    editDescriptionInput.textContent,
+    editCookTimeHrsInput.value,
+    editCookTimeMinsInput.value,
+    editPrepTimeHrsInput.value,
+    editPrepTimeMinsInput.value,
+    editServingsInput.value,
+    editIngredients,
+    editSteps
+  );
+
+  promises.push(database.editRecipeData(recipeId, recipe));
+
+  return Promise.all(promises);
 }

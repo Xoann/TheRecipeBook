@@ -1,5 +1,5 @@
 import { Database, Recipe, Ingredient } from "./classes.js";
-import { createImageFileObject } from "./functions.js";
+import { compressImage, createImageFileObject } from "./functions.js";
 
 export function checkErrors(
   recipeIdentifier,
@@ -17,7 +17,6 @@ export function checkErrors(
   let error = 0;
 
   //Empty Recipe Name
-
   if (!recipeName.value) {
     error = 1;
     recipeName.classList.add("input-error");
@@ -25,6 +24,7 @@ export function checkErrors(
       checkIfEmpty(recipeName);
     });
   }
+
   //Empty Prep Time (Only one of mins or hrs needs a value)
   if (!prepTimeMins.value && !prepTimeHrs.value) {
     error = 1;
@@ -102,26 +102,68 @@ export function checkErrors(
   }
   //Ingredients missing values
   for (let i = 0; i < num_ingredients; i++) {
-    if (getElementVal(`ingredient_${i}`).length === 0) {
-      document.getElementById(`ingredient_${i}`).classList.add("input-error");
-      document
-        .getElementById(`ingredient_${i}`)
-        .addEventListener("input", function () {
-          checkIfEmpty(document.getElementById(`ingredient_${i}`));
-        });
+    if (getElementVal(`ingredient_${recipeIdentifier}_${i}`).length === 0) {
+      let ingredientNameInput = document.getElementById(
+        `ingredient_${recipeIdentifier}_${i}`
+      );
+      ingredientNameInput.classList.add("input-error");
+      ingredientNameInput.addEventListener("input", function () {
+        checkIfEmpty(ingredientNameInput);
+      });
+      error = 1;
+    }
+  }
+
+  //Make sure all ingredients are fractions or whole numbers or whole number then fraction
+  for (let i = 0; i < num_ingredients; i++) {
+    let ingValElement = document.getElementById(
+      `ingredient_value_${recipeIdentifier}_${i}`
+    );
+    let ingVal = getElementVal(`ingredient_value_${recipeIdentifier}_${i}`);
+
+    let ingError = true;
+
+    if (!isNaN(isNumber(ingVal))) {
+      // if its a number then no errors
+      ingError = false;
+    } else if (
+      ingVal.split(" ").length === 1 && //its its not a number and only one word
+      ingVal.split("/").length === 2 && // has exactly one /
+      ingVal.split("/")[0].length > 0 && // there are numbers on both sides of the /
+      ingVal.split("/")[1].length > 0 &&
+      isNumber(ingVal.split("/")[1]) !== 0 //not dividing by 0
+    ) {
+      ingError = false;
+    } else if (
+      ingVal.split(" ").length === 2 && // if there are two words
+      !isNaN(isNumber(ingVal.split(" ")[0])) && // first part is a number
+      ingVal.split(" ")[1].split("/").length === 2 && // second part is a fraction
+      ingVal.split(" ")[1].split("/")[0].length > 0 && // there are numbers on both sides of the /
+      ingVal.split(" ")[1].split("/")[1].length > 0 &&
+      isNumber(ingVal.split(" ")[1].split("/")[1]) !== 0 // not dividing by 0
+    ) {
+      ingError = false;
+    }
+
+    if (ingError) {
+      ingValElement.classList.add("input-error");
+      ingValElement.addEventListener("input", function () {
+        checkIfEmpty(ingValElement);
+      });
       error = 1;
     }
   }
 
   //Empty Steps
   for (let i = 0; i < num_steps; i++) {
-    if (!document.getElementById(`recipe-step_${i}`).textContent) {
-      document.getElementById(`recipe-step_${i}`).classList.add("input-error");
-      document
-        .getElementById(`recipe-step_${i}`)
-        .addEventListener("input", function () {
-          checkIfSpanEmpty(document.getElementById(`recipe-step_${i}`));
-        });
+    let stepInput = document.getElementById(
+      `recipe-step_${recipeIdentifier}_${i}`
+    );
+    if (!stepInput.textContent) {
+      stepInput.classList.add("input-error");
+      stepInput.addEventListener("input", function () {
+        checkIfSpanEmpty(document.getElementById(`recipe-step_${i}`));
+      });
       error = 1;
     }
   }
@@ -134,6 +176,18 @@ export function checkErrors(
     return false;
   }
 }
+
+function isNumber(value) {
+  let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  for (let i = 0; i < value.length; i++) {
+    if (!numbers.includes(value[i])) {
+      return NaN;
+    }
+  }
+
+  return Number(value);
+}
+
 //Remove red border when something is typed in text box
 function checkIfEmpty(element) {
   if (element.value) {
@@ -202,9 +256,9 @@ export function submitForm(
   for (let i = 0; i < num_ingredients; i++) {
     ingredients.push(
       new Ingredient(
-        getElementVal(`ingredient_${i}`),
-        getElementVal(`ingredient_value_${i}`),
-        getElementVal(`ingredient_unit_${i}`)
+        getElementVal(`ingredient_${recipeIdentifier}_${i}`),
+        getElementVal(`ingredient_value_${recipeIdentifier}_${i}`),
+        getElementVal(`ingredient_unit_${recipeIdentifier}_${i}`)
       )
     );
   }
@@ -213,7 +267,10 @@ export function submitForm(
     `step-item_${recipeIdentifier}`
   ).length;
   for (let i = 0; i < num_steps; i++) {
-    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
+    steps.push(
+      document.getElementById(`recipe-step_${recipeIdentifier}_${i}`)
+        .textContent
+    );
   }
 
   const recipe = new Recipe(
@@ -236,371 +293,16 @@ export function submitForm(
   console.log(imagesArray[0]);
 
   return createImageFileObject(image).then((result) => {
-    return database.addRecipe(recipe, result);
-  });
-}
-
-export async function submitFormAsync(
-  database,
-  e,
-  recipeIdentifier,
-  imagesArray,
-  recipeName,
-  recipeDesc,
-  prepTimeHrs,
-  prepTimeMins,
-  cookTimeHrs,
-  cookTimeMins,
-  servings
-) {
-  e.preventDefault();
-
-  let recipeNameVal = recipeName.value;
-  let recipeDescVal = recipeDesc.textContent;
-  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
-  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
-  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
-  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
-  let servingsVal = servings.value;
-
-  let ingredients = [];
-  let steps = [];
-  const num_ingredients = document.getElementsByClassName(
-    `ingredient-row-container_${recipeIdentifier}`
-  ).length;
-  console.log(num_ingredients);
-  for (let i = 0; i < num_ingredients; i++) {
-    ingredients.push(
-      new Ingredient(
-        getElementVal(`ingredient_${i}`),
-        getElementVal(`ingredient_value_${i}`),
-        getElementVal(`ingredient_unit_${i}`)
-      )
-    );
-  }
-
-  const num_steps = document.getElementsByClassName(
-    `step-item_${recipeIdentifier}`
-  ).length;
-  for (let i = 0; i < num_steps; i++) {
-    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
-  }
-
-  const recipe = new Recipe(
-    recipeNameVal,
-    recipeDescVal,
-    cookTimeHrsVal,
-    cookTimeMinsVal,
-    prepTimeHrsVal,
-    prepTimeMinsVal,
-    servingsVal,
-    ingredients,
-    steps
-  );
-
-  //const image = imagesArray[0];
-  const image = document.getElementsByClassName(
-    `recipeImg_${recipeIdentifier}`
-  )[0];
-  //console.log(image.src);
-  console.log(imagesArray[0]);
-
-  const promises = [];
-  promises.push(
-    createImageFileObject(image).then((result) => {
-      database.addRecipe(recipe, result);
-    })
-  );
-
-  Promise.all(promises).then(() => {
-    // window.location.href = "./index.html";
-    return "Recipe Edited";
-  });
-}
-
-export async function createRecipe(
-  database,
-  e,
-  recipeIdentifier,
-  imagesArray,
-  recipeName,
-  recipeDesc,
-  prepTimeHrs,
-  prepTimeMins,
-  cookTimeHrs,
-  cookTimeMins,
-  servings
-) {
-  e.preventDefault();
-
-  let recipeNameVal = recipeName.value;
-  let recipeDescVal = recipeDesc.textContent;
-  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
-  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
-  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
-  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
-  let servingsVal = servings.value;
-
-  let ingredients = [];
-  let steps = [];
-  const num_ingredients = document.getElementsByClassName(
-    `ingredient-row-container_${recipeIdentifier}`
-  ).length;
-  console.log(num_ingredients);
-  for (let i = 0; i < num_ingredients; i++) {
-    ingredients.push(
-      new Ingredient(
-        getElementVal(`ingredient_${i}`),
-        getElementVal(`ingredient_value_${i}`),
-        getElementVal(`ingredient_unit_${i}`)
-      )
-    );
-  }
-
-  const num_steps = document.getElementsByClassName(
-    `step-item_${recipeIdentifier}`
-  ).length;
-  for (let i = 0; i < num_steps; i++) {
-    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
-  }
-
-  const recipe = new Recipe(
-    recipeNameVal,
-    recipeDescVal,
-    cookTimeHrsVal,
-    cookTimeMinsVal,
-    prepTimeHrsVal,
-    prepTimeMinsVal,
-    servingsVal,
-    ingredients,
-    steps
-  );
-
-  //const image = imagesArray[0];
-  const image = document.getElementsByClassName(
-    `recipeImg_${recipeIdentifier}`
-  )[0];
-  //console.log(image.src);
-  console.log(imagesArray[0]);
-
-  createImageFileObject(image).then((result) => {
-    return [recipe, result];
-  });
-}
-
-export function submitFormCallback(
-  database,
-  e,
-  recipeIdentifier,
-  imagesArray,
-  recipeName,
-  recipeDesc,
-  prepTimeHrs,
-  prepTimeMins,
-  cookTimeHrs,
-  cookTimeMins,
-  servings,
-  callback
-) {
-  e.preventDefault();
-
-  let recipeNameVal = recipeName.value;
-  let recipeDescVal = recipeDesc.textContent;
-  let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
-  let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
-  let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
-  let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
-  let servingsVal = servings.value;
-
-  let ingredients = [];
-  let steps = [];
-  const num_ingredients = document.getElementsByClassName(
-    `ingredient-row-container_${recipeIdentifier}`
-  ).length;
-  console.log(num_ingredients);
-  for (let i = 0; i < num_ingredients; i++) {
-    ingredients.push(
-      new Ingredient(
-        getElementVal(`ingredient_${i}`),
-        getElementVal(`ingredient_value_${i}`),
-        getElementVal(`ingredient_unit_${i}`)
-      )
-    );
-  }
-
-  const num_steps = document.getElementsByClassName(
-    `step-item_${recipeIdentifier}`
-  ).length;
-  for (let i = 0; i < num_steps; i++) {
-    steps.push(document.getElementById(`recipe-step_${i}`).textContent);
-  }
-
-  const recipe = new Recipe(
-    recipeNameVal,
-    recipeDescVal,
-    cookTimeHrsVal,
-    cookTimeMinsVal,
-    prepTimeHrsVal,
-    prepTimeMinsVal,
-    servingsVal,
-    ingredients,
-    steps
-  );
-
-  //const image = imagesArray[0];
-  const image = document.getElementsByClassName(
-    `recipeImg_${recipeIdentifier}`
-  )[0];
-  //console.log(image.src);
-  console.log(imagesArray[0]);
-
-  createImageFileObject(image).then((result) => {
-    database.addRecipe(recipe, result);
-  });
-
-  callback();
-}
-
-export function submitFormPromise(
-  database,
-  e,
-  recipeIdentifier,
-  imagesArray,
-  recipeName,
-  recipeDesc,
-  prepTimeHrs,
-  prepTimeMins,
-  cookTimeHrs,
-  cookTimeMins,
-  servings
-) {
-  return new Promise((resolve, reject) => {
-    e.preventDefault();
-
-    let recipeNameVal = recipeName.value;
-    let recipeDescVal = recipeDesc.textContent;
-    let cookTimeHrsVal = ifEmptyTime(cookTimeHrs.value);
-    let cookTimeMinsVal = ifEmptyTime(cookTimeMins.value);
-    let prepTimeHrsVal = ifEmptyTime(prepTimeHrs.value);
-    let prepTimeMinsVal = ifEmptyTime(prepTimeMins.value);
-    let servingsVal = servings.value;
-
-    let ingredients = [];
-    let steps = [];
-    const num_ingredients = document.getElementsByClassName(
-      `ingredient-row-container_${recipeIdentifier}`
-    ).length;
-    console.log(num_ingredients);
-    for (let i = 0; i < num_ingredients; i++) {
-      ingredients.push(
-        new Ingredient(
-          getElementVal(`ingredient_${i}`),
-          getElementVal(`ingredient_value_${i}`),
-          getElementVal(`ingredient_unit_${i}`)
-        )
-      );
+    if (image) {
+      return compressImage(result, 800, 800).then((compressedImage) => {
+        return database.addRecipe(recipe, compressedImage);
+      });
+    } else {
+      return database.addRecipe(recipe, image);
     }
-
-    const num_steps = document.getElementsByClassName(
-      `step-item_${recipeIdentifier}`
-    ).length;
-    for (let i = 0; i < num_steps; i++) {
-      steps.push(document.getElementById(`recipe-step_${i}`).textContent);
-    }
-
-    const recipe = new Recipe(
-      recipeNameVal,
-      recipeDescVal,
-      cookTimeHrsVal,
-      cookTimeMinsVal,
-      prepTimeHrsVal,
-      prepTimeMinsVal,
-      servingsVal,
-      ingredients,
-      steps
-    );
-
-    //const image = imagesArray[0];
-    const image = document.getElementsByClassName(
-      `recipeImg_${recipeIdentifier}`
-    )[0];
-    //console.log(image.src);
-    console.log(imagesArray[0]);
-
-    createImageFileObject(image).then((result) => {
-      database.addRecipe(recipe, result);
-    });
   });
 }
 
-// function writeUserData(
-//   recipeName,
-//   recipeDesc,
-//   cookTimeHrs,
-//   cookTimeMins,
-//   prepTimeHrs,
-//   prepTimeMins,
-//   servings,
-//   ingredients,
-//   steps,
-//   image
-// ) {
-//   firebase
-//     .database()
-//     .ref(`${firebase.auth().currentUser.uid}/recipes/${recipeName}`)
-//     .set({
-//       recipeDesc: recipeDesc,
-//       cookTimeHrs: cookTimeHrs,
-//       cookTimeMins: cookTimeMins,
-//       prepTimeHrs: prepTimeHrs,
-//       prepTimeMins: prepTimeMins,
-//       servings: servings,
-//       ingredients: ingredients,
-//       steps: steps,
-//     });
-//   const storageRef = firebase.storage().ref();
-//   const imageRef = storageRef.child(
-//     `${firebase.auth().currentUser.uid}/images/${recipeName}`
-//   );
-//   console.log(image);
-//   if (image) {
-//     imageRef.put(image).then((snapshot) => {});
-//   } else {
-//     const imageUrl = "../../img/food-placeholder-1.jpg";
-//     fetch(imageUrl)
-//       .then((response) => response.blob())
-//       .then((blob) => {
-//         // Create a File object from the Blob
-//         const fileObject = new File([blob], "image.png", { type: "image/png" });
-//         imageRef.put(fileObject);
-//       });
-//   }
-//   console.log("Uploaded");
-// }
-
-// async function createImageFileObject(imageUrl) {
-//   try {
-//     // Fetch the image data
-//     const response = await fetch(imageUrl);
-
-//     if (!response.ok) {
-//       throw new Error("Failed to fetch image");
-//     }
-
-//     // Convert response data to a Blob
-//     const blob = await response.blob();
-
-//     // Create a File object from the Blob
-//     const fileObject = new File([blob], "image.jpg", { type: "image/jpeg" });
-
-//     // Log the created File object
-//     console.log("Created File object:", fileObject);
-//     return fileObject;
-//   } catch (error) {
-//     console.error("Error:", error.message);
-//     return { error: error.message };
-//   }
-// }
 const getElementVal = (id) => {
   return document.getElementById(id).value;
 };

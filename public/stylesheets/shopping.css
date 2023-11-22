@@ -1,7 +1,7 @@
 .title {
   height: 5%;
   margin-top: 2%;
-  margin-left: 2%;
+  /*margin-left: 2%; */
   color: var(--primary-colour);
   font-size: 25px;
   font-family: Gabarito;
@@ -23,7 +23,7 @@
   gap: 40px;
   align-items: center;
   border-radius: 30px;
-  margin-top: 15px;
+  margin-top: 70px;
   min-height: 92%;
   min-width: 900px;
   width: 70%;
@@ -54,7 +54,7 @@
 }
 
 .column {
-  width: 50%;
+  width: 70%;
   display: flex;
   justify-content: center;
 }
@@ -71,6 +71,7 @@
   flex-direction: column;
   gap: 20px;
   align-items: center;
+  width: 100%;
 }
 
 .recipe-container {
@@ -83,9 +84,23 @@
 .shopping-list-entry-div {
   position: relative;
   border-radius: 10px;
-  overflow: hidden;
-  height: 250px;
+  width: 230px;
+  height: 160px;
   border: solid 3px var(--primary-colour);
+  overflow: hidden;
+}
+
+.recipe-entry-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  height: 100%;
+}
+
+.shopping-list-entry-div-no-image {
+  display: flex;
+  height: auto;
+  min-height: 50px;
 }
 
 .recipe-title-div {
@@ -97,9 +112,15 @@
   border-radius: 0 0 20px 0;
 }
 
+.recipe-title-div-no-image {
+  width: 100%;
+  border-radius: 0px;
+}
+
 .recipe-list-entry-image {
   height: 100%;
-  width: auto;
+  width: 100%;
+  object-fit: cover;
 }
 
 .ingredient-container {
@@ -107,6 +128,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
+  width: 100%;
 }
 
 .shopping-list-entry {
@@ -115,4 +137,51 @@
 
 .column-title h2 {
   font-size: 32px;
+}
+
+.remove-button {
+  height: 30px;
+  aspect-ratio: 1;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.remove-button:hover {
+  background-color: var(--grey-two-colour);
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px) {
+  .mainBg {
+    min-width: 0px;
+    width: 100vw;
+  }
+
+  .overlay {
+    min-width: 0px;
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 699px) {
+  .mainBg {
+    min-width: 0px;
+    width: 100vw;
+  }
+
+  .overlay {
+    min-width: 0px;
+    width: 90%;
+  }
+
+  .column-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .title {
+    margin-top: 2rem;
+  }
 }

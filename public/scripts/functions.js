@@ -109,7 +109,7 @@ function createMenu(database, recipeDiv, recipeName) {
   recipeCardMenuBtn.classList.add("recipe-card-menu-btn");
   recipeCardMenuBtn.id = "recipe-card-menu-btn";
 
-  fetch("../svgs/elipses.svg")
+  fetch("../svgs/vertical-elipses.svg")
     .then((response) => response.text())
     .then((svgData) => {
       const parser = new DOMParser();
@@ -120,7 +120,8 @@ function createMenu(database, recipeDiv, recipeName) {
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
-  recipeCardMenuBtn.addEventListener("click", () => {
+  recipeCardMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     handleElipsisBtnPress(recipeName);
   });
 
@@ -163,7 +164,7 @@ function updateShoppingListModal() {
 function handleDeleteRecipe(database, recipeName) {
   // Modify delete modal
   const deleteModalText = document.getElementById("delete-modal-text");
-  deleteModalText.textContent = `Are you sure you want to delete your ${recipeName} recipe?`;
+  deleteModalText.textContent = `Are you sure you want to delete this recipe?`;
 
   // Display delete modal
   const modal = document.getElementById("delete-modal");
@@ -181,6 +182,9 @@ function handleDeleteRecipe(database, recipeName) {
     database.deleteRecipe(recipeName);
     document.getElementById(`${recipeName}-recipe-div`).style.display = "none";
     closeModal(modal);
+    database.recipeInShoppingList(recipeName).then(() => {
+      database.updateShoppingList(recipeName);
+    });
   });
 }
 
@@ -217,22 +221,13 @@ export function displayRecipes(
   profile = database.user,
   friendUsername
 ) {
-  // Displays recipes as card in the recipe-container DOM element (class)
-
-  // let noRecipes = 0;
-  // database.getRecipeCount().then((count) => {
-  //   if (count === 0) {
-  //     noRecipes = 1;
-  //     return;
-  //   }
-  // });
-  // if (noRecipes === 1) {
-  //   return;
-  // }
   const recipeContainer =
     document.getElementsByClassName("recipe-container")[0];
   recipeContainer.innerHTML = "";
   database.getAllRecipeNames(profile).then((recipeNames) => {
+    if (!recipeNames) {
+      return;
+    }
     for (let i = 0; i < recipeNames.length; i++) {
       const recipeName = recipeNames[i];
 
@@ -301,10 +296,9 @@ export function displayRecipes(
       let forkRecipe;
       forkPromises.push(
         database.getRecipe(recipeName, profile).then((recipe) => {
-          recipeNameElement.textContent = recipeName;
+          recipeNameElement.textContent = recipe.name;
           recipeDescription.innerHTML = recipe.desc;
           forkRecipe = recipe;
-          forkRecipe.name = recipeName;
         })
       );
 
@@ -321,7 +315,6 @@ export function displayRecipes(
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
         Promise.all(forkPromises).then(() => {
-
           createForkBtn(
             database,
             recipeDiv,
@@ -329,16 +322,13 @@ export function displayRecipes(
             recipeImg,
             friendUsername
           );
-
         });
       }
     }
   });
 }
 
-
 function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
-
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
   forkBtn.innerHTML = "Fork";
@@ -352,9 +342,9 @@ function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
         const fileObject = new File([blob], "image.jpg", {
           type: "image/jpeg",
         });
-        recipe.name = `${recipe.name} by ${friendUsername}`;
-        console.log(recipe.name);
-        database.addRecipe(recipe, fileObject);
+        const newRecipe = Object.assign({}, recipe);
+        newRecipe.name = `${recipe.name} by ${friendUsername}`;
+        database.addRecipe(newRecipe, fileObject);
       });
     });
     // match /users/{userId}/{allPaths=**} {
@@ -431,15 +421,25 @@ export function generateRecipeModal(
     //Name
     const recipeNameElement = document.createElement("h2");
     recipeNameElement.classList.add("modal-recipe-name");
-    recipeNameElement.textContent = recipeName;
+
+    recipeNameElement.textContent = recipe.name.toString();
+    modalContentElement.appendChild(recipeNameElement);
 
     //Image
+    const imageDiv = document.createElement("div");
+    imageDiv.classList.add("image-div");
+
+    modalContentElement.appendChild(imageDiv);
+
     const image = document.createElement("img");
     image.classList.add("image");
     database.getRecipeImage(recipeName, profile).then((url) => {
       if (url) {
         image.src = url;
-        modalContentElement.appendChild(image);
+        imageDiv.appendChild(image);
+        imageDiv.classList.remove("no-image-container");
+      } else {
+        imageDiv.classList.add("no-image-container");
       }
     });
 
@@ -468,10 +468,12 @@ export function generateRecipeModal(
     const servingsLabel = document.createElement("label");
     servingsLabel.classList.add("detail-label");
     servingsLabel.textContent = "Servings:";
+    servingsLabel.style.order = 1;
     servingsContainer.appendChild(servingsLabel);
 
     const servingsInput = document.createElement("input");
     servingsInput.classList.add("servings-input");
+    servingsInput.style.order = 3;
 
     const detailsContainer = document.createElement("div");
     detailsContainer.classList.add("details-container");
@@ -533,15 +535,37 @@ export function generateRecipeModal(
       let origServings = Number(recipe.servings);
 
       for (let i = 0; i < recipe.ingredients.length; i++) {
-        let ingredientString = recipe.ingredients[i].value;
-        let ingredientValue;
+        let ingredientElementArray =
+          ingredientValueElements[i].textContent.split(" ");
 
-        ingredientValue = multiplyFractionByNumber(
-          ingredientString,
-          numServings,
-          origServings
-        );
-        ingredientValueElements[i].textContent = ingredientValue;
+        let firstValue = ingredientElementArray[0];
+
+        if (
+          !isNaN(Number(firstValue)) ||
+          (firstValue.includes("/") &&
+            !isNaN(Number(firstValue.replace("/", ""))))
+        ) {
+          let ingredientString = recipe.ingredients[i].value;
+          let ingredientValue;
+
+          ingredientValue = multiplyFractionByNumber(
+            ingredientString,
+            numServings,
+            origServings
+          );
+          // ingredientValueElements[i].textContent = ingredientValue;
+          let ingredientUnitAndName = ingredientElementArray.slice(1);
+          if (ingredientUnitAndName[0].includes("/")) {
+            let value = ingredientUnitAndName[0].replace("/", "");
+            if (!isNaN(Number(value))) {
+              ingredientUnitAndName = ingredientUnitAndName.slice(1);
+            }
+          }
+          let ingredientUnitNameString = ingredientUnitAndName.join(" ");
+          ingredientValueElements[
+            i
+          ].textContent = `${ingredientValue} ${ingredientUnitNameString}`;
+        }
       }
     }
 
@@ -553,6 +577,7 @@ export function generateRecipeModal(
         const svgElement = svgDOM.querySelector("svg");
         svgElement.classList.add("servings-button");
         servingsContainer.appendChild(svgElement);
+        svgElement.style.order = 2;
 
         servingsContainer.appendChild(servingsInput);
 
@@ -572,6 +597,7 @@ export function generateRecipeModal(
         const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
         const svgElement = svgDOM.querySelector("svg");
         svgElement.classList.add("servings-button");
+        svgElement.style.order = 4;
         servingsContainer.appendChild(svgElement);
 
         svgElement.addEventListener("click", function () {
@@ -590,33 +616,14 @@ export function generateRecipeModal(
       const ingredientElement = document.createElement("li");
       ingredientElement.classList.add("ingredient-element");
 
-      const ingredientDiv = document.createElement("div");
-      ingredientDiv.classList.add("ingredient-div");
-
-      let ingredientValue = document.createElement("h3");
-      let ingredientNameUnit = document.createElement("h3");
-
-      ingredientValue.textContent = ingredient.value;
-      ingredientNameUnit.textContent = `${ingredient.unit} ${ingredient.name}`;
-
-      ingredientValue.classList.add("ingredient");
-      ingredientValue.classList.add("ingredient-value");
-      ingredientValue.classList.add(
+      let ingredientText = document.createElement("h3");
+      ingredientText.classList.add("ingredient");
+      ingredientText.classList.add(
         `ingredient_${recipeName.replace(/ /g, "-")}`
       );
-      ingredientNameUnit.classList.add("ingredient");
+      ingredientText.textContent = `${ingredient.value} ${ingredient.unit} ${ingredient.name}`;
 
-      if (ingredient.value.length === 0) {
-        ingredientNameUnit.classList.add("no-value");
-      }
-
-      //ingredientValue.classList.add(`${recipeName}-ingredient`);
-
-      ingredientDiv.appendChild(ingredientValue);
-
-      ingredientDiv.appendChild(ingredientNameUnit);
-
-      ingredientElement.appendChild(ingredientDiv);
+      ingredientElement.appendChild(ingredientText);
 
       ingredientsContainer.appendChild(ingredientElement);
     }
@@ -670,8 +677,6 @@ export function generateRecipeModal(
     documentBody.appendChild(modalElement);
     modalElement.appendChild(modalContentElement);
 
-    modalContentElement.appendChild(recipeNameElement);
-
     modalContentElement.appendChild(descriptionDiv);
     modalContentElement.appendChild(detailsContainer);
     modalContentElement.appendChild(ingredientsStepsContainer);
@@ -701,6 +706,17 @@ function multiplyFractionByNumber(fractionString, numerator, denominator) {
 
   if (fractionString.indexOf("/") === -1) {
     fractionString = fractionString + "/1";
+  }
+
+  if (fractionString.includes(" ")) {
+    let wholePart = fractionString.split(" ")[0];
+    let fractionPart = fractionString.split(" ")[1];
+    let denominator = fractionPart.split("/")[1];
+    let numerator = fractionPart.split("/")[0];
+
+    fractionString = `${
+      Number(wholePart) * Number(denominator) + Number(numerator)
+    }/${denominator}`;
   }
 
   // Extract numerator and denominator from the fraction string
@@ -773,4 +789,68 @@ export async function createImageFileObject(image) {
   } else {
     return null;
   }
+}
+
+export function compressImage(file, sizeX, sizeY) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function (readerEvent) {
+      const img = new Image();
+
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas dimensions to resize the image
+        const maxWidth = sizeX; // Set your desired maximum width
+        const maxHeight = sizeY; // Set your desired maximum height
+
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions while maintaining the aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        // Resize the canvas and draw the resized image
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert canvas content back to a Blob with reduced size
+        canvas.toBlob(
+          (blob) => {
+            if (blob.size > 200000) {
+              compressImage(blob, sizeX - 100, sizeY - 100).then(
+                (compressedImage) => {
+                  resolve(compressedImage);
+                }
+              );
+            } else {
+              resolve(blob);
+            }
+            // Resolve with the compressed image Blob
+          },
+          file.type,
+          1.0
+        );
+      };
+
+      // Set the image source to the uploaded file
+      img.src = readerEvent.target.result;
+    };
+
+    // Read the uploaded file as a data URL
+    reader.readAsDataURL(file);
+  });
 }

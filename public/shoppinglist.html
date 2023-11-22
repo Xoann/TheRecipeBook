@@ -12,27 +12,67 @@
       href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <title>Recipe Book</title>
+    <title>Chef Mate</title>
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
     <header>
       <nav class="main-nav">
+        <div class="logo" id="h">
+          <img class="logo-img" src="img/tab.png" />
+          <div class="logo-title">
+            <span class="logo-title-word">Chef Mate</span>
+          </div>
+        </div>
 
-        <img class="logo" id="h" src="img/logo.png" />
-
-        <div class="nav-list">
+        <div class="nav-list" mobile-visible="false">
+          <div id="home-nav-button" class="nav-list-link">
+            <span class="nav-list-item">Home</span>
+          </div>
           <div id="shopping-list" class="nav-list-link">
             <span class="nav-list-item">Shopping List</span>
           </div>
           <div id="add-recipe" class="nav-list-link">
-            <span class="nav-list-item">Add Recipe</span>
+            <span class="nav-list-item">New Recipe</span>
           </div>
-          <div id="username" class="nav-list-link">
+          <div id="username" class="nav-list-link mobile-nav-account">
             <span class="nav-list-item" id="username-button"></span>
             <img id="pfp-nav" src="img/default-pfp.png" alt="" />
           </div>
+
+          <div id="nav-profile" class="nav-list-link mobile-nav">
+            <span class="nav-list-item">Profile</span>
+          </div>
+          <div id="nav-sign-out" class="nav-list-link mobile-nav">
+            <span class="nav-list-item">Sign Out</span>
+          </div>
+          <div id="nav-dark-mode" class="nav-list-link mobile-nav">
+            <span class="nav-list-item">Dark Mode</span>
+          </div>
         </div>
       </nav>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6 nav-toggle nav-open"
+        mobile-visible="false"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          class="nav-path"
+        />
+      </svg>
     </header>
     <div class="mainBg">
       <div id="user-menu" class="user-menu">
@@ -139,6 +179,5 @@
 
     <script type="module" src="../scripts/navbar.js"></script>
     <script src="../scripts/darkmode.js"></script>
-
   </body>
 </html>

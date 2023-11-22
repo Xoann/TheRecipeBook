@@ -10,9 +10,9 @@ svg {
 
 /* NAVBAR */
 
-.mainBg {
+/* .mainBg {
   padding-top: 7vh;
-}
+} */
 
 .main-nav {
   padding-right: 6.1px;
@@ -23,8 +23,7 @@ svg {
   background-color: var(--dark-one-colour);
   border-bottom: 1px var(--nav-border) solid;
   /* box-shadow: 0 4px 13px -7px var(--light-button-hover); remove this shit if it looks dumb */
-  height: 7vh;
-  max-height: 60px;
+  height: 55px;
   width: 100vw;
   z-index: 11;
 }
@@ -60,14 +59,34 @@ svg {
   align-items: center;
   display: flex;
   gap: 20px;
-  height: 100%;
   padding: 0px 30px;
   border-radius: 7px;
   transition: background-color 0.15s;
 }
 
+#username {
+  width: 175px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .nav-list-link {
   height: 100%;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  color: var(--light-text-colour);
+  border: 0px;
+  background-repeat: no-repeat;
+  z-index: 100;
 }
 
 #pfp-nav {
@@ -81,12 +100,36 @@ svg {
 .logo {
   height: 100%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 15px;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 100%;
+}
+
+.logo-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-title-word {
+  display: block;
+  font-size: 28px;
+  font-family: Gabarito;
+  color: var(--primary-colour);
 }
 
 .user-menu {
   display: block;
   position: fixed;
-  top: calc(7vh);
+  top: 58px;
   right: 10px;
   height: 0;
   width: 166px;
@@ -100,7 +143,7 @@ svg {
   border-color: var(--nav-border);
   border-style: solid;
   border-width: 0;
-  z-index: 5;
+  z-index: 999;
 }
 
 .user-menu-list {
@@ -188,3 +231,104 @@ svg {
 }
 
 /* TEXT */
+
+@media only screen and (max-width: 699px) {
+  .nav-list {
+    position: fixed;
+    height: 100vh;
+    max-height: 10000px;
+    width: 80%;
+    top: 0px;
+    left: 20%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    background-color: blue;
+    padding-top: 30%;
+    padding-left: 2rem;
+    font-size: 24px;
+    transform: translateX(101%);
+    transition: transform 0.3s ease-out;
+    background: hsla(0, 0%, 0%, 0.808);
+    backdrop-filter: blur(4rem);
+  }
+
+  .nav-list[mobile-visible="true"] {
+    transform: translateX(0%);
+  }
+
+  .nav-list-link {
+    display: block;
+    height: 40px;
+    margin: 20px 0;
+    width: 80%;
+  }
+
+  .nav-toggle {
+    display: block;
+    right: 20px;
+    top: 5px;
+  }
+
+  .mobile-nav {
+    display: block;
+  }
+
+  .mobile-nav-account {
+    order: -1;
+    display: none;
+  }
+
+  .light-nav-list {
+    background: hsla(0, 0%, 100%, 0.4) !important;
+  }
+}
+
+.loader {
+  z-index: 9999;
+  color: var(--primary-colour);
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: absolute;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em,
+      0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em,
+      0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}

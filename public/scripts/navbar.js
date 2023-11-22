@@ -27,6 +27,7 @@ window.addEventListener("click", function (event) {
     }, 100);
   }
 });
+
 document.getElementById("profile-page").addEventListener("click", () => {
   window.location.href = "account.html";
 });
@@ -44,6 +45,10 @@ document.getElementById("nav-sign-out").addEventListener("click", () => {
 });
 
 document.getElementById("h").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+document.getElementById("home-nav-button").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 

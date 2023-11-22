@@ -67,8 +67,11 @@ firebase.auth().onAuthStateChanged((user) => {
 
   database.getUsername().then((username) => {
     if (!window.localStorage.getItem("username")) {
+      document.querySelector("#username").style.width = "fit-content";
+
       usernameText.textContent = username;
     }
+    document.querySelector("#username").style.width = "fit-content";
 
     window.localStorage.setItem("username", username);
   });

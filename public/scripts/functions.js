@@ -842,7 +842,7 @@ export function compressImage(file, sizeX, sizeY) {
             // Resolve with the compressed image Blob
           },
           file.type,
-          0.8
+          1.0
         );
       };
 

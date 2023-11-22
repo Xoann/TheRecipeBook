@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+#no-scroll {
+  overflow-x: hidden;
+}
+
 .main-title {
   color: var(--primary-colour);
   font-size: 70px;

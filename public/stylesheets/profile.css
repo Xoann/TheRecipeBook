@@ -24,10 +24,10 @@
   background-color: var(--grey-one-colour);
   border-radius: 15px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1.5fr;
   grid-gap: 10px;
   width: 90%;
-  padding: 30px;
+  padding: 30px 50px;
   min-width: 600px;
   justify-content: flex-start;
   /* align-items: center; */
@@ -52,19 +52,22 @@
 .profile-info {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .username {
-  font-size: 30px;
+  font-size: 32px;
 }
 
 .name {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .profile-stats {
-  font-size: 18px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .fork-btn {
@@ -74,25 +77,50 @@
   align-items: center;
   top: 10px;
   right: 10px;
-  width: 50px;
+  width: 65px;
   height: 30px;
   background-color: var(--dark-two-colour);
-  color: var(--light-colour);
   border-radius: 100px;
   overflow: hidden;
   z-index: 10;
   transition: all 0.3s ease;
+  color: var(--light-text-colour);
+  gap: -10px;
 }
 
 .fork-btn:hover {
   background-color: var(--grey-one-colour);
 }
 
+.fork-text {
+  font-weight: normal;
+  font-size: 16px;
+  margin-left: 0%;
+  margin-right: 10px;
+}
+
+#forked-done-button {
+  background-color: transparent;
+  border: 2px solid var(--primary-colour);
+}
+
+.fork-button-svg {
+  transform: rotate(135deg);
+  order: -1;
+  height: 16px;
+  margin-left: 5px;
+  margin-bottom: 2px;
+}
+
+.fork-btn path {
+  fill: var(--light-text-colour) !important;
+}
+
 #forked-modal-content {
   margin-top: 20%;
   min-width: 300px;
   width: 300px;
-  width: 40%;
+  width: 25%;
 }
 
 .stat-value {
@@ -100,10 +128,6 @@
 }
 
 .name {
-  color: var(--light-text-colour);
-}
-
-.fork-btn {
   color: var(--light-text-colour);
 }
 
@@ -140,6 +164,7 @@
     min-width: 0px;
     display: flex;
     flex-direction: column;
+    padding: 30px;
   }
 
   .profile-stats {

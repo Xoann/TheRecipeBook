@@ -314,6 +314,8 @@ export function displayRecipes(
       if (type === "home") {
         createMenu(database, recipeDiv, recipeName);
       } else if (type === "profile") {
+        document.getElementById("recipe-count").textContent =
+          document.getElementsByClassName("recipe-div").length;
         Promise.all(forkPromises).then(() => {
           createForkBtn(
             database,
@@ -331,7 +333,25 @@ export function displayRecipes(
 function createForkBtn(database, recipeDiv, recipe, recipeImg, friendUsername) {
   const forkBtn = document.createElement("div");
   forkBtn.classList.add("fork-btn");
-  forkBtn.innerHTML = "Fork";
+
+  const killmyself = document.createElement("h3");
+  killmyself.textContent = "Fork";
+  killmyself.classList.add("fork-text");
+  forkBtn.appendChild(killmyself);
+
+  fetch("../svgs/fork.svg")
+    .then((response) => response.text())
+    .then((svgData) => {
+      const parser = new DOMParser();
+      const svgDOM = parser.parseFromString(svgData, "image/svg+xml");
+      const svgElement = svgDOM.querySelector("svg");
+      svgElement.classList.add("fork-button-svg");
+      forkBtn.appendChild(svgElement);
+    })
+    .catch((error) => {
+      console.error("Error loading SVG:", error);
+    });
+
   recipeDiv.appendChild(forkBtn);
 
   forkBtn.addEventListener("click", () => {

@@ -527,7 +527,7 @@
 }
 
 .ingredients-container .med-label {
-  margin-left: 10px;
+  margin-left: -18px;
 }
 
 .ingredients-steps-container {
@@ -572,6 +572,7 @@
   font-size: 18px;
   width: 60%;
   list-style-type: decimal;
+  list-style-position: inside;
 }
 
 .step {

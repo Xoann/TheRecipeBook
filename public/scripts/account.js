@@ -114,6 +114,7 @@ document.body.addEventListener("click", (event) => {
 
   if (event.target !== friendMenu || targetNotMenuOpenBtn) {
     friendMenu.style.display = "none";
+    friendMenuIsOpen = !friendMenuIsOpen;
   }
 });
 

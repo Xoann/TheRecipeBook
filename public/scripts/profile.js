@@ -32,10 +32,6 @@ function loadProfilePage(profile, loggedUser) {
     document.getElementById("name").textContent = name;
   });
 
-  database.getFriendRecipeCount(profile).then((count) => {
-    document.getElementById("recipe-count").textContent = count;
-  });
-
   database.getFriendDateJoined(profile).then((date) => {
     document.getElementById("date-joined").textContent = date;
   });

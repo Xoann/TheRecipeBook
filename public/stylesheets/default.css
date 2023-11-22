@@ -276,7 +276,7 @@ svg {
 
   .mobile-nav-account {
     order: -1;
-    display: none;
+    display: none !important;
   }
 
   .light-nav-list {

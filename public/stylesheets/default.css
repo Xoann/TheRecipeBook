@@ -297,6 +297,10 @@ svg {
   transform: translateZ(0);
 }
 
+img {
+  object-fit: cover !important;
+}
+
 @keyframes mulShdSpin {
   0%,
   100% {

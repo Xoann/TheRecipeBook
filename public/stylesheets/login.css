@@ -448,6 +448,7 @@ form {
     transition: 333ms;
     min-width: 300px;
     margin-top: 10vw;
+    min-height: 650px;
   }
 
   .mobile-view-btns {

@@ -48,10 +48,6 @@ document.getElementById("h").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
-document.getElementById("home-nav-button").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
 document.getElementById("shopping-list").addEventListener("click", () => {
   window.location.href = "shoppinglist.html";
 });

@@ -171,6 +171,11 @@
   stroke: var(--light-colour);
 }
 
+.ellipsis path {
+  stroke: var(--light-colour);
+  fill: var(--light-colour);
+}
+
 #delete-modal-content {
   background-color: var(--grey-one-colour);
   color: var(--light-colour);

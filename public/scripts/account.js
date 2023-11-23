@@ -17,6 +17,9 @@ let currentUid;
 let database;
 
 firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    window.location.href = "../login.html";
+  }
   database = new Database(firebase.auth().currentUser.uid);
   loadProfilePage(database);
 });

@@ -2,6 +2,9 @@ import { Database } from "./classes.js";
 
 // Load shopping list and recipes
 firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    window.location.href = "../login.html";
+  }
   const database = new Database(firebase.auth().currentUser.uid);
   getShoppingListData(database).then((data) => {
     generateDOMContent(database, data[0], data[1]);

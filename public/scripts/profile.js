@@ -5,10 +5,12 @@ let currentUid;
 let database;
 
 firebase.auth().onAuthStateChanged((user) => {
-  database = new Database(firebase.auth().currentUser.uid);
   if (user) {
     currentUid = firebase.auth().currentUser.uid;
+  } else {
+    window.location.href = "../login.html";
   }
+  database = new Database(firebase.auth().currentUser.uid);
   const urlParams = new URLSearchParams(window.location.search);
   const profile = urlParams.get("user");
   console.log("1");

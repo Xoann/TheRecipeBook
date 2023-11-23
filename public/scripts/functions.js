@@ -602,7 +602,9 @@ export function generateRecipeModal(
         servingsContainer.appendChild(servingsInput);
 
         svgElement.addEventListener("click", function () {
-          servingsInput.value = servingsInput.value - 1;
+          if (servingsInput.value > 0) {
+            servingsInput.value = servingsInput.value - 1;
+          }
           recalculateIngredients();
         });
       })

@@ -120,6 +120,24 @@ function createMenu(database, recipeDiv, recipeName) {
     .catch((error) => {
       console.error("Error loading SVG:", error);
     });
+
+  //ipad ellipsis
+  let ellipsisContainer = document.createElement("div");
+  ellipsisContainer.classList.add("ellipsis-container");
+  recipeCardMenuBtn.appendChild(ellipsisContainer);
+
+  let ellipsis1 = document.createElement("div");
+  ellipsis1.classList.add("ellipsis-dot");
+  ellipsisContainer.appendChild(ellipsis1);
+
+  let ellipsis2 = document.createElement("div");
+  ellipsis2.classList.add("ellipsis-dot");
+  ellipsisContainer.appendChild(ellipsis2);
+
+  let ellipsis3 = document.createElement("div");
+  ellipsis3.classList.add("ellipsis-dot");
+  ellipsisContainer.appendChild(ellipsis3);
+
   recipeCardMenuBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     handleElipsisBtnPress(recipeName);

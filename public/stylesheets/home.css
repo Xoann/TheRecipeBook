@@ -1098,3 +1098,26 @@
     width: 80%;
   }
 }
+
+.ellipsis-container {
+  display: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .ellipsis-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 100%;
+    width: 100%;
+  }
+
+  .ellipsis-dot {
+    height: 4px;
+    width: 4px;
+    border-radius: 20px;
+    background-color: var(--light-colour);
+  }
+}

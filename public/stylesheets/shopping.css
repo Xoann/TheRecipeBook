@@ -151,7 +151,7 @@
   background-color: var(--grey-two-colour);
 }
 
-@media only screen and (min-width: 700px) and (max-width: 900px) {
+@media only screen and (min-width: 760px) and (max-width: 900px) {
   .mainBg {
     min-width: 0px;
     width: 100vw;
@@ -163,7 +163,7 @@
   }
 }
 
-@media only screen and (max-width: 699px) {
+@media only screen and (max-width: 759px) {
   .mainBg {
     min-width: 0px;
     width: 100vw;

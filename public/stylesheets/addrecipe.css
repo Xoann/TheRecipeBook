@@ -619,7 +619,7 @@ option:hover,
   width: 150px;
 }
 
-@media only screen and (min-width: 700px) and (max-width: 900px) {
+@media only screen and (min-width: 760px) and (max-width: 900px) {
   .mainBg {
     min-width: 0px;
   }
@@ -656,7 +656,7 @@ option:hover,
   }
 }
 
-@media only screen and (max-width: 699px) {
+@media only screen and (max-width: 759px) {
   .addrecipe-modal-content {
     gap: 10px;
   }

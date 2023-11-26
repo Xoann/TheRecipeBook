@@ -664,6 +664,14 @@ export class Database {
           this.getRecipe(recipeName).then((recipe) => {
             const ingredients = recipe.ingredients;
             for (const ingredient of ingredients) {
+              if (ingredient.value.includes("/")) {
+                let fraction = ingredient.value;
+                ingredient.value = `${
+                  Number(fraction.split("/")[0]) /
+                  Number(fraction.split("/")[1])
+                }`;
+              }
+
               // console.log(shoppingIngredientObject);
               if (volUnitsToMl.hasOwnProperty(ingredient.unit)) {
                 if (
